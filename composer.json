@@ -1,0 +1,24 @@
+{
+	"name": "fuelphp/common",
+	"type": "library",
+	"description": "FuelPHP generic helper functions.",
+	"keywords": ["Helper", "Utility"],
+	"homepage": "https://github.com/fuelphp/common",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "FuelPHP Development Team",
+			"email": "team@fuelphp.com"
+		}
+	],
+	"require": {
+		"php": ">=5.3.3"
+	},
+	"require-dev": {
+		"mockery/mockery": "0.7.*"
+	},
+	"autoload": {
+		"psr-0": { "FuelPHP\\Common": "src/" }
+	},
+	"minimum-stability": "dev"
+}
