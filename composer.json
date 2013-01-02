@@ -18,7 +18,8 @@
 		"mockery/mockery": "0.7.*"
 	},
 	"autoload": {
-		"psr-0": { "FuelPHP\\Common": "src/" }
+		"psr-0": { "FuelPHP\\Common": "src/" },
+		"files": ["src/helpers.php"]
 	},
 	"minimum-stability": "dev"
 }
