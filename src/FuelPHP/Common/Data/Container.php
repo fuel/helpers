@@ -102,6 +102,20 @@ class Container implements ArrayAccess
 	}
 
 	/**
+	 * Set a config value
+	 *
+	 * @param   string  $key
+	 * @param   mixed   $value
+	 * @throws  \RuntimeException
+	 *
+	 * @since  2.0.0
+	 */
+	public function set($key, $value)
+	{
+		return $this->offsetSet($key, $value);
+	}
+
+	/**
 	 * Get this bag's entire content
 	 *
 	 * @return  array
