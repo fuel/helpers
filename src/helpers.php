@@ -8,16 +8,16 @@
  * @copyright  2010 - 2013 Fuel Development Team
  */
 
-if ( ! function_exists('__val'))
+if ( ! function_exists('result'))
 {
 	/**
 	 * Checks if a return value is a Closure without params, and if
 	 * so executes it before returning it.
 	 *
 	 * @param   mixed  $val
-	 * @return  mixed
+	 * @return  mixed  closure result
 	 */
-	function __val($val)
+	function result($val)
 	{
 		if ($val instanceof Closure)
 		{
@@ -28,102 +28,141 @@ if ( ! function_exists('__val'))
 	}
 }
 
-if ( ! function_exists('array_set_dot_key'))
+if ( ! function_exists('array_set'))
 {
 	/**
 	 * Set a value on an array according to a dot-notated key
 	 *
-	 * @param   string              $key
-	 * @param   array|\ArrayAccess  $input
-	 * @param   mixed               $setting
-	 * @param   bool                $unsetOnNull
-	 * @return  bool
-	 * @throws  \InvalidArgumentException
+	 * @param   array  $array   array
+	 * @param   mixed  $dotkey  dot-notated key
+	 * @param   mixed  $value   value
+	 * @return  voic
 	 *
 	 * @since  2.0.0
 	 */
-	function array_set_dot_key($key, &$input, &$setting, $unsetOnNull = false)
+	function array_set(array &$array, $dotkey, $value = null)
 	{
-		if ( ! is_array($input) and ! $input instanceof \ArrayAccess)
+		$set = $dotkey;
+
+		if ( ! is_array($dotkey))
 		{
-			throw new \InvalidArgumentException('The second argument of array_set_dot_key() must be an array or ArrayAccess object.');
+			$set = array($dotkey => $value);
 		}
 
-		// Explode the key and start iterating
-		$keys = explode('.', $key);
-		while (count($keys) > 1)
+		foreach ($set as $dotkey => $value)
 		{
-			$key = array_shift($keys);
-			if ( ! isset($input[$key])
-				or ( ! empty($keys) and ! is_array($input[$key]) and ! $input[$key] instanceof \ArrayAccess))
+			$arr = &$array;
+			$keys = explode('.', $dotkey);
+			$last = array_pop($keys);
+
+			while ($key = array_shift($keys))
 			{
-				// Unset impossible
-				if ($unsetOnNull and is_null($setting))
+				if ( ! isset($array[$key]) or ! is_array($array[$key]))
 				{
-					return false;
+					$array[$key] = array();
 				}
 
-				// Create new subarray or overwrite non array
-				$input[$key] = array();
+				$array = &$array[$key];
 			}
-			$input =& $input[$key];
-		}
-		$key = array_shift($keys);
 
-		if ($unsetOnNull and is_null($setting))
+			$array[$last] = $value;
+		}
+	}
+}
+
+if ( ! function_exists('array_get'))
+{
+	/**
+	 * Get a value from an array according to a dot-notated key
+	 *
+	 * @param   array   $array    array
+	 * @param   string  $dotkey   dot-notated key
+	 * @param   mixed   $default
+	 * @return  mixed   array value or default
+	 *
+	 * @since  2.0.0
+	 */
+	function array_get(array $array, $dotkey, $default = null)
+	{
+		$keys = explode('.', $dotkey);
+
+		while($key = array_shift($keys))
 		{
-			if ( ! isset($input[$key]))
+			if ( ! isset($array[$key]))
+			{
+				return result($default);
+			}
+
+			$array = $array[$key];
+		}
+
+		return $array;
+	}
+}
+
+if ( ! function_exists('array_has'))
+{
+	/**
+	 * Get wether a value exists in an array according to a dot-notated key
+	 *
+	 * @param   array   $array    array
+	 * @param   string  $dotkey   dot-notated key
+	 * @param   mixed   $default
+	 * @return  boolean array value or default
+	 *
+	 * @since  2.0.0
+	 */
+	function array_has(array $array, $dotkey)
+	{
+		$keys = explode('.', $dotkey);
+
+		while($key = array_shift($keys))
+		{
+			if ( ! isset($array[$key]))
 			{
 				return false;
 			}
-			$setting = $input[$key];
-			unset($input[$key]);
-		}
-		else
-		{
-			$input[$key] = $setting;
+
+			$array = $array[$key];
 		}
 
 		return true;
 	}
 }
 
-if ( ! function_exists('array_get_dot_key'))
+if ( ! function_exists('array_delete'))
 {
 	/**
-	 * Get a value from an array according to a dot-notated key
+	 * Delete a value from an array according to a dot-notated key
 	 *
-	 * @param   string              $key
-	 * @param   array|\ArrayAccess  $input
-	 * @param   mixed               $return
-	 * @return  bool
-	 * @throws  \InvalidArgumentException
+	 * @param   array   $array    array
+	 * @param   string  $dotkey   dot-notated key
+	 * @return  boolean wether a value was deleted
 	 *
 	 * @since  2.0.0
 	 */
-	function array_get_dot_key($key, &$input, &$return)
+	function array_delete(array &$array, $dotkey)
 	{
-		if ( ! is_array($input) and ! $input instanceof \ArrayAccess)
-		{
-			throw new \InvalidArgumentException('The second argument of array_get_dot_key() must be an array or ArrayAccess object.');
-		}
+		$keys = explode('.', $dotkey);
+		$last = array_pop($keys);
 
-		// Explode the key and start iterating
-		$keys = explode('.', $key);
-		while (count($keys) > 0)
+		while ($key = array_shift($keys))
 		{
-			$key = array_shift($keys);
-			if ( ! isset($input[$key])
-				or ( ! empty($keys) and ! is_array($input[$key]) and ! $input[$key] instanceof \ArrayAccess))
+			if ( ! isset($array[$key]))
 			{
-				// Value not found, return failure
 				return false;
 			}
-			$input =& $input[$key];
+
+			$array = &$array[$key];
 		}
 
-		// return success
-		$return = $input;
+		if ( ! isset($array[$last]))
+		{
+			return false;
+		}
+
+		unset($array[$last]);
+
 		return true;
 	}
 }
