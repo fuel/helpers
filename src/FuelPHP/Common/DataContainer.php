@@ -26,7 +26,7 @@ class DataContainer implements ArrayAccess
 	 *
 	 * @since  2.0.0
 	 */
-	protected $data;
+	protected $data = array();
 
 	/**
 	 * @var  bool

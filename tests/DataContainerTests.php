@@ -75,5 +75,6 @@ class DataContainerTests extends PHPUnit_Framework_TestCase
 		$this->assertTrue($c->delete('deep.key'));
 		$this->assertFalse($c->delete('deep.key'));
 		$this->assertFalse($c->delete('deep.other'));
+		$this->assertFalse($c->delete('other.key'));
 	}
 }
