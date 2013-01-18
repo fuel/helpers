@@ -24,7 +24,7 @@ class DataContainerTests extends PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @expectedException  OutOfBoundsException
+	 * @expectedException  RuntimeException
 	 */
 	public function testReadOnlyReplace()
 	{
