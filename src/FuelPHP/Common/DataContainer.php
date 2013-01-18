@@ -55,9 +55,15 @@ class DataContainer implements ArrayAccess
 	 *
 	 * @param   array  $data  new data
 	 * @return  $this
+	 * @throws  RuntimeException
 	 */
 	public function setContents(array $data)
 	{
+		if ($this->readOnly)
+		{
+			throw new \RuntimeException('Changing values on this Data Container is not allowed.');
+		}
+
 		$this->data = $data;
 
 		return $this;
