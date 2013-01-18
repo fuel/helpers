@@ -77,4 +77,52 @@ class DataContainerTests extends PHPUnit_Framework_TestCase
 		$this->assertFalse($c->delete('deep.other'));
 		$this->assertFalse($c->delete('other.key'));
 	}
+
+	public function testMerge()
+	{
+		$c = new DataContainer(array(
+			'this' => 'is',
+			'nested' => array(
+				'values' => 'awesome',
+			),
+			'set' => array(
+				1, 2, 3
+			),
+		));
+
+		$c->merge(new DataContainer(array(
+			'nested' => array(
+				'thing' => 'added',
+			),
+		)), array('set' => array('yeah')));
+
+		$expected = array(
+			'this' => 'is',
+			'nested' => array(
+				'values' => 'awesome',
+				'thing' => 'added',
+			),
+			'set' => array(1,2,3,'yeah'),
+		);
+
+		$this->assertEquals($expected, $c->all());
+	}
+
+	/**
+	 * @expectedException  InvalidArgumentException
+	 */
+	public function testInvalidMerge()
+	{
+		$c = new DataContainer;
+
+		$c->merge(1);
+	}
+
+	public function testIsAssoc()
+	{
+		$this->assertTrue(arr_is_assoc(array('yeah' => 'assoc')));
+		$this->assertTrue(arr_is_assoc(array(1 => 'assoc', 0 => 'yeah')));
+		$this->assertFalse(arr_is_assoc(array(0 => 'assoc', 1 => 'yeah')));
+		$this->assertFalse(arr_is_assoc(array('yeah', 'assoc')));
+	}
 }

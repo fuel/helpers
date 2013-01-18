@@ -11,6 +11,7 @@
 namespace FuelPHP\Common;
 
 use ArrayAccess;
+use InvalidArgumentException;
 
 /**
  * Generic data container
@@ -85,6 +86,26 @@ class DataContainer implements ArrayAccess
 		return $this;
 	}
 
+	public function merge($arg)
+	{
+		$arguments = func_get_args();
+
+		$valid = true;
+
+		$arguments = array_map(function ($array) use (&$valid)
+		{
+			if ($array instanceof DataContainer)
+			{
+				return $array->getContents();
+			}
+
+			return $array;
+		}, $arguments);
+
+		array_unshift($arguments, $this->data);
+		$this->data = call_user_func_array('arr_merge', $arguments);
+	}
+
 	/**
 	 * Check wether the container is read-only.
 	 *
@@ -105,7 +126,7 @@ class DataContainer implements ArrayAccess
 	 */
 	public function has($key)
 	{
-		return array_has($this->data, $key);
+		return arr_has($this->data, $key);
 	}
 
 	/**
@@ -119,7 +140,7 @@ class DataContainer implements ArrayAccess
 	 */
 	public function get($key, $default = null)
 	{
-		return array_get($this->data, $key, $default);
+		return arr_get($this->data, $key, $default);
 	}
 
 	/**
@@ -138,7 +159,7 @@ class DataContainer implements ArrayAccess
 			throw new \RuntimeException('Changing values on this Data Container is not allowed.');
 		}
 
-		array_set($this->data, $key, $value);
+		arr_set($this->data, $key, $value);
 
 		return $this;
 	}
@@ -150,7 +171,7 @@ class DataContainer implements ArrayAccess
 			throw new \RuntimeException('Changing values on this Data Container is not allowed.');
 		}
 
-		return array_delete($this->data, $key);
+		return arr_delete($this->data, $key);
 	}
 
 	/**

@@ -28,7 +28,7 @@ if ( ! function_exists('result'))
 	}
 }
 
-if ( ! function_exists('array_set'))
+if ( ! function_exists('arr_set'))
 {
 	/**
 	 * Set a value on an array according to a dot-notated key
@@ -40,7 +40,7 @@ if ( ! function_exists('array_set'))
 	 *
 	 * @since  2.0.0
 	 */
-	function array_set(array &$array, $dotkey, $value = null)
+	function arr_set(array &$array, $dotkey, $value = null)
 	{
 		$set = $dotkey;
 
@@ -70,7 +70,7 @@ if ( ! function_exists('array_set'))
 	}
 }
 
-if ( ! function_exists('array_get'))
+if ( ! function_exists('arr_get'))
 {
 	/**
 	 * Get a value from an array according to a dot-notated key
@@ -82,7 +82,7 @@ if ( ! function_exists('array_get'))
 	 *
 	 * @since  2.0.0
 	 */
-	function array_get(array $array, $dotkey, $default = null)
+	function arr_get(array $array, $dotkey, $default = null)
 	{
 		$keys = explode('.', $dotkey);
 
@@ -100,7 +100,7 @@ if ( ! function_exists('array_get'))
 	}
 }
 
-if ( ! function_exists('array_has'))
+if ( ! function_exists('arr_has'))
 {
 	/**
 	 * Get wether a value exists in an array according to a dot-notated key
@@ -112,7 +112,7 @@ if ( ! function_exists('array_has'))
 	 *
 	 * @since  2.0.0
 	 */
-	function array_has(array $array, $dotkey)
+	function arr_has(array $array, $dotkey)
 	{
 		$keys = explode('.', $dotkey);
 
@@ -130,7 +130,7 @@ if ( ! function_exists('array_has'))
 	}
 }
 
-if ( ! function_exists('array_delete'))
+if ( ! function_exists('arr_delete'))
 {
 	/**
 	 * Delete a value from an array according to a dot-notated key
@@ -141,7 +141,7 @@ if ( ! function_exists('array_delete'))
 	 *
 	 * @since  2.0.0
 	 */
-	function array_delete(array &$array, $dotkey)
+	function arr_delete(array &$array, $dotkey)
 	{
 		$keys = explode('.', $dotkey);
 		$last = array_pop($keys);
@@ -164,5 +164,65 @@ if ( ! function_exists('array_delete'))
 		unset($array[$last]);
 
 		return true;
+	}
+}
+
+if ( ! function_exists('arr_merge'))
+{
+	/**
+	 * Merge 2 arrays recursively, differs in 2 important ways from array_merge_recursive()
+	 * - When there's 2 different values and not both arrays, the latter value overwrites the earlier
+	 *   instead of merging both into an array
+	 * - Numeric keys that don't conflict aren't changed, only when a numeric key already exists is the
+	 *   value added using array_push()
+	 *
+	 * @param   array  multiple variables all of which must be arrays
+	 * @return  array
+	 * @throws  \InvalidArgumentException
+	 */
+	function arr_merge(array $array)
+	{
+		$arrays = array_slice(func_get_args(), 1);
+
+		foreach ($arrays as $arr)
+		{
+			if ( ! is_array($arr))
+			{
+				throw new \InvalidArgumentException('arr_merge() - all arguments must be arrays.');
+			}
+
+			foreach ($arr as $k => $v)
+			{
+				// numeric keys are appended
+				if (is_int($k))
+				{
+					array_key_exists($k, $array) ? array_push($array, $v) : $array[$k] = $v;
+				}
+				elseif (is_array($v) and array_key_exists($k, $array) and is_array($array[$k]))
+				{
+					$array[$k] = arr_merge($array[$k], $v);
+				}
+				else
+				{
+					$array[$k] = $v;
+				}
+			}
+		}
+
+		return $array;
+	}
+}
+
+if ( ! function_exists('arr_is_assoc'))
+{
+	/**
+	 * Determine wether an array is associative
+	 *
+	 * @param   array    $array  array to check
+	 * @return  boolean  wether it is an associative array
+	 */
+	function arr_is_assoc(array $array)
+	{
+		return array_keys($array) !== range(0, count($array) - 1);
 	}
 }
