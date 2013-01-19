@@ -93,7 +93,7 @@ class DataContainer implements ArrayAccess
 	}
 
 	/**
-	 * Merge the arrays into the container.
+	 * Merge arrays into the container.
 	 *
 	 * @param   array  $arg  array to merge with
 	 * @return  $this
