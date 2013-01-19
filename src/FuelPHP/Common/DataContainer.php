@@ -92,10 +92,21 @@ class DataContainer implements ArrayAccess
 		return $this;
 	}
 
+	/**
+	 * Merge the arrays into the container.
+	 *
+	 * @param   array  $arg  array to merge with
+	 * @return  $this
+	 * @throws  RuntimeException
+	 */
 	public function merge($arg)
 	{
-		$arguments = func_get_args();
+		if ($this->readOnly)
+		{
+			throw new \RuntimeException('Changing values on this Data Container is not allowed.');
+		}
 
+		$arguments = func_get_args();
 		$valid = true;
 
 		$arguments = array_map(function ($array) use (&$valid)
@@ -110,6 +121,8 @@ class DataContainer implements ArrayAccess
 
 		array_unshift($arguments, $this->data);
 		$this->data = call_user_func_array('arr_merge', $arguments);
+
+		return $this;
 	}
 
 	/**

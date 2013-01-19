@@ -35,6 +35,15 @@ class DataContainerTests extends PHPUnit_Framework_TestCase
 	/**
 	 * @expectedException  RuntimeException
 	 */
+	public function testReadOnlyMerge()
+	{
+		$c = new DataContainer(array(), true);
+		$c->merge(array('new' => 'stuff'));
+	}
+
+	/**
+	 * @expectedException  RuntimeException
+	 */
 	public function testReadOnly()
 	{
 		$c = new DataContainer(array(
