@@ -106,9 +106,6 @@ class DataContainer implements ArrayAccess
 			throw new \RuntimeException('Changing values on this Data Container is not allowed.');
 		}
 
-		$arguments = func_get_args();
-		$valid = true;
-
 		$arguments = array_map(function ($array) use (&$valid)
 		{
 			if ($array instanceof DataContainer)
@@ -117,7 +114,8 @@ class DataContainer implements ArrayAccess
 			}
 
 			return $array;
-		}, $arguments);
+
+		}, func_get_args());
 
 		array_unshift($arguments, $this->data);
 		$this->data = call_user_func_array('arr_merge', $arguments);
