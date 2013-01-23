@@ -41,13 +41,32 @@ class Html
 	 * Returns a HTML tag.
 	 * 
 	 * @param string $name Name of the tag to render. (Eg, img, form, a...)
-	 * @param null|string $value If not set to null will create a tag of the form "&lt;name&lt;value&lt;/name&lt;". Otherwise will render as a single tag.
+	 * @param null|string $content If not set to null will create a tag of the form "&lt;name&lt;content&lt;/name&lt;". Otherwise will render as a single tag.
 	 * @param array $attributes Any attributes to apply to the tag to render
 	 * @return string
 	 */
-	public function tag($name, $value=null, $attributes=array())
+	public function tag($name, $content=null, $attributes=array())
 	{
 		$tag = '<'.$name;
+		
+		$attributeString = $this->arrayToAttributes($attributes);
+		
+		//Add the attribute string if needed
+		if ( ! empty($attributeString))
+		{
+			$tag .= ' '.$attributeString;
+		}
+		
+		//Work out how we are going to close the tag
+		if ( is_null($content))
+		{
+			//No content for the tag so just close it.
+			$tag .= '/>';
+		}
+		else
+		{
+			$tag .= '>' . $content . '</' . $name . '>';
+		}
 		
 		return $tag;
 	}

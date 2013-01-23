@@ -48,10 +48,13 @@ class HtmlTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testTag()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-				'This test has not been implemented yet.'
+		$tag = $this->object->tag('div');
+		
+		$expected = array(
+			'tag' => 'div',
 		);
+		
+		$this->assertTag($expected, $tag);
 	}
 
 	/**
