@@ -2,7 +2,7 @@
 /**
  * Part of the FuelPHP framework.
  *
- * @package    FuelPHP\Foundation
+ * @package    FuelPHP\Common
  * @version    2.0
  * @license    MIT License
  * @copyright  2010 - 2013 Fuel Development Team
@@ -15,7 +15,7 @@ require_once('..'.DIRECTORY_SEPARATOR.'helpers.php');
 /**
  * Common functions to deal with arrays.
  *
- * @package FuelPHP\Fieldset
+ * @package FuelPHP\Common
  * @since   2.0.0
  * @author  Fuel Development Team
  */
