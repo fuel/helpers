@@ -11,3 +11,4 @@ build
 nbproject
 .idea
 vendor/*
+composer.lock
