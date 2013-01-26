@@ -44,7 +44,7 @@ class HtmlTest extends \PHPUnit_Framework_TestCase
 
 	/**
 	 * @covers FuelPHP\Common\Html::tag
-	 * @todo   Implement testTag().
+	 * @group common
 	 */
 	public function testTag()
 	{
@@ -56,9 +56,48 @@ class HtmlTest extends \PHPUnit_Framework_TestCase
 		
 		$this->assertTag($expected, $tag);
 	}
+	
+	/**
+	 * @covers FuelPHP\Common\Html::tag
+	 * @group common
+	 */
+	public function testTagWithAttributes()
+	{
+		$attributes = array('name' => 'foobar');
+		
+		$tag = $this->object->tag('div', $attributes);
+		
+		$expected = array(
+			'tag' => 'div',
+			'attributes' => $attributes,
+		);
+		
+		$this->assertTag($expected, $tag);
+	}
 
 	/**
+	 * @covers FuelPHP\Common\Html::tag
+	 * @group common
+	 */
+	public function testTagWithAttributesAndContent()
+	{
+		$attributes = array('name' => 'foobar');
+		$content = 'This is some content!';
+		
+		$tag = $this->object->tag('div', $attributes, $content);
+		
+		$expected = array(
+			'tag' => 'div',
+			'attributes' => $attributes,
+			'content' => $content,
+		);
+		
+		$this->assertTag($expected, $tag);
+	}
+	
+	/**
 	 * @covers FuelPHP\Common\Html::arrayToAttributes
+	 * @group common
 	 */
 	public function testArrayToAttributes()
 	{
@@ -73,6 +112,7 @@ class HtmlTest extends \PHPUnit_Framework_TestCase
 
 	/**
 	 * @covers FuelPHP\Common\Html::arrayToAttributes
+	 * @group common
 	 */
 	public function testArrayToAttributesSingle()
 	{
@@ -86,6 +126,7 @@ class HtmlTest extends \PHPUnit_Framework_TestCase
 	
 	/**
 	 * @covers FuelPHP\Common\Html::arrayToAttributes
+	 * @group common
 	 */
 	public function testArrayToAttributesEmpty()
 	{
