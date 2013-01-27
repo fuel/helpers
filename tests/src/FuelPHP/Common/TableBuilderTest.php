@@ -30,40 +30,72 @@ class TableBuilderTest extends \PHPUnit_Framework_TestCase
 	{
 		
 	}
-
+	
 	/**
-	 * @covers FuelPHP\Common\TableBuilder::addCell
-	 * @todo   Implement testAddCell().
+	 * @covers FuelPHP\Common\TableBuilder::getCurrentRow
+	 * @group common
 	 */
-	public function testAddCell()
+	public function testGetCurrentRow()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
+		$this->assertInstanceOf(
+				'FuelPHP\Common\TableBuilder\Row',
+				$this->object->getCurrentRow()
 		);
 	}
-
+	
 	/**
+	 * @covers FuelPHP\Common\TableBuilder::getRows
+	 * @group common
+	 */
+	public function testGetRowsEmpty()
+	{
+		$this->assertEquals(0, count($this->object->getRows()));
+	}
+	
+	/**
+	 * @covers FuelPHP\Common\TableBuilder::getRows
 	 * @covers FuelPHP\Common\TableBuilder::addRow
-	 * @todo   Implement testAddRow().
+	 * @group common
 	 */
 	public function testAddRow()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
+		$rowCount = 10;
+		
+		for ($i=0; $i < $rowCount; $i++)
+		{
+			$this->object->addRow();
+		}
+		
+		$this->assertEquals($rowCount, count($this->object->getRows()));
+	}
+	
+	/**
+	 * @covers FuelPHP\Common\TableBuilder::addCell
+	 * @covers FuelPHP\Common\TableBuilder::getCurrentRow
+	 * @group common
+	 */
+	public function testAddCellContent()
+	{
+		$this->object->addCell('This is some content');
+		
+		$this->assertEquals(
+				1,
+				count($this->object->getCurrentRow())
 		);
 	}
-
+	
 	/**
-	 * @covers FuelPHP\Common\TableBuilder::getRows
-	 * @todo   Implement testGetRows().
+	 * @covers FuelPHP\Common\TableBuilder::addCell
+	 * @covers FuelPHP\Common\TableBuilder::getCurrentRow
+	 * @group common
 	 */
-	public function testGetRows()
+	public function testAddCell()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
+		$this->object->addCell(new TableBuilder\Cell('This is some content'));
+		
+		$this->assertEquals(
+				1,
+				count($this->object->getCurrentRow())
 		);
 	}
 
