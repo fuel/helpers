@@ -26,6 +26,11 @@ class Cell
 	protected $_content;
 	
 	/**
+	 * @var array Contains the attributes to associate with this table.
+	 */
+	protected $_attributes = array();
+	
+	/**
 	 * Creates a new Cell and optionally sets the content
 	 * @param mixed $content
 	 */
@@ -53,5 +58,28 @@ class Cell
 	{
 		$this->_content = $content;
 		return $this;
+	}
+	
+	/**
+	 * Sets the atributes of the Cell
+	 * 
+	 * @param array $newAttributes
+	 * @return \FuelPHP\Common\Table\Cell
+	 */
+	public function setAttributes(array $newAttributes)
+	{
+		$this->_attributes = $newAttributes;
+		
+		return $this;
+	}
+	
+	/**
+	 * Gets the attributes of this Cell
+	 * 
+	 * @return array
+	 */
+	public function getAttributes()
+	{
+		return $this->_attributes;
 	}
 }

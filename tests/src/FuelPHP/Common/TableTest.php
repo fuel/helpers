@@ -98,5 +98,19 @@ class TableTest extends \PHPUnit_Framework_TestCase
 				count($this->object->getCurrentRow())
 		);
 	}
+	
+	/**
+	 * @covers FuelPHP\Common\Table::setAttributes
+	 * @covers FuelPHP\Common\Table::getAttributes
+	 * @group common
+	 */
+	public function testSetGetAttributes()
+	{
+		$attributes = array('class' => 'table', 'id' => 'test');
+		
+		$this->object->setAttributes($attributes);
+		
+		$this->assertEquals($attributes, $this->object->getAttributes());
+	}
 
 }

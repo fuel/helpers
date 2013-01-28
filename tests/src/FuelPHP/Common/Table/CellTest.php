@@ -55,5 +55,19 @@ class CellTest extends \PHPUnit_Framework_TestCase
 		$new = new Cell;
 		$this->assertInstanceOf('FuelPHP\Common\Table\Cell', $new);
 	}
+	
+	/**
+	 * @covers FuelPHP\Common\Table\Cell::setAttributes
+	 * @covers FuelPHP\Common\Table\Cell::getAttributes
+	 * @group common
+	 */
+	public function testSetGetAttributes()
+	{
+		$attributes = array('class' => 'table', 'id' => 'test');
+		
+		$this->object->setAttributes($attributes);
+		
+		$this->assertEquals($attributes, $this->object->getAttributes());
+	}
 
 }

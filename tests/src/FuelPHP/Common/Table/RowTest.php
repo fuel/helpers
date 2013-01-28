@@ -64,5 +64,19 @@ class RowTest extends \PHPUnit_Framework_TestCase
 		
 		$this->assertEquals(3, count($this->object));
 	}
+	
+	/**
+	 * @covers FuelPHP\Common\Table\Row::setAttributes
+	 * @covers FuelPHP\Common\Table\Row::getAttributes
+	 * @group common
+	 */
+	public function testSetGetAttributes()
+	{
+		$attributes = array('class' => 'table', 'id' => 'test');
+		
+		$this->object->setAttributes($attributes);
+		
+		$this->assertEquals($attributes, $this->object->getAttributes());
+	}
 
 }

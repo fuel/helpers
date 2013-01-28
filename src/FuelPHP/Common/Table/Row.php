@@ -19,6 +19,11 @@ namespace FuelPHP\Common\Table;
  */
 class Row extends \FuelPHP\Common\DataContainer
 {
+
+	/**
+	 * @var array Contains the attributes to associate with this table.
+	 */
+	protected $_attributes = array();
 	
 	/**
 	 * Overrides the set method from DataContainer to ensure only Cells can be added
@@ -33,5 +38,28 @@ class Row extends \FuelPHP\Common\DataContainer
 		}
 		
 		parent::set($key, $value);
+	}
+	
+	/**
+	 * Sets the atributes of the Row
+	 * 
+	 * @param array $newAttributes
+	 * @return \FuelPHP\Common\Table\Row
+	 */
+	public function setAttributes(array $newAttributes)
+	{
+		$this->_attributes = $newAttributes;
+		
+		return $this;
+	}
+	
+	/**
+	 * Gets the attributes of this Row
+	 * 
+	 * @return array
+	 */
+	public function getAttributes()
+	{
+		return $this->_attributes;
 	}
 }

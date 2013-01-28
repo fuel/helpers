@@ -31,6 +31,11 @@ class Table
 	protected $_currentRow = null;
 	
 	/**
+	 * @var array Contains the attributes to associate with this table.
+	 */
+	protected $_attributes = array();
+	
+	/**
 	 * Adds a Cell to the current Row.
 	 *
 	 * @param mixed $content Anything that is not a Cell will be added as content to a new Cell
@@ -110,5 +115,28 @@ class Table
 		}
 
 		return $this->_currentRow;
+	}
+	
+	/**
+	 * Sets the atributes of the Table
+	 * 
+	 * @param array $newAttributes
+	 * @return \FuelPHP\Common\Table
+	 */
+	public function setAttributes(array $newAttributes)
+	{
+		$this->_attributes = $newAttributes;
+		
+		return $this;
+	}
+	
+	/**
+	 * Gets the attributes of this Table
+	 * 
+	 * @return array
+	 */
+	public function getAttributes()
+	{
+		return $this->_attributes;
 	}
 }
