@@ -39,9 +39,10 @@ class Table
 	 * Adds a Cell to the current Row.
 	 *
 	 * @param mixed $content Anything that is not a Cell will be added as content to a new Cell
+	 * @param array $attributes The array of attributes to assign the new Cell
 	 * @return \FuelPHP\Common\Table For method chaining
 	 */
-	public function addCell($content)
+	public function addCell($content, $attributes=array())
 	{
 		$currentRow = $this->getCurrentRow();
 		//If we have been given a Cell then just add it, else create a new cell
@@ -51,7 +52,7 @@ class Table
 		}
 		else
 		{
-			$currentRow[] = $this->constructCell($content);
+			$currentRow[] = $this->constructCell($content, $attributes);
 		}
 
 		//Return current object for method chaining
@@ -62,11 +63,15 @@ class Table
 	 * Creates a new Cell with the given content.
 	 *
 	 * @param mixed $content The content for the new Cell
+	 * @param array $attributes The attributes for the Cell
 	 * @return \FuelPHP\Common\Cell
 	 */
-	protected function constructCell($content=null)
+	protected function constructCell($content=null, $attributes=array())
 	{
-		return new Table\Cell($content);
+		$cell = new Table\Cell($content);
+		$cell->setAttributes($attributes);
+		
+		return $cell;
 	}
 
 	/**
@@ -115,6 +120,18 @@ class Table
 		}
 
 		return $this->_currentRow;
+	}
+	
+	/**
+	 * Sets the attributes for the currently active Row
+	 * 
+	 * @param array $attributes
+	 * @return \FuelPHP\Common\Table
+	 */
+	public function setCurrentRowAttributes(array $attributes)
+	{
+		$this->getCurrentRow()->setAttributes($attributes);
+		return $this;
 	}
 	
 	/**

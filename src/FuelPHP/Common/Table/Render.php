@@ -38,16 +38,17 @@ abstract class Render
 			$rows[] = $this->row($row, $cells);
 		}
 		
-		return $this->container($rows);
+		return $this->container($table, $rows);
 	}
 	
 	/**
 	 * Should generate the container tag, eg: &lt;table&gt;
 	 * 
+	 * @param \FuelPHP\Common\Table $table 
 	 * @param array $rows The constructed rows to show
 	 * @return mixed Should ideally be a string that can be pritned later.
 	 */
-	protected abstract function container(array $rows);
+	protected abstract function container(\FuelPHP\Common\Table $table, array $rows);
 	
 	/**
 	 * Renders a normal row

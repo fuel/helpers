@@ -21,21 +21,44 @@ namespace FuelPHP\Common\Table\Render;
 class SimpleTable extends \FuelPHP\Common\Table\Render
 {
 	
-	protected function container(array $rows)
+	protected function container(\FuelPHP\Common\Table $table, array $rows)
 	{
-		return '<table><thead></thead><tbody>' .
+		$html = '<table';
+		$this->addAttributes($html, $table->getAttributes());
+		$html .= '><thead></thead><tbody>' .
 			implode("\n", $rows) .
 			'</tbody><tfoot></tfoot></table>';
+		
+		return $html;
 	}
 	
 	protected function row(\FuelPHP\Common\Table\Row $row, array $cells)
 	{
-		return '<tr>' . implode('', $cells) . '</tr>';
+		$html = '<tr';
+		$this->addAttributes($html, $row->getAttributes());
+		$html .= '>' . implode('', $cells) . '</tr>';
+		
+		return $html;
 	}
 	
 	protected function cell(\FuelPHP\Common\Table\Cell $cell)
 	{
-		return '<td>' . $cell->getContent() . '</td>';
+		$html = '<td';
+		$this->addAttributes($html, $cell->getAttributes());
+		$html .= '>' . $cell->getContent() . '</td>';
+		
+		return $html;
+	}
+	
+	protected function addAttributes(&$html, array $attributesArray)
+	{
+		if( count($attributesArray) > 0)
+		{
+			$attributes = \FuelPHP\Common\Html::forge()
+				->arrayToAttributes($attributesArray);
+			
+			$html .= ' ' . $attributes;
+		}
 	}
 	
 }

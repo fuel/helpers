@@ -31,6 +31,14 @@ class SimpleTableTest extends \PHPUnit_Framework_TestCase
 		
 	}
 	
+	/**
+	 * @covers \FuelPHP\Common\Table\Render::renderTable
+	 * @covers \FuelPHP\Common\Table\Render\SimpleTable::container
+	 * @covers \FuelPHP\Common\Table\Render\SimpleTable::row
+	 * @covers \FuelPHP\Common\Table\Render\SimpleTable::cell
+	 * @covers \FuelPHP\Common\Table\Render\SimpleTable::addAttributes
+	 * @group common
+	 */
 	public function testRender()
 	{
 		$table = new \FuelPHP\Common\Table();
@@ -42,6 +50,36 @@ class SimpleTableTest extends \PHPUnit_Framework_TestCase
 		$expected = '<table><thead></thead><tbody><tr><td>foo</td><td>bar</td></tr></tbody><tfoot></tfoot></table>';
 		
 		$result = $this->object->renderTable($table);
+		
+		$this->assertXmlStringEqualsXmlString(
+			$expected, 
+			$result
+		);
+	}
+	
+	/**
+	 * @covers \FuelPHP\Common\Table\Render::renderTable
+	 * @covers \FuelPHP\Common\Table\Render\SimpleTable::container
+	 * @covers \FuelPHP\Common\Table\Render\SimpleTable::row
+	 * @covers \FuelPHP\Common\Table\Render\SimpleTable::cell
+	 * @covers \FuelPHP\Common\Table\Render\SimpleTable::addAttributes
+	 * @group common
+	 */
+	public function testRenderWithAttributes()
+	{
+		$table = new \FuelPHP\Common\Table();
+		$table
+			->setAttributes(array('id' => 'table'))
+			->addCell('foo', array('id' => 'foo'))
+			->addCell('bar', array('id' => 'bar'))
+			->setCurrentRowAttributes(array('id' => 'row'))
+			->addRow();
+		
+		$expected = '<table id="table"><thead></thead><tbody><tr id="row"><td id="foo">foo</td><td id="bar">bar</td></tr></tbody><tfoot></tfoot></table>';
+		
+		$result = $this->object->renderTable($table);
+		
+		echo "\n$result\n";
 		
 		$this->assertXmlStringEqualsXmlString(
 			$expected, 
