@@ -2,18 +2,18 @@
 /**
  * Part of the FuelPHP framework.
  *
- * @package    FuelPHP\Common\TableBuilder
+ * @package    FuelPHP\Common\Table
  * @version    2.0
  * @license    MIT License
  * @copyright  2010 - 2013 Fuel Development Team
  */
 
-namespace FuelPHP\Common\TableBuilder;
+namespace FuelPHP\Common\Table;
 
 /**
  * Defines a Row that contains Cells for a table.
  *
- * @package FuelPHP\Common\TableBuilder
+ * @package FuelPHP\Common\Table
  * @since   2.0.0
  * @author  Fuel Development Team
  */

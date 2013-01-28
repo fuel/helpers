@@ -17,30 +17,30 @@ namespace FuelPHP\Common;
  * @since   2.0.0
  * @author  Fuel Development Team
  */
-class TableBuilder
+class Table
 {
 
 	/**
-	 * @var array Contains cconstructed rows
+	 * @var array Contains constructed rows
 	 */
 	protected $_rows = array();
-
+	
 	/**
 	 * @var Row The row that new cells will be added to
 	 */
 	protected $_currentRow = null;
-
+	
 	/**
 	 * Adds a Cell to the current Row.
 	 *
 	 * @param mixed $content Anything that is not a Cell will be added as content to a new Cell
-	 * @return \FuelPHP\Common\TableBuilder For method chaining
+	 * @return \FuelPHP\Common\Table For method chaining
 	 */
 	public function addCell($content)
 	{
 		$currentRow = $this->getCurrentRow();
 		//If we have been given a Cell then just add it, else create a new cell
-		if ($content instanceof TableBuilder\Cell)
+		if ($content instanceof Table\Cell)
 		{
 			$currentRow[] = $content;
 		}
@@ -61,7 +61,7 @@ class TableBuilder
 	 */
 	protected function constructCell($content=null)
 	{
-		return new TableBuilder\Cell($content);
+		return new Table\Cell($content);
 	}
 
 	/**
@@ -69,14 +69,14 @@ class TableBuilder
 	 */
 	protected function createRow()
 	{
-		$this->_currentRow = new TableBuilder\Row;
+		$this->_currentRow = new Table\Row;
 	}
 
 	/**
 	 * Adds the Row that's currently being constructed to the list of finished
 	 * Rows.
 	 *
-	 * @return \FuelPHP\Common\TableBuilder
+	 * @return \FuelPHP\Common\Table
 	 */
 	public function addRow()
 	{

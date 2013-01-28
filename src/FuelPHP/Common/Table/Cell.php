@@ -2,18 +2,18 @@
 /**
  * Part of the FuelPHP framework.
  *
- * @package    FuelPHP\Common\TableBuilder
+ * @package    FuelPHP\Common\Table
  * @version    2.0
  * @license    MIT License
  * @copyright  2010 - 2013 Fuel Development Team
  */
 
-namespace FuelPHP\Common\TableBuilder;
+namespace FuelPHP\Common\Table;
 
 /**
  * Defines a cell of a Row
  *
- * @package FuelPHP\Common\TableBuilder
+ * @package FuelPHP\Common\Table
  * @since   2.0.0
  * @author  Fuel Development Team
  */
@@ -47,7 +47,7 @@ class Cell
 	 * Sets the content of the Cell
 	 * 
 	 * @param mixed $content
-	 * @return \FuelPHP\Common\TableBuilder\Cell
+	 * @return \FuelPHP\Common\Table\Cell
 	 */
 	public function setContent($content)
 	{
