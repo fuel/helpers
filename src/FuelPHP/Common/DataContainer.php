@@ -11,6 +11,9 @@
 namespace FuelPHP\Common;
 
 use ArrayAccess;
+use IteratorAggregate;
+use ArrayIterator;
+use Countable;
 use InvalidArgumentException;
 
 /**
@@ -20,7 +23,7 @@ use InvalidArgumentException;
  *
  * @since  2.0.0
  */
-class DataContainer implements ArrayAccess
+class DataContainer implements ArrayAccess, IteratorAggregate, Countable
 {
 	/**
 	 * @var  array
@@ -175,7 +178,7 @@ class DataContainer implements ArrayAccess
 		{
 			throw new \RuntimeException('Changing values on this Data Container is not allowed.');
 		}
-
+		
 		arr_set($this->data, $key, $value);
 
 		return $this;
@@ -256,5 +259,15 @@ class DataContainer implements ArrayAccess
 	public function offsetUnset($key)
 	{
 		return $this->delete($key);
+	}
+
+	public function getIterator()
+	{
+		return new ArrayIterator($this->data);
+	}
+
+	public function count()
+	{
+		return count($this->data);
 	}
 }

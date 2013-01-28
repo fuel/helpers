@@ -51,5 +51,18 @@ class RowTest extends \PHPUnit_Framework_TestCase
 	{
 		$this->object[] = 'failure';
 	}
+	
+	/**
+	 * @covers FuelPHP\Common\Table\Row::set
+	 * @group common
+	 */
+	public function testAddCells()
+	{
+		$this->object[] = new Cell();
+		$this->object[] = new Cell();
+		$this->object[] = new Cell();
+		
+		$this->assertEquals(3, count($this->object));
+	}
 
 }

@@ -40,13 +40,20 @@ if ( ! function_exists('arr_set'))
 	 *
 	 * @since  2.0.0
 	 */
-	function arr_set(array &$array, $dotkey, $value = null)
+	function arr_set(array &$array, $dotkey = null, $value = null)
 	{
 		$set = $dotkey;
 
 		if ( ! is_array($dotkey))
 		{
 			$set = array($dotkey => $value);
+		}
+		
+		//Special case for when $dotkey is null
+		if(  is_null($dotkey))
+		{
+			$array[] = $value;
+			return;
 		}
 
 		foreach ($set as $dotkey => $value)

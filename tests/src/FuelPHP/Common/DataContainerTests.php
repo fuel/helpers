@@ -1,8 +1,10 @@
 <?php
 
+namespace FuelPHP\Common;
+
 use FuelPHP\Common\DataContainer;
 
-class DataContainerTests extends PHPUnit_Framework_TestCase
+class DataContainerTest extends \PHPUnit_Framework_TestCase
 {
 	/**
 	 * @expectedException  OutOfBoundsException
@@ -23,6 +25,15 @@ class DataContainerTests extends PHPUnit_Framework_TestCase
 		$c['exception'];
 	}
 
+	public function testAddMultipleAsArray()
+	{
+		$c = new DataContainer();
+		$c[] = 'foo';
+		$c[] = 'bar';
+		
+		$this->assertEquals(2, count($c));
+	}
+	
 	/**
 	 * @expectedException  RuntimeException
 	 */

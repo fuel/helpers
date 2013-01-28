@@ -20,4 +20,50 @@ namespace FuelPHP\Common\Table;
 abstract class Render
 {
 	
+	public function renderTable(\FuelPHP\Common\Table $table)
+	{
+		//Generate each row
+		$rows = array();
+		
+		foreach($table->getRows() as $row)
+		{
+			//Build the cells for each row
+			$cells = array();
+			
+			foreach($row as $cell)
+			{
+				$cells[] = $this->cell($cell);
+			}
+			
+			$rows[] = $this->row($row, $cells);
+		}
+		
+		return $this->container($rows);
+	}
+	
+	/**
+	 * Should generate the container tag, eg: &lt;table&gt;
+	 * 
+	 * @param array $rows The constructed rows to show
+	 * @return mixed Should ideally be a string that can be pritned later.
+	 */
+	protected abstract function container(array $rows);
+	
+	/**
+	 * Renders a normal row
+	 * 
+	 * @param Row $row The current row being rendered
+	 * @param array $cells The constructed Cells that the current Row contains
+	 * @return mixed Should ideally be a string that can be printed by
+	 * container()
+	 */
+	protected abstract function row(Row $row, array $cells);
+	
+	/**
+	 * Renders a normal cell
+	 * 
+	 * @param Cell 
+	 */
+	protected abstract function cell(Cell $cell);
+	
 }
