@@ -76,21 +76,21 @@ class Arr
 	 *
 	 * @since  2.0.0
 	 */
-	function get(array $array, $dotkey, $default = null)
+	function get(array &$array, $dotkey, $default = null)
 	{
 		$keys = explode('.', $dotkey);
-
-		while($key = array_shift($keys))
+		
+		$processArray = $array;
+		while( ($key = array_shift($keys)) !== null)
 		{
-			if ( ! isset($array[$key]))
+			if ( ! isset($processArray[$key]))
 			{
 				return result($default);
 			}
-
-			$array = $array[$key];
+			$processArray = $processArray[$key];
 		}
 
-		return $array;
+		return $processArray;
 	}
 	
 	/**
