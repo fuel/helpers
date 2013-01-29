@@ -37,7 +37,7 @@ class SimpleTableTest extends \PHPUnit_Framework_TestCase
 	 * @covers \FuelPHP\Common\Table\Render\SimpleTable::row
 	 * @covers \FuelPHP\Common\Table\Render\SimpleTable::cell
 	 * @covers \FuelPHP\Common\Table\Render\SimpleTable::addAttributes
-	 * @group common
+	 * @group Common
 	 */
 	public function testRender()
 	{
@@ -63,7 +63,7 @@ class SimpleTableTest extends \PHPUnit_Framework_TestCase
 	 * @covers \FuelPHP\Common\Table\Render\SimpleTable::row
 	 * @covers \FuelPHP\Common\Table\Render\SimpleTable::cell
 	 * @covers \FuelPHP\Common\Table\Render\SimpleTable::addAttributes
-	 * @group common
+	 * @group Common
 	 */
 	public function testRenderWithAttributes()
 	{

@@ -8,6 +8,7 @@ class DataContainerTest extends \PHPUnit_Framework_TestCase
 {
 	/**
 	 * @expectedException  OutOfBoundsException
+	 * @group Common
 	 */
 	public function testGetSet()
 	{
@@ -25,6 +26,9 @@ class DataContainerTest extends \PHPUnit_Framework_TestCase
 		$c['exception'];
 	}
 
+	/**
+	 * @group Common
+	 */
 	public function testAddMultipleAsArray()
 	{
 		$c = new DataContainer();
@@ -36,6 +40,7 @@ class DataContainerTest extends \PHPUnit_Framework_TestCase
 	
 	/**
 	 * @expectedException  RuntimeException
+	 * @group Common
 	 */
 	public function testReadOnlyReplace()
 	{
@@ -45,6 +50,7 @@ class DataContainerTest extends \PHPUnit_Framework_TestCase
 
 	/**
 	 * @expectedException  RuntimeException
+	 * @group Common
 	 */
 	public function testReadOnlyMerge()
 	{
@@ -54,6 +60,7 @@ class DataContainerTest extends \PHPUnit_Framework_TestCase
 
 	/**
 	 * @expectedException  RuntimeException
+	 * @group Common
 	 */
 	public function testReadOnly()
 	{
@@ -72,6 +79,7 @@ class DataContainerTest extends \PHPUnit_Framework_TestCase
 
 	/**
 	 * @expectedException  RuntimeException
+	 * @group Common
 	 */
 	public function testReadOnlyArrayAccess()
 	{
@@ -83,7 +91,10 @@ class DataContainerTest extends \PHPUnit_Framework_TestCase
 
 		unset($c['some']);
 	}
-
+	
+	/**
+	 * @group Common
+	 */
 	public function testHas()
 	{
 		$c = new DataContainer(array(
@@ -96,6 +107,9 @@ class DataContainerTest extends \PHPUnit_Framework_TestCase
 		$this->assertTrue(isset($c['yes']));
 	}
 
+	/**
+	 * @group Common
+	 */
 	public function testDelete()
 	{
 		$c = new DataContainer;
@@ -106,7 +120,10 @@ class DataContainerTest extends \PHPUnit_Framework_TestCase
 		$this->assertFalse($c->delete('deep.other'));
 		$this->assertFalse($c->delete('other.key'));
 	}
-
+	
+	/**
+	 * @group Common
+	 */
 	public function testMerge()
 	{
 		$c = new DataContainer(array(
@@ -139,6 +156,7 @@ class DataContainerTest extends \PHPUnit_Framework_TestCase
 
 	/**
 	 * @expectedException  InvalidArgumentException
+	 * @group Common
 	 */
 	public function testInvalidMerge()
 	{
@@ -147,6 +165,9 @@ class DataContainerTest extends \PHPUnit_Framework_TestCase
 		$c->merge(1);
 	}
 
+	/**
+	 * @group Common
+	 */
 	public function testIsAssoc()
 	{
 		$this->assertTrue(arr_is_assoc(array('yeah' => 'assoc')));

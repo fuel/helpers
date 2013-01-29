@@ -54,7 +54,7 @@ class RowTest extends \PHPUnit_Framework_TestCase
 	
 	/**
 	 * @covers FuelPHP\Common\Table\Row::set
-	 * @group common
+	 * @group Common
 	 */
 	public function testAddCells()
 	{
@@ -68,7 +68,7 @@ class RowTest extends \PHPUnit_Framework_TestCase
 	/**
 	 * @covers FuelPHP\Common\Table\Row::setAttributes
 	 * @covers FuelPHP\Common\Table\Row::getAttributes
-	 * @group common
+	 * @group Common
 	 */
 	public function testSetGetAttributes()
 	{

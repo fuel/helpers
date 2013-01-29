@@ -59,7 +59,7 @@ class CellTest extends \PHPUnit_Framework_TestCase
 	/**
 	 * @covers FuelPHP\Common\Table\Cell::setAttributes
 	 * @covers FuelPHP\Common\Table\Cell::getAttributes
-	 * @group common
+	 * @group Common
 	 */
 	public function testSetGetAttributes()
 	{

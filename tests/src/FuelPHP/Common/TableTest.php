@@ -34,7 +34,7 @@ class TableTest extends \PHPUnit_Framework_TestCase
 	/**
 	 * @covers FuelPHP\Common\Table::getCurrentRow
 	 * @covers FuelPHP\Common\Table::createRow
-	 * @group common
+	 * @group Common
 	 */
 	public function testGetCurrentRow()
 	{
@@ -46,7 +46,7 @@ class TableTest extends \PHPUnit_Framework_TestCase
 	
 	/**
 	 * @covers FuelPHP\Common\Table::getRows
-	 * @group common
+	 * @group Common
 	 */
 	public function testGetRowsEmpty()
 	{
@@ -57,7 +57,7 @@ class TableTest extends \PHPUnit_Framework_TestCase
 	 * @covers FuelPHP\Common\Table::getRows
 	 * @covers FuelPHP\Common\Table::addRow
 	 * @covers FuelPHP\Common\Table::createRow
-	 * @group common
+	 * @group Common
 	 */
 	public function testAddRow()
 	{
@@ -76,7 +76,7 @@ class TableTest extends \PHPUnit_Framework_TestCase
 	 * @covers FuelPHP\Common\Table::getCurrentRow
 	 * @covers FuelPHP\Common\Table::createRow
 	 * @covers FuelPHP\Common\Table::constructCell
-	 * @group common
+	 * @group Common
 	 */
 	public function testAddCellContent()
 	{
@@ -92,7 +92,7 @@ class TableTest extends \PHPUnit_Framework_TestCase
 	 * @covers FuelPHP\Common\Table::addCell
 	 * @covers FuelPHP\Common\Table::getCurrentRow
 	 * @covers FuelPHP\Common\Table::createRow
-	 * @group common
+	 * @group Common
 	 */
 	public function testAddCell()
 	{
@@ -107,7 +107,7 @@ class TableTest extends \PHPUnit_Framework_TestCase
 	/**
 	 * @covers FuelPHP\Common\Table::setAttributes
 	 * @covers FuelPHP\Common\Table::getAttributes
-	 * @group common
+	 * @group Common
 	 */
 	public function testSetGetAttributes()
 	{
@@ -122,7 +122,7 @@ class TableTest extends \PHPUnit_Framework_TestCase
 	 * @covers FuelPHP\Common\Table::setCurrentRowAttributes
 	 * @covers FuelPHP\Common\Table::getCurrentRow
 	 * @covers FuelPHP\Common\Table::createRow
-	 * @group common
+	 * @group Common
 	 */
 	public function testSetRowAttributes()
 	{

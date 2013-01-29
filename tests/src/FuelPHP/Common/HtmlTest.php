@@ -32,7 +32,7 @@ class HtmlTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @group common
+	 * @group Common
 	 * @covers FuelPHP\Common\Html::forge
 	 * @covers FuelPHP\Common\Html::__construct
 	 */
@@ -44,7 +44,7 @@ class HtmlTest extends \PHPUnit_Framework_TestCase
 
 	/**
 	 * @covers FuelPHP\Common\Html::tag
-	 * @group common
+	 * @group Common
 	 */
 	public function testTag()
 	{
@@ -59,7 +59,7 @@ class HtmlTest extends \PHPUnit_Framework_TestCase
 	
 	/**
 	 * @covers FuelPHP\Common\Html::tag
-	 * @group common
+	 * @group Common
 	 */
 	public function testTagWithAttributes()
 	{
@@ -77,7 +77,7 @@ class HtmlTest extends \PHPUnit_Framework_TestCase
 
 	/**
 	 * @covers FuelPHP\Common\Html::tag
-	 * @group common
+	 * @group Common
 	 */
 	public function testTagWithAttributesAndContent()
 	{
@@ -97,7 +97,7 @@ class HtmlTest extends \PHPUnit_Framework_TestCase
 	
 	/**
 	 * @covers FuelPHP\Common\Html::arrayToAttributes
-	 * @group common
+	 * @group Common
 	 */
 	public function testArrayToAttributes()
 	{
@@ -112,7 +112,7 @@ class HtmlTest extends \PHPUnit_Framework_TestCase
 
 	/**
 	 * @covers FuelPHP\Common\Html::arrayToAttributes
-	 * @group common
+	 * @group Common
 	 */
 	public function testArrayToAttributesSingle()
 	{
@@ -126,7 +126,7 @@ class HtmlTest extends \PHPUnit_Framework_TestCase
 	
 	/**
 	 * @covers FuelPHP\Common\Html::arrayToAttributes
-	 * @group common
+	 * @group Common
 	 */
 	public function testArrayToAttributesEmpty()
 	{
