@@ -85,7 +85,7 @@ abstract class Arr
 		{
 			if ( ! isset($processArray[$key]))
 			{
-				return result($default);
+				return Helper::result($default);
 			}
 			$processArray = $processArray[$key];
 		}
