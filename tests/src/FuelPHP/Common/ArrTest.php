@@ -9,17 +9,11 @@ class ArrTest extends \PHPUnit_Framework_TestCase
 {
 
 	/**
-	 * @var Arr
-	 */
-	protected $object;
-
-	/**
 	 * Sets up the fixture, for example, opens a network connection.
 	 * This method is called before a test is executed.
 	 */
 	protected function setUp()
 	{
-		$this->object = new Arr;
 	}
 
 	/**
@@ -41,7 +35,7 @@ class ArrTest extends \PHPUnit_Framework_TestCase
 		$key = 'key';
 		$value = 'test';
 		
-		$this->object->set($array, $key, $value);
+		Arr::set($array, $key, $value);
 		$this->assertArrayHasKey($key, $array);
 	}
 	
@@ -55,7 +49,7 @@ class ArrTest extends \PHPUnit_Framework_TestCase
 		$key = null;
 		$value = 'test';
 		
-		$this->object->set($array, $key, $value);
+		Arr::set($array, $key, $value);
 		$this->assertEquals(1, count($array));
 	}
 	
@@ -69,7 +63,7 @@ class ArrTest extends \PHPUnit_Framework_TestCase
 		$key = 'first.second.third';
 		$value = 'test';
 		
-		$this->object->set($array, $key, $value);
+		Arr::set($array, $key, $value);
 		$this->assertArrayHasKey('third', $array['first']['second']);
 	}
 
@@ -81,9 +75,9 @@ class ArrTest extends \PHPUnit_Framework_TestCase
 	{
 		$array = array('one', 'two' => array('child' => 'value'), 'last' => 'three');
 		
-		$this->assertEquals('one', $this->object->get($array, 0));
-		$this->assertEquals('three', $this->object->get($array, 'last'));
-		$this->assertEquals('value', $this->object->get($array, 'two.child'));
+		$this->assertEquals('one', Arr::get($array, 0));
+		$this->assertEquals('three',  Arr::get($array, 'last'));
+		$this->assertEquals('value',  Arr::get($array, 'two.child'));
 	}
 
 	/**
@@ -94,9 +88,9 @@ class ArrTest extends \PHPUnit_Framework_TestCase
 	{
 		$array = array('one' => 1, 'two' => array('three' => 'foo'));
 		
-		$this->assertTrue($this->object->has($array, 'one'));
-		$this->assertTrue($this->object->has($array, 'two.three'));
-		$this->assertFalse($this->object->has($array, 'four'));
+		$this->assertTrue(Arr::has($array, 'one'));
+		$this->assertTrue(Arr::has($array, 'two.three'));
+		$this->assertFalse(Arr::has($array, 'four'));
 	}
 
 	/**
@@ -106,7 +100,7 @@ class ArrTest extends \PHPUnit_Framework_TestCase
 	public function testDelete()
 	{
 		$array = array('one' => 1, 'two' => 2);
-		$this->object->delete($array, 'one');
+		Arr::delete($array, 'one');
 		
 		$this->assertEquals(1, count($array));
 	}
@@ -122,7 +116,7 @@ class ArrTest extends \PHPUnit_Framework_TestCase
 		
 		$expected = array('one' => 1, 'two' => 2);
 		
-		$this->assertEquals($expected, $this->object->merge($array1, $array2));
+		$this->assertEquals($expected, Arr::merge($array1, $array2));
 	}
 
 	/**
@@ -134,8 +128,8 @@ class ArrTest extends \PHPUnit_Framework_TestCase
 		$assoc = array('one' => 1);
 		$nonAssoc = array(1);
 		
-		$this->assertTrue($this->object->isAssoc($assoc));
-		$this->assertFalse($this->object->isAssoc($nonAssoc));
+		$this->assertTrue(Arr::isAssoc($assoc));
+		$this->assertFalse(Arr::isAssoc($nonAssoc));
 	}
 
 }

@@ -18,7 +18,7 @@ namespace FuelPHP\Common;
  * @since   2.0.0
  * @author  Fuel Development Team
  */
-class Arr
+abstract class Arr
 {
 	
 	/**
@@ -31,7 +31,7 @@ class Arr
 	 *
 	 * @since  2.0.0
 	 */
-	function set(array &$array, $dotkey = null, $value = null)
+	public static function set(array &$array, $dotkey = null, $value = null)
 	{
 		$set = $dotkey;
 
@@ -76,7 +76,7 @@ class Arr
 	 *
 	 * @since  2.0.0
 	 */
-	function get(array &$array, $dotkey, $default = null)
+	public static function get(array &$array, $dotkey, $default = null)
 	{
 		$keys = explode('.', $dotkey);
 		
@@ -103,7 +103,7 @@ class Arr
 	 *
 	 * @since  2.0.0
 	 */
-	function has(array $array, $dotkey)
+	public static function has(array $array, $dotkey)
 	{
 		$keys = explode('.', $dotkey);
 
@@ -129,7 +129,7 @@ class Arr
 	 *
 	 * @since  2.0.0
 	 */
-	function delete(array &$array, $dotkey)
+	public static function delete(array &$array, $dotkey)
 	{
 		$keys = explode('.', $dotkey);
 		$last = array_pop($keys);
@@ -165,7 +165,7 @@ class Arr
 	 * @return  array
 	 * @throws  \InvalidArgumentException
 	 */
-	function merge(array $array)
+	public static function merge(array $array)
 	{
 		$arrays = array_slice(func_get_args(), 1);
 
@@ -203,7 +203,7 @@ class Arr
 	 * @param   array    $array  array to check
 	 * @return  boolean  wether it is an associative array
 	 */
-	function isAssoc(array $array)
+	public static function isAssoc(array $array)
 	{
 		return array_keys($array) !== range(0, count($array) - 1);
 	}
