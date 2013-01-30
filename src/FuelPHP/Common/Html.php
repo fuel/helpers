@@ -18,24 +18,8 @@ namespace FuelPHP\Common;
  * @since   2.0.0
  * @author  Fuel Development Team
  */
-class Html
+abstract class Html
 {
-	private static $_instance = null;
-	
-	public static function forge()
-	{
-		if(is_null(static::$_instance))
-		{
-			static::$_instance = new static;
-		}
-		
-		return static::$_instance;
-	}
-	
-	private function __construct()
-	{
-		;
-	}
 	
 	/**
 	 * Returns a HTML tag.
@@ -45,11 +29,11 @@ class Html
 	 * @param null|string $content If not set to null will create a tag of the form "&lt;name&lt;content&lt;/name&lt;". Otherwise will render as a single tag.
 	 * @return string
 	 */
-	public function tag($name, $attributes=array(), $content=null)
+	public static function tag($name, $attributes=array(), $content=null)
 	{
 		$tag = '<'.$name;
 		
-		$attributeString = $this->arrayToAttributes($attributes);
+		$attributeString = static::arrayToAttributes($attributes);
 		
 		//Add the attribute string if needed
 		if ( ! empty($attributeString))
@@ -81,10 +65,11 @@ class Html
 	 * @param array $attributes
 	 * @return string
 	 */
-	public function arrayToAttributes(array $attributes)
+	public static function arrayToAttributes(array $attributes)
 	{
 		//Build a list of single attributes first
 		$attributeList = array();
+		
 		foreach ($attributes as $key => $value)
 		{
 			$attributeList[] = $key . '="' . $value . '"';

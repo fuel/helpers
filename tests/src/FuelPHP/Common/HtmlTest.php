@@ -19,7 +19,6 @@ class HtmlTest extends \PHPUnit_Framework_TestCase
 	 */
 	protected function setUp()
 	{
-		$this->object = Html::forge();
 	}
 
 	/**
@@ -32,23 +31,12 @@ class HtmlTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @group Common
-	 * @covers FuelPHP\Common\Html::forge
-	 * @covers FuelPHP\Common\Html::__construct
-	 */
-	public function testForge()
-	{
-		
-		$this->assertInstanceOf('FuelPHP\Common\Html', Html::forge());
-	}
-
-	/**
 	 * @covers FuelPHP\Common\Html::tag
 	 * @group Common
 	 */
 	public function testTag()
 	{
-		$tag = $this->object->tag('div');
+		$tag = Html::tag('div');
 		
 		$expected = array(
 			'tag' => 'div',
@@ -65,7 +53,7 @@ class HtmlTest extends \PHPUnit_Framework_TestCase
 	{
 		$attributes = array('name' => 'foobar');
 		
-		$tag = $this->object->tag('div', $attributes);
+		$tag = Html::tag('div', $attributes);
 		
 		$expected = array(
 			'tag' => 'div',
@@ -84,7 +72,7 @@ class HtmlTest extends \PHPUnit_Framework_TestCase
 		$attributes = array('name' => 'foobar');
 		$content = 'This is some content!';
 		
-		$tag = $this->object->tag('div', $attributes, $content);
+		$tag = Html::tag('div', $attributes, $content);
 		
 		$expected = array(
 			'tag' => 'div',
@@ -103,7 +91,7 @@ class HtmlTest extends \PHPUnit_Framework_TestCase
 	{
 		$this->assertEquals(
 				'name="test" foo="bar"',
-				$this->object->arrayToAttributes(array(
+				Html::arrayToAttributes(array(
 					'name' => 'test',
 					'foo' => 'bar',
 				))
@@ -118,7 +106,7 @@ class HtmlTest extends \PHPUnit_Framework_TestCase
 	{
 		$this->assertEquals(
 				'name="test"',
-				$this->object->arrayToAttributes(array(
+				Html::arrayToAttributes(array(
 					'name' => 'test',
 				))
 		);
@@ -132,7 +120,7 @@ class HtmlTest extends \PHPUnit_Framework_TestCase
 	{
 		$this->assertEquals(
 				'',
-				$this->object->arrayToAttributes(array())
+				Html::arrayToAttributes(array())
 		);
 	}
 	
