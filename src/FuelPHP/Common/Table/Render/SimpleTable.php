@@ -54,8 +54,7 @@ class SimpleTable extends \FuelPHP\Common\Table\Render
 	{
 		if( count($attributesArray) > 0)
 		{
-			$attributes = \FuelPHP\Common\Html::forge()
-				->arrayToAttributes($attributesArray);
+			$attributes = \FuelPHP\Common\Html::arrayToAttributes($attributesArray);
 			
 			$html .= ' ' . $attributes;
 		}
