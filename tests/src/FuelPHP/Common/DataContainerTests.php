@@ -34,10 +34,10 @@ class DataContainerTest extends \PHPUnit_Framework_TestCase
 		$c = new DataContainer();
 		$c[] = 'foo';
 		$c[] = 'bar';
-		
+
 		$this->assertEquals(2, count($c));
 	}
-	
+
 	/**
 	 * @expectedException  RuntimeException
 	 * @group Common
@@ -91,7 +91,7 @@ class DataContainerTest extends \PHPUnit_Framework_TestCase
 
 		unset($c['some']);
 	}
-	
+
 	/**
 	 * @group Common
 	 */
@@ -120,7 +120,7 @@ class DataContainerTest extends \PHPUnit_Framework_TestCase
 		$this->assertFalse($c->delete('deep.other'));
 		$this->assertFalse($c->delete('other.key'));
 	}
-	
+
 	/**
 	 * @group Common
 	 */

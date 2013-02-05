@@ -178,7 +178,14 @@ class DataContainer implements ArrayAccess, IteratorAggregate, Countable
 		{
 			throw new \RuntimeException('Changing values on this Data Container is not allowed.');
 		}
-		
+
+		if ($key === null)
+		{
+			$this->data[] = $value;
+
+			return $this;
+		}
+
 		arr_set($this->data, $key, $value);
 
 		return $this;

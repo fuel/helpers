@@ -48,13 +48,6 @@ if ( ! function_exists('arr_set'))
 		{
 			$set = array($dotkey => $value);
 		}
-		
-		//Special case for when $dotkey is null
-		if(  is_null($dotkey))
-		{
-			$array[] = $value;
-			return;
-		}
 
 		foreach ($set as $dotkey => $value)
 		{
