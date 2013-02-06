@@ -161,7 +161,6 @@ class DataContainerTest extends \PHPUnit_Framework_TestCase
 	public function testInvalidMerge()
 	{
 		$c = new DataContainer;
-
 		$c->merge(1);
 	}
 
@@ -174,5 +173,19 @@ class DataContainerTest extends \PHPUnit_Framework_TestCase
 		$this->assertTrue(arr_is_assoc(array(1 => 'assoc', 0 => 'yeah')));
 		$this->assertFalse(arr_is_assoc(array(0 => 'assoc', 1 => 'yeah')));
 		$this->assertFalse(arr_is_assoc(array('yeah', 'assoc')));
+	}
+
+	public function testIteratorAggregate()
+	{
+		$c = new DataContainer(array(
+			'some' => 'value',
+			'is' => 'this',
+		));
+
+		foreach($c as $key => $value)
+		{
+			$this->assertTrue($c->has($key));
+			$this->assertEquals($value, $c[$key]);
+		}
 	}
 }

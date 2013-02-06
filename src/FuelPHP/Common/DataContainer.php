@@ -2,10 +2,10 @@
 /**
  * Part of the FuelPHP framework.
  *
- * @package    FuelPHP\Foundation
+ * @package    FuelPHP\Common
  * @version    2.0
  * @license    MIT License
- * @copyright  2010 - 2013 Fuel Development Team
+ * @copyright  2010 - 2013 FuelPHP Development Team
  */
 
 namespace FuelPHP\Common;
@@ -20,21 +20,18 @@ use InvalidArgumentException;
  * Generic data container
  *
  * @package  FuelPHP\Common
- *
  * @since  2.0.0
  */
 class DataContainer implements ArrayAccess, IteratorAggregate, Countable
 {
 	/**
-	 * @var  array
-	 *
+	 * @var    array  container data
 	 * @since  2.0.0
 	 */
 	protected $data = array();
 
 	/**
-	 * @var  bool
-	 *
+	 * @var    bool   wether the container is read-only
 	 * @since  2.0.0
 	 */
 	protected $readOnly = false;
@@ -42,16 +39,15 @@ class DataContainer implements ArrayAccess, IteratorAggregate, Countable
 	/**
 	 * Constructor
 	 *
-	 * @param  array  $data
-	 *
+	 * @param  array    $data      container data
+	 * @param  boolean  $readOnly  wether the container is read-only
 	 * @since  2.0.0
 	 */
-	public function __construct(array $data = null, $readOnly = false)
+	public function __construct(array $data = array(), $readOnly = false)
 	{
-		$this->data = $data ?: array();
+		$this->data = $data;
 		$this->readOnly = $readOnly;
 	}
-
 
 	/**
 	 * Replace the container's data.
@@ -59,6 +55,7 @@ class DataContainer implements ArrayAccess, IteratorAggregate, Countable
 	 * @param   array  $data  new data
 	 * @return  $this
 	 * @throws  RuntimeException
+	 * @since   2.0.0
 	 */
 	public function setContents(array $data)
 	{
@@ -76,6 +73,7 @@ class DataContainer implements ArrayAccess, IteratorAggregate, Countable
 	 * Get the container's data
 	 *
 	 * @return  array  container's data
+	 * @since   2.0.0
 	 */
 	public function getContents()
 	{
@@ -87,6 +85,7 @@ class DataContainer implements ArrayAccess, IteratorAggregate, Countable
 	 *
 	 * @param   boolean  $readOnly  wether it's a read-only container
 	 * @return  $this
+	 * @since   2.0.0
 	 */
 	public function setReadOnly($readOnly = true)
 	{
@@ -101,6 +100,7 @@ class DataContainer implements ArrayAccess, IteratorAggregate, Countable
 	 * @param   array  $arg  array to merge with
 	 * @return  $this
 	 * @throws  RuntimeException
+	 * @since   2.0.0
 	 */
 	public function merge($arg)
 	{
@@ -130,6 +130,7 @@ class DataContainer implements ArrayAccess, IteratorAggregate, Countable
 	 * Check wether the container is read-only.
 	 *
 	 * @return  boolean  $readOnly  wether it's a read-only container
+	 * @since   2.0.0
 	 */
 	public function isReadOnly()
 	{
@@ -141,8 +142,7 @@ class DataContainer implements ArrayAccess, IteratorAggregate, Countable
 	 *
 	 * @param   string  $key
 	 * @return  bool
-	 *
-	 * @since  2.0.0
+	 * @since   2.0.0
 	 */
 	public function has($key)
 	{
@@ -155,8 +155,7 @@ class DataContainer implements ArrayAccess, IteratorAggregate, Countable
 	 * @param   string  $key
 	 * @param   mixed   $default
 	 * @return  mixed
-	 *
-	 * @since  2.0.0
+	 * @since   2.0.0
 	 */
 	public function get($key, $default = null)
 	{
@@ -169,8 +168,7 @@ class DataContainer implements ArrayAccess, IteratorAggregate, Countable
 	 * @param   string  $key
 	 * @param   mixed   $value
 	 * @throws  \RuntimeException
-	 *
-	 * @since  2.0.0
+	 * @since   2.0.0
 	 */
 	public function set($key, $value)
 	{
@@ -191,6 +189,13 @@ class DataContainer implements ArrayAccess, IteratorAggregate, Countable
 		return $this;
 	}
 
+	/**
+	 * Delete data from the container
+	 *
+	 * @param   string   $key  key to delete
+	 * @return  boolean  delete success boolean
+	 * @since   2.0.0
+	 */
 	public function delete($key)
 	{
 		if ($this->readOnly)
@@ -205,8 +210,7 @@ class DataContainer implements ArrayAccess, IteratorAggregate, Countable
 	 * Get this bag's entire data
 	 *
 	 * @return  array
-	 *
-	 * @since  2.0.0
+	 * @since   2.0.0
 	 */
 	public function all()
 	{
@@ -218,8 +222,7 @@ class DataContainer implements ArrayAccess, IteratorAggregate, Countable
 	 *
 	 * @param   string  $key
 	 * @return  bool
-	 *
-	 * @since  2.0.0
+	 * @since   2.0.0
 	 */
 	public function offsetExists($key)
 	{
@@ -232,7 +235,7 @@ class DataContainer implements ArrayAccess, IteratorAggregate, Countable
 	 * @param   string  $key
 	 * @return  mixed
 	 * @throws  OutOfBoundsException
-	 * @since  2.0.0
+	 * @since   2.0.0
 	 */
 	public function offsetGet($key)
 	{
@@ -245,9 +248,8 @@ class DataContainer implements ArrayAccess, IteratorAggregate, Countable
 	/**
 	 * Disallow setting values like an array
 	 *
-	 * @param   string  $key
-	 * @param   mixed   $value
-	 *
+	 * @param  string  $key
+	 * @param  mixed   $value
 	 * @since  2.0.0
 	 */
 	public function offsetSet($key, $value)
@@ -259,20 +261,31 @@ class DataContainer implements ArrayAccess, IteratorAggregate, Countable
 	 * Disallow unsetting values like an array
 	 *
 	 * @param   string  $key
-	 * @throws  \RuntimeException
-	 *
-	 * @since  2.0.0
+	 * @throws  RuntimeException
+	 * @since   2.0.0
 	 */
 	public function offsetUnset($key)
 	{
 		return $this->delete($key);
 	}
 
+	/**
+	 * IteratorAggregate implementation
+	 *
+	 * @return  IteratorAggregate  iterator
+	 * @since   2.0.0
+	 */
 	public function getIterator()
 	{
 		return new ArrayIterator($this->data);
 	}
 
+	/**
+	 * Countable implementation
+	 *
+	 * @return  int  number of items stored in the container
+	 * @since   2.0.0
+	 */
 	public function count()
 	{
 		return count($this->data);

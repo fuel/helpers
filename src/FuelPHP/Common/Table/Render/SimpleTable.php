@@ -10,6 +10,11 @@
 
 namespace FuelPHP\Common\Table\Render;
 
+use FuelPHP\Common\Table\Cell;
+use FuelPHP\Common\Table\Row;
+use FuelPHP\Common\Table;
+use FuelPHP\Common\Html;
+
 /**
  * Uses a table structure built with Table to create a HTML table tag and
  * content.
@@ -20,44 +25,44 @@ namespace FuelPHP\Common\Table\Render;
  */
 class SimpleTable extends \FuelPHP\Common\Table\Render
 {
-	
-	protected function container(\FuelPHP\Common\Table $table, array $rows)
+
+	protected function container(Table $table, array $rows)
 	{
 		$html = '<table';
 		$this->addAttributes($html, $table->getAttributes());
 		$html .= '><thead></thead><tbody>' .
 			implode("\n", $rows) .
 			'</tbody><tfoot></tfoot></table>';
-		
+
 		return $html;
 	}
-	
-	protected function row(\FuelPHP\Common\Table\Row $row, array $cells)
+
+	protected function row(Row $row, array $cells)
 	{
 		$html = '<tr';
 		$this->addAttributes($html, $row->getAttributes());
 		$html .= '>' . implode('', $cells) . '</tr>';
-		
+
 		return $html;
 	}
-	
-	protected function cell(\FuelPHP\Common\Table\Cell $cell)
+
+	protected function cell(Cell $cell)
 	{
 		$html = '<td';
 		$this->addAttributes($html, $cell->getAttributes());
 		$html .= '>' . $cell->getContent() . '</td>';
-		
+
 		return $html;
 	}
-	
+
 	protected function addAttributes(&$html, array $attributesArray)
 	{
 		if( count($attributesArray) > 0)
 		{
-			$attributes = \FuelPHP\Common\Html::arrayToAttributes($attributesArray);
-			
+			$attributes = Html::arrayToAttributes($attributesArray);
+
 			$html .= ' ' . $attributes;
 		}
 	}
-	
+
 }
