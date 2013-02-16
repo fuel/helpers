@@ -10,6 +10,7 @@
 
 namespace FuelPHP\Common\Table\Render;
 
+use FuelPHP\Common\Table\Render;
 use FuelPHP\Common\Table\Cell;
 use FuelPHP\Common\Table\Row;
 use FuelPHP\Common\Table;
@@ -23,9 +24,16 @@ use FuelPHP\Common\Html;
  * @since   2.0.0
  * @author  Fuel Development Team
  */
-class SimpleTable extends \FuelPHP\Common\Table\Render
+class SimpleTable extends Render
 {
 
+	/**
+	 * Generates a "correct" table tag to contain the rendered rows.
+	 * 
+	 * @param  Table   $table
+	 * @param  array   $rows
+	 * @return string
+	 */
 	protected function container(Table $table, array $rows)
 	{
 		$html = '<table';
@@ -37,6 +45,13 @@ class SimpleTable extends \FuelPHP\Common\Table\Render
 		return $html;
 	}
 
+	/**
+	 * Generates a tr with the given rendered cells.
+	 * 
+	 * @param  Row     $row
+	 * @param  array   $cells
+	 * @return string
+	 */
 	protected function row(Row $row, array $cells)
 	{
 		$html = '<tr';
@@ -46,6 +61,12 @@ class SimpleTable extends \FuelPHP\Common\Table\Render
 		return $html;
 	}
 
+	/**
+	 * Creates a td tag using the given Cell
+	 * 
+	 * @param Cell     $cell
+	 * @return string
+	 */
 	protected function cell(Cell $cell)
 	{
 		$html = '<td';
@@ -55,11 +76,18 @@ class SimpleTable extends \FuelPHP\Common\Table\Render
 		return $html;
 	}
 
-	protected function addAttributes(&$html, array $attributesArray)
+	/**
+	 * Helper function to convert an array into a list of attributes and append
+	 * them to a string.
+	 * 
+	 * @param string $html        The string to append the attributes to. Passed by reference.
+	 * @param array  $attributes  The key-value array that defines the attributes.
+	 */
+	protected function addAttributes(&$html, array $attributes)
 	{
-		if( count($attributesArray) > 0)
+		if( count($attributes) > 0)
 		{
-			$attributes = Html::arrayToAttributes($attributesArray);
+			$attributes = Html::arrayToAttributes($attributes);
 
 			$html .= ' ' . $attributes;
 		}

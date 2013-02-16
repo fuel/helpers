@@ -10,6 +10,9 @@
 
 namespace FuelPHP\Common;
 
+use FuelPHP\Common\Table\Row;
+use FuelPHP\Common\Table\Cell;
+
 /**
  * Deals with constructing table structures.
  *
@@ -38,15 +41,15 @@ class Table
 	/**
 	 * Adds a Cell to the current Row.
 	 *
-	 * @param mixed $content Anything that is not a Cell will be added as content to a new Cell
-	 * @param array $attributes The array of attributes to assign the new Cell
-	 * @return \FuelPHP\Common\Table For method chaining
+	 * @param  mixed $content    Anything that is not a Cell will be added as content to a new Cell
+	 * @param  array $attributes The array of attributes to assign the new Cell
+	 * @return Table For method chaining
 	 */
 	public function addCell($content, $attributes=array())
 	{
 		$currentRow = $this->getCurrentRow();
 		//If we have been given a Cell then just add it, else create a new cell
-		if ($content instanceof Table\Cell)
+		if ($content instanceof Cell)
 		{
 			$currentRow[] = $content;
 		}
@@ -62,13 +65,13 @@ class Table
 	/**
 	 * Creates a new Cell with the given content.
 	 *
-	 * @param mixed $content The content for the new Cell
-	 * @param array $attributes The attributes for the Cell
-	 * @return \FuelPHP\Common\Cell
+	 * @param  mixed $content    The content for the new Cell
+	 * @param  array $attributes The attributes for the Cell
+	 * @return Cell
 	 */
 	protected function constructCell($content=null, $attributes=array())
 	{
-		$cell = new Table\Cell($content);
+		$cell = new Cell($content);
 		$cell->setAttributes($attributes);
 		
 		return $cell;
@@ -79,14 +82,14 @@ class Table
 	 */
 	protected function createRow()
 	{
-		$this->_currentRow = new Table\Row;
+		$this->_currentRow = new Row;
 	}
 
 	/**
 	 * Adds the Row that's currently being constructed to the list of finished
 	 * Rows.
 	 *
-	 * @return \FuelPHP\Common\Table
+	 * @return Table
 	 */
 	public function addRow()
 	{
@@ -126,7 +129,7 @@ class Table
 	 * Sets the attributes for the currently active Row
 	 * 
 	 * @param array $attributes
-	 * @return \FuelPHP\Common\Table
+	 * @return Table
 	 */
 	public function setCurrentRowAttributes(array $attributes)
 	{
@@ -138,7 +141,7 @@ class Table
 	 * Sets the atributes of the Table
 	 * 
 	 * @param array $newAttributes
-	 * @return \FuelPHP\Common\Table
+	 * @return Table
 	 */
 	public function setAttributes(array $newAttributes)
 	{

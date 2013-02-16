@@ -31,7 +31,8 @@ class Cell
 	protected $_attributes = array();
 	
 	/**
-	 * Creates a new Cell and optionally sets the content
+	 * Creates a new Cell and optionally sets the content.
+	 * 
 	 * @param mixed $content
 	 */
 	public function __construct($content=null)
@@ -41,6 +42,7 @@ class Cell
 	
 	/**
 	 * Gets the content of the Cell
+	 * 
 	 * @return mixed
 	 */
 	public function getContent()
@@ -51,8 +53,8 @@ class Cell
 	/**
 	 * Sets the content of the Cell
 	 * 
-	 * @param mixed $content
-	 * @return \FuelPHP\Common\Table\Cell
+	 * @param  mixed $content
+	 * @return Cell
 	 */
 	public function setContent($content)
 	{
@@ -63,8 +65,8 @@ class Cell
 	/**
 	 * Sets the atributes of the Cell
 	 * 
-	 * @param array $newAttributes
-	 * @return \FuelPHP\Common\Table\Cell
+	 * @param  array $newAttributes
+	 * @return Cell
 	 */
 	public function setAttributes(array $newAttributes)
 	{

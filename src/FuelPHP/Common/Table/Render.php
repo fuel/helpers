@@ -10,6 +10,8 @@
 
 namespace FuelPHP\Common\Table;
 
+use \FuelPHP\Common\Table;
+
 /**
  * Uses a table structure built with Table to create HTML
  *
@@ -20,7 +22,13 @@ namespace FuelPHP\Common\Table;
 abstract class Render
 {
 	
-	public function renderTable(\FuelPHP\Common\Table $table)
+	/**
+	 * Renders the given table into a string. Output depends on the subclass.
+	 * 
+	 * @param  Table   $table
+	 * @return string
+	 */
+	public function renderTable(Table $table)
 	{
 		//Generate each row
 		$rows = array();
@@ -44,17 +52,17 @@ abstract class Render
 	/**
 	 * Should generate the container tag, eg: &lt;table&gt;
 	 * 
-	 * @param \FuelPHP\Common\Table $table 
-	 * @param array $rows The constructed rows to show
-	 * @return mixed Should ideally be a string that can be pritned later.
+	 * @param Table  $table 
+	 * @param array  $rows  The constructed rows to show
+	 * @return mixed Should Ideally be a string that can be printed later.
 	 */
-	protected abstract function container(\FuelPHP\Common\Table $table, array $rows);
+	protected abstract function container(Table $table, array $rows);
 	
 	/**
-	 * Renders a normal row
+	 * Renders a normal Row
 	 * 
-	 * @param Row $row The current row being rendered
-	 * @param array $cells The constructed Cells that the current Row contains
+	 * @param  Row   $row   The current row being rendered
+	 * @param  array $cells The constructed Cells that the current Row contains
 	 * @return mixed Should ideally be a string that can be printed by
 	 * container()
 	 */

@@ -24,9 +24,9 @@ abstract class Html
 	/**
 	 * Returns a HTML tag.
 	 * 
-	 * @param string $name Name of the tag to render. (Eg, img, form, a...)
-	 * @param array $attributes Any attributes to apply to the tag to render
-	 * @param null|string $content If not set to null will create a tag of the form "&lt;name&lt;content&lt;/name&lt;". Otherwise will render as a single tag.
+	 * @param  string      $name       Name of the tag to render. (Eg, img, form, a...)
+	 * @param  array       $attributes Any attributes to apply to the tag to render
+	 * @param  null|string $content    If not set to null will create a tag of the form "&lt;name&lt;content&lt;/name&lt;". Otherwise will render as a single tag.
 	 * @return string
 	 */
 	public static function tag($name, $attributes=array(), $content=null)
@@ -62,7 +62,7 @@ abstract class Html
 	 * becomes:
 	 * 'name="test" foo="bar"'
 	 * 
-	 * @param array $attributes
+	 * @param  array  $attributes
 	 * @return string
 	 */
 	public static function arrayToAttributes(array $attributes)

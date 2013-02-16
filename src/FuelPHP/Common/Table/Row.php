@@ -10,6 +10,8 @@
 
 namespace FuelPHP\Common\Table;
 
+use \FuelPHP\Common\DataContainer;
+
 /**
  * Defines a Row that contains Cells for a table.
  *
@@ -17,7 +19,7 @@ namespace FuelPHP\Common\Table;
  * @since   2.0.0
  * @author  Fuel Development Team
  */
-class Row extends \FuelPHP\Common\DataContainer
+class Row extends DataContainer
 {
 
 	/**
@@ -43,8 +45,8 @@ class Row extends \FuelPHP\Common\DataContainer
 	/**
 	 * Sets the atributes of the Row
 	 * 
-	 * @param array $newAttributes
-	 * @return \FuelPHP\Common\Table\Row
+	 * @param  array $newAttributes
+	 * @return Row
 	 */
 	public function setAttributes(array $newAttributes)
 	{
