@@ -13,6 +13,7 @@ namespace FuelPHP\Common;
 
 use FuelPHP\Common\Table\Row;
 use FuelPHP\Common\Table\Cell;
+use FuelPHP\Common\Table\EnumRowType;
 
 /**
  * Deals with constructing table structures.
@@ -80,10 +81,14 @@ class Table
 
 	/**
 	 * Creates a new Row object and assigns it as the currently active row.
+	 * @param EnumRowType $type The type of the new row, uses Body by default
 	 */
-	protected function createRow()
+	protected function createRow($type = EnumRowType::Body)
 	{
 		$this->currentRow = new Row;
+		$this->currentRow->setType($type);
+		
+		return $this;
 	}
 
 	/**
