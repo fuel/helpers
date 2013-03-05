@@ -20,7 +20,7 @@ namespace FuelPHP\Common;
  */
 abstract class Helper
 {
-	
+
 	/**
 	 * Checks if a return value is a Closure without params, and if
 	 * so executes it before returning it.
@@ -30,11 +30,12 @@ abstract class Helper
 	 */
 	public static function result($val)
 	{
-		if ($val instanceof Closure)
+		if ( $val instanceof Closure )
 		{
 			return $val();
 		}
 
 		return $val;
 	}
+
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of the FuelPHP framework.
  *
@@ -26,18 +27,18 @@ class Table
 	/**
 	 * @var array Contains constructed rows
 	 */
-	protected $_rows = array();
-	
+	protected $rows = array();
+
 	/**
 	 * @var Row The row that new cells will be added to
 	 */
-	protected $_currentRow = null;
-	
+	protected $currentRow = null;
+
 	/**
 	 * @var array Contains the attributes to associate with this table.
 	 */
-	protected $_attributes = array();
-	
+	protected $attributes = array();
+
 	/**
 	 * Adds a Cell to the current Row.
 	 *
@@ -45,11 +46,11 @@ class Table
 	 * @param  array $attributes The array of attributes to assign the new Cell
 	 * @return Table For method chaining
 	 */
-	public function addCell($content, $attributes=array())
+	public function addCell($content, $attributes = array())
 	{
 		$currentRow = $this->getCurrentRow();
 		//If we have been given a Cell then just add it, else create a new cell
-		if ($content instanceof Cell)
+		if ( $content instanceof Cell )
 		{
 			$currentRow[] = $content;
 		}
@@ -69,11 +70,11 @@ class Table
 	 * @param  array $attributes The attributes for the Cell
 	 * @return Cell
 	 */
-	protected function constructCell($content=null, $attributes=array())
+	protected function constructCell($content = null, $attributes = array())
 	{
 		$cell = new Cell($content);
 		$cell->setAttributes($attributes);
-		
+
 		return $cell;
 	}
 
@@ -82,7 +83,7 @@ class Table
 	 */
 	protected function createRow()
 	{
-		$this->_currentRow = new Row;
+		$this->currentRow = new Row;
 	}
 
 	/**
@@ -93,8 +94,8 @@ class Table
 	 */
 	public function addRow()
 	{
-		$this->_rows[] = $this->_currentRow;
-		$this->_currentRow = null;
+		$this->rows[] = $this->currentRow;
+		$this->currentRow = null;
 
 		return $this;
 	}
@@ -106,7 +107,7 @@ class Table
 	 */
 	public function getRows()
 	{
-		return $this->_rows;
+		return $this->rows;
 	}
 
 	/**
@@ -117,14 +118,14 @@ class Table
 	 */
 	public function getCurrentRow()
 	{
-		if (is_null($this->_currentRow))
+		if ( is_null($this->currentRow) )
 		{
 			$this->createRow();
 		}
 
-		return $this->_currentRow;
+		return $this->currentRow;
 	}
-	
+
 	/**
 	 * Sets the attributes for the currently active Row
 	 * 
@@ -136,7 +137,7 @@ class Table
 		$this->getCurrentRow()->setAttributes($attributes);
 		return $this;
 	}
-	
+
 	/**
 	 * Sets the atributes of the Table
 	 * 
@@ -145,11 +146,11 @@ class Table
 	 */
 	public function setAttributes(array $newAttributes)
 	{
-		$this->_attributes = $newAttributes;
-		
+		$this->attributes = $newAttributes;
+
 		return $this;
 	}
-	
+
 	/**
 	 * Gets the attributes of this Table
 	 * 
@@ -157,6 +158,7 @@ class Table
 	 */
 	public function getAttributes()
 	{
-		return $this->_attributes;
+		return $this->attributes;
 	}
+
 }

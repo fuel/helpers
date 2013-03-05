@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of the FuelPHP framework.
  *
@@ -21,7 +22,7 @@ use \FuelPHP\Common\Table;
  */
 abstract class Render
 {
-	
+
 	/**
 	 * Renders the given table into a string. Output depends on the subclass.
 	 * 
@@ -32,23 +33,23 @@ abstract class Render
 	{
 		//Generate each row
 		$rows = array();
-		
-		foreach($table->getRows() as $row)
+
+		foreach ( $table->getRows() as $row )
 		{
 			//Build the cells for each row
 			$cells = array();
-			
-			foreach($row as $cell)
+
+			foreach ( $row as $cell )
 			{
 				$cells[] = $this->cell($cell);
 			}
-			
+
 			$rows[] = $this->row($row, $cells);
 		}
-		
+
 		return $this->container($table, $rows);
 	}
-	
+
 	/**
 	 * Should generate the container tag, eg: &lt;table&gt;
 	 * 
@@ -57,7 +58,7 @@ abstract class Render
 	 * @return mixed Should Ideally be a string that can be printed later.
 	 */
 	protected abstract function container(Table $table, array $rows);
-	
+
 	/**
 	 * Renders a normal Row
 	 * 
@@ -67,12 +68,12 @@ abstract class Render
 	 * container()
 	 */
 	protected abstract function row(Row $row, array $cells);
-	
+
 	/**
 	 * Renders a normal cell
 	 * 
 	 * @param Cell 
 	 */
 	protected abstract function cell(Cell $cell);
-	
+
 }

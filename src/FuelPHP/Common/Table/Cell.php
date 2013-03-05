@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of the FuelPHP framework.
  *
@@ -19,27 +20,27 @@ namespace FuelPHP\Common\Table;
  */
 class Cell
 {
-	
+
 	/**
 	 * @var mixed The content of the Cell
 	 */
-	protected $_content;
-	
+	protected $content;
+
 	/**
 	 * @var array Contains the attributes to associate with this table.
 	 */
-	protected $_attributes = array();
-	
+	protected $attributes = array();
+
 	/**
 	 * Creates a new Cell and optionally sets the content.
 	 * 
 	 * @param mixed $content
 	 */
-	public function __construct($content=null)
+	public function __construct($content = null)
 	{
 		$this->setContent($content);
 	}
-	
+
 	/**
 	 * Gets the content of the Cell
 	 * 
@@ -47,9 +48,9 @@ class Cell
 	 */
 	public function getContent()
 	{
-		return $this->_content;
+		return $this->content;
 	}
-	
+
 	/**
 	 * Sets the content of the Cell
 	 * 
@@ -58,10 +59,10 @@ class Cell
 	 */
 	public function setContent($content)
 	{
-		$this->_content = $content;
+		$this->content = $content;
 		return $this;
 	}
-	
+
 	/**
 	 * Sets the atributes of the Cell
 	 * 
@@ -70,11 +71,11 @@ class Cell
 	 */
 	public function setAttributes(array $newAttributes)
 	{
-		$this->_attributes = $newAttributes;
-		
+		$this->attributes = $newAttributes;
+
 		return $this;
 	}
-	
+
 	/**
 	 * Gets the attributes of this Cell
 	 * 
@@ -82,6 +83,7 @@ class Cell
 	 */
 	public function getAttributes()
 	{
-		return $this->_attributes;
+		return $this->attributes;
 	}
+
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of the FuelPHP framework.
  *
@@ -85,7 +86,7 @@ class SimpleTable extends Render
 	 */
 	protected function addAttributes(&$html, array $attributes)
 	{
-		if( count($attributes) > 0)
+		if ( count($attributes) > 0 )
 		{
 			$attributes = Html::arrayToAttributes($attributes);
 

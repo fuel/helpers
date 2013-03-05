@@ -20,7 +20,7 @@ namespace FuelPHP\Common;
  */
 abstract class Html
 {
-	
+
 	/**
 	 * Returns a HTML tag.
 	 * 
@@ -29,20 +29,20 @@ abstract class Html
 	 * @param  null|string $content    If not set to null will create a tag of the form "&lt;name&lt;content&lt;/name&lt;". Otherwise will render as a single tag.
 	 * @return string
 	 */
-	public static function tag($name, $attributes=array(), $content=null)
+	public static function tag($name, $attributes = array(), $content = null)
 	{
-		$tag = '<'.$name;
-		
+		$tag = '<' . $name;
+
 		$attributeString = static::arrayToAttributes($attributes);
-		
+
 		//Add the attribute string if needed
-		if ( ! empty($attributeString))
+		if ( !empty($attributeString) )
 		{
-			$tag .= ' '.$attributeString;
+			$tag .= ' ' . $attributeString;
 		}
-		
+
 		//Work out how we are going to close the tag
-		if ( is_null($content))
+		if ( is_null($content) )
 		{
 			//No content for the tag so just close it.
 			$tag .= '/>';
@@ -51,10 +51,10 @@ abstract class Html
 		{
 			$tag .= '>' . $content . '</' . $name . '>';
 		}
-		
+
 		return $tag;
 	}
-	
+
 	/**
 	 * Produces a string of html tag attributes from an array.
 	 * 
@@ -69,13 +69,13 @@ abstract class Html
 	{
 		//Build a list of single attributes first
 		$attributeList = array();
-		
-		foreach ($attributes as $key => $value)
+
+		foreach ( $attributes as $key => $value )
 		{
 			$attributeList[] = $key . '="' . $value . '"';
 		}
-		
+
 		return implode(' ', $attributeList);
 	}
-	
+
 }

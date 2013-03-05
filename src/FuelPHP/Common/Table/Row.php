@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of the FuelPHP framework.
  *
@@ -25,8 +26,8 @@ class Row extends DataContainer
 	/**
 	 * @var array Contains the attributes to associate with this table.
 	 */
-	protected $_attributes = array();
-	
+	protected $attributes = array();
+
 	/**
 	 * Overrides the set method from DataContainer to ensure only Cells can be added
 	 * 
@@ -34,14 +35,14 @@ class Row extends DataContainer
 	 */
 	public function set($key, $value)
 	{
-		if ( ! $value instanceof Cell )
+		if ( !$value instanceof Cell )
 		{
 			throw new \InvalidArgumentException('Only Cells can be added to Rows');
 		}
-		
+
 		parent::set($key, $value);
 	}
-	
+
 	/**
 	 * Sets the atributes of the Row
 	 * 
@@ -50,11 +51,11 @@ class Row extends DataContainer
 	 */
 	public function setAttributes(array $newAttributes)
 	{
-		$this->_attributes = $newAttributes;
-		
+		$this->attributes = $newAttributes;
+
 		return $this;
 	}
-	
+
 	/**
 	 * Gets the attributes of this Row
 	 * 
@@ -62,6 +63,7 @@ class Row extends DataContainer
 	 */
 	public function getAttributes()
 	{
-		return $this->_attributes;
+		return $this->attributes;
 	}
+
 }
