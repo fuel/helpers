@@ -78,5 +78,25 @@ class RowTest extends \PHPUnit_Framework_TestCase
 		
 		$this->assertEquals($attributes, $this->object->getAttributes());
 	}
+	
+	/**
+	 * @covers FuelPHP\Common\Table\Row::getType
+	 * @group Common
+	 */
+	public function testGetType()
+	{
+		$this->assertEquals(EnumRowType::Body, $this->object->getType());
+	}
+	
+	/**
+	 * @covers FuelPHP\Common\Table\Row::setType
+	 * @covers FuelPHP\Common\Table\Row::getType
+	 * @group Common
+	 */
+	public function testSetType()
+	{
+		$this->object->setType(EnumRowType::Footer);
+		$this->assertEquals(EnumRowType::Footer, $this->object->getType());
+	}
 
 }

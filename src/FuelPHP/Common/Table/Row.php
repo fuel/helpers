@@ -27,6 +27,7 @@ class Row extends DataContainer
 	 * @var array Contains the attributes to associate with this table.
 	 */
 	protected $attributes = array();
+	protected $type = EnumRowType::Body;
 
 	/**
 	 * Overrides the set method from DataContainer to ensure only Cells can be added
@@ -64,6 +65,28 @@ class Row extends DataContainer
 	public function getAttributes()
 	{
 		return $this->attributes;
+	}
+
+	/**
+	 * Gets the type of the row as defined by EnumRowType
+	 * 
+	 * @return int
+	 */
+	public function getType()
+	{
+		return $this->type;
+	}
+
+	/**
+	 * Sets the type of the row. Should be a value from EnumRowType.
+	 * 
+	 * @param int $type
+	 * @return \FuelPHP\Common\Table\Row
+	 */
+	public function setType($type)
+	{
+		$this->type = $type;
+		return $this;
 	}
 
 }
