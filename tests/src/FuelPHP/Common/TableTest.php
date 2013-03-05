@@ -65,7 +65,7 @@ class TableTest extends \PHPUnit_Framework_TestCase
 		
 		for ($i=0; $i < $rowCount; $i++)
 		{
-			$this->object->addRow();
+			$this->object->createRow()->addRow();
 		}
 		
 		$this->assertEquals($rowCount, count($this->object->getRows()));
@@ -133,6 +133,44 @@ class TableTest extends \PHPUnit_Framework_TestCase
 			$attributes,
 			$this->object->getCurrentRow()->getAttributes()
 		);
+	}
+	
+	/**
+	 * @covers FuelPHP\Common\Table::createRow
+	 * @covers FuelPHP\Common\Table::addRow
+	 * @covers FuelPHP\Common\Table::getHeaderRows
+	 * @group Common
+	 */
+	public function testAddHeader()
+	{
+		$this->object->createRow(Table\EnumRowType::Header)
+			->addRow();
+		
+		$this->assertEquals(1, count($this->object->getHeaderRows()));
+	}
+	
+	/**
+	 * @covers FuelPHP\Common\Table::createRow
+	 * @covers FuelPHP\Common\Table::addRow
+	 * @covers FuelPHP\Common\Table::getFooterRows
+	 * @group Common
+	 */
+	public function testAddFooter()
+	{
+		$this->object->createRow(Table\EnumRowType::Footer)
+			->addRow();
+		
+		$this->assertEquals(1, count($this->object->getFooterRows()));
+	}
+	
+	/**
+	 * @expectedException InvalidArgumentException
+	 * @group Common
+	 */
+	public function testAddInvalidRowType()
+	{
+		$this->object->createRow(42) //Invalid row type
+			->addRow();
 	}
 
 }

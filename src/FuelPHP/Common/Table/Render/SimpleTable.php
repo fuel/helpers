@@ -33,15 +33,21 @@ class SimpleTable extends Render
 	 * 
 	 * @param  Table   $table
 	 * @param  array   $rows
+	 * @param  array   $headers
+	 * @param  array   $footers
 	 * @return string
 	 */
-	protected function container(Table $table, array $rows)
+	protected function container(Table $table, array $rows, array $headers, array $footers)
 	{
 		$html = '<table';
 		$this->addAttributes($html, $table->getAttributes());
-		$html .= '><thead></thead><tbody>' .
-			implode("\n", $rows) .
-			'</tbody><tfoot></tfoot></table>';
+		$html .= '><thead>';
+		$html .= implode("\n", $headers);
+		$html .= '</thead><tbody>';
+		$html .= implode("\n", $rows);
+		$html .= '</tbody><tfoot>';
+		$html .= implode("\n", $footers);
+		$html .= '</tfoot></table>';
 
 		return $html;
 	}
@@ -92,6 +98,26 @@ class SimpleTable extends Render
 
 			$html .= ' ' . $attributes;
 		}
+	}
+
+	protected function footerCell(Table\Cell $cell)
+	{
+		return $this->cell($cell);
+	}
+
+	protected function footerRow(Table\Row $row, array $cells)
+	{
+		return $this->row($row, $cells);
+	}
+
+	protected function headerCell(Table\Cell $cell)
+	{
+		return $this->cell($cell);
+	}
+
+	protected function headerRow(Table\Row $row, array $cells)
+	{
+		return $this->row($row, $cells);
 	}
 
 }

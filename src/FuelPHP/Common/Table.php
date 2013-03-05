@@ -29,6 +29,16 @@ class Table
 	 * @var array Contains constructed rows
 	 */
 	protected $rows = array();
+	
+	/**
+	 * @var array Contains constructed header rows
+	 */
+	protected $headerRows = array();
+	
+	/**
+	 * @var array Contains constructed footer rows
+	 */
+	protected $footerRows = array();
 
 	/**
 	 * @var Row The row that new cells will be added to
@@ -81,13 +91,14 @@ class Table
 
 	/**
 	 * Creates a new Row object and assigns it as the currently active row.
+	 * 
 	 * @param EnumRowType $type The type of the new row, uses Body by default
 	 */
-	protected function createRow($type = EnumRowType::Body)
+	public function createRow($type = EnumRowType::Body)
 	{
 		$this->currentRow = new Row;
 		$this->currentRow->setType($type);
-		
+
 		return $this;
 	}
 
@@ -99,7 +110,21 @@ class Table
 	 */
 	public function addRow()
 	{
-		$this->rows[] = $this->currentRow;
+		switch ( $this->currentRow->getType() )
+		{
+			case EnumRowType::Body:
+				$this->rows[] = $this->currentRow;
+				break;
+			case EnumRowType::Header:
+				$this->headerRows[] = $this->currentRow;
+				break;
+			case EnumRowType::Footer:
+				$this->footerRows[] = $this->currentRow;
+				break;
+			default:
+				throw new \InvalidArgumentException('Unknown row type');
+		}
+
 		$this->currentRow = null;
 
 		return $this;
@@ -113,6 +138,26 @@ class Table
 	public function getRows()
 	{
 		return $this->rows;
+	}
+	
+	/**
+	 * Returns a list of currently constructed header rows
+	 * 
+	 * @return array
+	 */
+	public function getHeaderRows()
+	{
+		return $this->headerRows;
+	}
+	
+	/**
+	 * Returns a list of currently constructed footer rows
+	 * 
+	 * @return array
+	 */
+	public function getFooterRows()
+	{
+		return $this->footerRows;
 	}
 
 	/**
