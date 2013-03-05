@@ -112,7 +112,11 @@ class SimpleTable extends Render
 
 	protected function headerCell(Table\Cell $cell)
 	{
-		return $this->cell($cell);
+		$html = '<th';
+		$this->addAttributes($html, $cell->getAttributes());
+		$html .= '>' . $cell->getContent() . '</th>';
+
+		return $html;
 	}
 
 	protected function headerRow(Table\Row $row, array $cells)
