@@ -14,6 +14,7 @@ class HtmlTest extends \PHPUnit_Framework_TestCase
 	 */
 	protected function setUp()
 	{
+		
 	}
 
 	/**
@@ -32,14 +33,14 @@ class HtmlTest extends \PHPUnit_Framework_TestCase
 	public function testTag()
 	{
 		$tag = Html::tag('div');
-		
+
 		$expected = array(
 			'tag' => 'div',
 		);
-		
+
 		$this->assertTag($expected, $tag);
 	}
-	
+
 	/**
 	 * @covers FuelPHP\Common\Html::tag
 	 * @group Common
@@ -47,14 +48,14 @@ class HtmlTest extends \PHPUnit_Framework_TestCase
 	public function testTagWithAttributes()
 	{
 		$attributes = array('name' => 'foobar');
-		
+
 		$tag = Html::tag('div', $attributes);
-		
+
 		$expected = array(
 			'tag' => 'div',
 			'attributes' => $attributes,
 		);
-		
+
 		$this->assertTag($expected, $tag);
 	}
 
@@ -66,18 +67,18 @@ class HtmlTest extends \PHPUnit_Framework_TestCase
 	{
 		$attributes = array('name' => 'foobar');
 		$content = 'This is some content!';
-		
+
 		$tag = Html::tag('div', $attributes, $content);
-		
+
 		$expected = array(
 			'tag' => 'div',
 			'attributes' => $attributes,
 			'content' => $content,
 		);
-		
+
 		$this->assertTag($expected, $tag);
 	}
-	
+
 	/**
 	 * @covers FuelPHP\Common\Html::arrayToAttributes
 	 * @group Common
@@ -85,11 +86,21 @@ class HtmlTest extends \PHPUnit_Framework_TestCase
 	public function testArrayToAttributes()
 	{
 		$this->assertEquals(
-				'name="test" foo="bar"',
-				Html::arrayToAttributes(array(
-					'name' => 'test',
-					'foo' => 'bar',
-				))
+			'name="test" foo="bar"',
+			Html::arrayToAttributes(array(
+				'name' => 'test',
+				'foo' => 'bar',
+			))
+		);
+	}
+
+	public function testArrayToAttributesNoValue()
+	{
+		$this->assertEquals(
+			'selected',
+			Html::arrayToAttributes(array(
+				'selected',
+			))
 		);
 	}
 
@@ -100,13 +111,12 @@ class HtmlTest extends \PHPUnit_Framework_TestCase
 	public function testArrayToAttributesSingle()
 	{
 		$this->assertEquals(
-				'name="test"',
-				Html::arrayToAttributes(array(
-					'name' => 'test',
-				))
+			'name="test"', Html::arrayToAttributes(array(
+				'name' => 'test',
+			))
 		);
 	}
-	
+
 	/**
 	 * @covers FuelPHP\Common\Html::arrayToAttributes
 	 * @group Common
@@ -114,9 +124,8 @@ class HtmlTest extends \PHPUnit_Framework_TestCase
 	public function testArrayToAttributesEmpty()
 	{
 		$this->assertEquals(
-				'',
-				Html::arrayToAttributes(array())
+			'', Html::arrayToAttributes(array())
 		);
 	}
-	
+
 }

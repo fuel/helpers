@@ -72,7 +72,14 @@ abstract class Html
 
 		foreach ( $attributes as $key => $value )
 		{
-			$attributeList[] = $key . '="' . $value . '"';
+			if ( is_string($key) )
+			{
+				$attributeList[] = $key . '="' . $value . '"';
+			}
+			else
+			{
+				$attributeList[] = $value;
+			}
 		}
 
 		return implode(' ', $attributeList);
