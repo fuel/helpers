@@ -94,6 +94,10 @@ class HtmlTest extends \PHPUnit_Framework_TestCase
 		);
 	}
 
+	/**
+	 * @covers FuelPHP\Common\Html::arrayToAttributes
+	 * @group Common
+	 */
 	public function testArrayToAttributesNoValue()
 	{
 		$this->assertEquals(
@@ -117,6 +121,20 @@ class HtmlTest extends \PHPUnit_Framework_TestCase
 		);
 	}
 
+	/**
+	 * @covers FuelPHP\Common\Html::arrayToAttributes
+	 * @group Common
+	 */
+	public function testArrayToAttributesMixed()
+	{
+		$this->assertEquals(
+			'name="test" selected', Html::arrayToAttributes(array(
+				'name' => 'test',
+				'selected',
+			))
+		);
+	}
+	
 	/**
 	 * @covers FuelPHP\Common\Html::arrayToAttributes
 	 * @group Common

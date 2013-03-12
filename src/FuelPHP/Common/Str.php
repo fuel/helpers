@@ -21,6 +21,8 @@ namespace FuelPHP\Common;
 class Str
 {
 
+	protected static $encoding = 'UTF-8';
+	
   /**
 	 * Truncates a string to the given length.  It will optionally preserve
 	 * HTML tags if $is_html is set to true.
@@ -124,7 +126,7 @@ class Str
 	 */
 	public static function sub($str, $start, $length = null, $encoding = null)
 	{
-		$encoding or $encoding = \Fuel::$encoding;
+		$encoding or $encoding = static::$encoding;
 
 		// substr functions don't parse null correctly
 		$length = is_null($length) ? (function_exists('mb_substr') ? mb_strlen($str, $encoding) : strlen($str)) - $start : $length;
@@ -143,7 +145,7 @@ class Str
 	 */
 	public static function length($str, $encoding = null)
 	{
-		$encoding or $encoding = \Fuel::$encoding;
+		$encoding or $encoding = static::$encoding;
 
 		return function_exists('mb_strlen')
 			? mb_strlen($str, $encoding)
@@ -159,7 +161,7 @@ class Str
 	 */
 	public static function lower($str, $encoding = null)
 	{
-		$encoding or $encoding = \Fuel::$encoding;
+		$encoding or $encoding = static::$encoding;
 
 		return function_exists('mb_strtolower')
 			? mb_strtolower($str, $encoding)
@@ -175,7 +177,7 @@ class Str
 	 */
 	public static function upper($str, $encoding = null)
 	{
-		$encoding or $encoding = \Fuel::$encoding;
+		$encoding or $encoding = static::$encoding;
 
 		return function_exists('mb_strtoupper')
 			? mb_strtoupper($str, $encoding)
@@ -193,7 +195,7 @@ class Str
 	 */
 	public static function lcfirst($str, $encoding = null)
 	{
-		$encoding or $encoding = \Fuel::$encoding;
+		$encoding or $encoding = static::$encoding;
 
 		return function_exists('mb_strtolower')
 			? mb_strtolower(mb_substr($str, 0, 1, $encoding), $encoding).
@@ -212,7 +214,7 @@ class Str
 	 */
 	public static function ucfirst($str, $encoding = null)
 	{
-		$encoding or $encoding = \Fuel::$encoding;
+		$encoding or $encoding = static::$encoding;
 
 		return function_exists('mb_strtoupper')
 			? mb_strtoupper(mb_substr($str, 0, 1, $encoding), $encoding).
@@ -234,7 +236,7 @@ class Str
 	 */
 	public static function ucwords($str, $encoding = null)
 	{
-		$encoding or $encoding = \Fuel::$encoding;
+		$encoding or $encoding = static::$encoding;
 
 		return function_exists('mb_convert_case')
 			? mb_convert_case($str, MB_CASE_TITLE, $encoding)
