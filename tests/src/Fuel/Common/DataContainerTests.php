@@ -1,8 +1,8 @@
 <?php
 
-namespace FuelPHP\Common;
+namespace Fuel\Common;
 
-use FuelPHP\Common\DataContainer;
+use Fuel\Common\DataContainer;
 
 class DataContainerTest extends \PHPUnit_Framework_TestCase
 {

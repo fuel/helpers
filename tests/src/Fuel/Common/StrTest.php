@@ -1,6 +1,6 @@
 <?php
 
-namespace FuelPHP\Common;
+namespace Fuel\Common;
 
 class StrTest extends \PHPUnit_Framework_TestCase
 {
