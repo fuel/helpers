@@ -243,7 +243,7 @@ class DataContainer implements ArrayAccess, IteratorAggregate, Countable
 			}
 			else
 			{
-				$result = $default;
+				$result = result($default);
 			}
 		}
 
