@@ -17,7 +17,6 @@ class DataContainerTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals(array(), $c->getContents());
 		$c->setContents($data);
 		$this->assertEquals($data, $c->getContents());
-		$this->assertEquals($data, $c->all());
 		$c->set('this', 'new');
 		$this->assertEquals('new', $c->get('this'));
 		$this->assertEquals('default', $c->get('nothing', 'default'));
@@ -151,7 +150,7 @@ class DataContainerTest extends \PHPUnit_Framework_TestCase
 			'set' => array(1,2,3,'yeah'),
 		);
 
-		$this->assertEquals($expected, $c->all());
+		$this->assertEquals($expected, $c->getContents());
 	}
 
 	/**
