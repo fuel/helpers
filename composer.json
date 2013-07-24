@@ -19,7 +19,8 @@
 	},
 	"autoload": {
 		"psr-0": { "Fuel\\Common": "src/" },
-		"files": ["src/helpers.php"]
+		"files": ["src/helpers.php"],
+		"files": ["src/bootstrap.php"]
 	},
 	"minimum-stability": "dev"
 }
