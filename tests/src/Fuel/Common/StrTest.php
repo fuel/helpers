@@ -277,40 +277,40 @@ class StrTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * Test for Str::starts_with()
+	 * Test for Str::startsWith()
 	 *
 	 * @test
 	 */
-	public function test_starts_with()
+	public function test_startsWith()
 	{
 		$string = 'HELLO WORLD';
 
-		$output = Str::starts_with($string, 'HELLO');
+		$output = Str::startsWith($string, 'HELLO');
 		$this->assertTrue($output);
 
-		$output = Str::starts_with($string, 'hello');
+		$output = Str::startsWith($string, 'hello');
 		$this->assertFalse($output);
 
-		$output = Str::starts_with($string, 'hello', true);
+		$output = Str::startsWith($string, 'hello', true);
 		$this->assertTrue($output);
 	}
 
 	/**
-	 * Test for Str::ends_with()
+	 * Test for Str::endsWith()
 	 *
 	 * @test
 	 */
-	public function test_ends_with()
+	public function test_endsWith()
 	{
 		$string = 'HELLO WORLD';
 
-		$output = Str::ends_with($string, 'WORLD');
+		$output = Str::endsWith($string, 'WORLD');
 		$this->assertTrue($output);
 
-		$output = Str::ends_with($string, 'world');
+		$output = Str::endsWith($string, 'world');
 		$this->assertFalse($output);
 
-		$output = Str::ends_with($string, 'world', true);
+		$output = Str::endsWith($string, 'world', true);
 		$this->assertTrue($output);
 	}
 
