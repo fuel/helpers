@@ -95,7 +95,7 @@ class Str
 	 * @param   boolean  $ignore_case  wether to ignore the case
 	 * @return  boolean  wether a string starts with a specified beginning
 	 */
-	public static function starts_with($str, $start, $ignore_case = false)
+	public static function startsWith($str, $start, $ignore_case = false)
 	{
 		return (bool) preg_match('/^'.preg_quote($start, '/').'/m'.($ignore_case ? 'i' : ''), $str);
 	}
@@ -108,7 +108,7 @@ class Str
 	 * @param   boolean  $ignore_case  wether to ignore the case
 	 * @return  boolean  wether a string ends with a specified ending
 	 */
-	public static function ends_with($str, $end, $ignore_case = false)
+	public static function endsWith($str, $end, $ignore_case = false)
 	{
 		return (bool) preg_match('/'.preg_quote($end, '/').'$/m'.($ignore_case ? 'i' : ''), $str);
 	}
