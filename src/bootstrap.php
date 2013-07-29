@@ -17,6 +17,9 @@ namespace Fuel\Common;
 // register the services of this composer library
 \Dependency::getInstance()->registerService(new ServicesProvider);
 
+// alias helper classes to global
+\Alias::alias('Fuel\Common\Str', 'Str');
+
 /**
  * FuelPHP Composer library application bootstrap
  */
