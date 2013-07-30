@@ -15,7 +15,11 @@
 		"php": ">=5.4"
 	},
 	"require-dev": {
-		"mockery/mockery": "0.7.*"
+		"mockery/mockery": "0.7.*",
+		"symfony/yaml": "2.1.x"
+	},
+	"suggest": {
+		"symfony/yaml": "Allows YAML data conversions."
 	},
 	"autoload": {
 		"psr-0": { "Fuel\\Common": "src/" },

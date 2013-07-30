@@ -19,6 +19,7 @@ namespace Fuel\Common;
 
 // alias helper classes to global
 \Alias::alias('Fuel\Common\Str', 'Str');
+\Alias::alias('Fuel\Common\Inflector', 'Inflector');
 
 /**
  * FuelPHP Composer library application bootstrap

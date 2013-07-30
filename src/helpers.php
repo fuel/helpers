@@ -242,3 +242,19 @@ if ( ! function_exists('arr_is_assoc'))
 		return array_keys($array) !== range(0, count($array) - 1);
 	}
 }
+
+if ( ! function_exists('arr_is_multi'))
+{
+	/**
+	 * Checks if the given array is a multidimensional array.
+	 *
+	 * @param   array  $arr       the array to check
+	 * @param   array  $all_keys  if true, check that all elements are arrays
+	 * @return  bool   true if its a multidimensional array, false if not
+	 */
+	function arr_is_multi($arr, $all_keys = false)
+	{
+		$values = array_filter($arr, 'is_array');
+		return $all_keys ? count($arr) === count($values) : count($values) > 0;
+	}
+}
