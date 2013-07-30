@@ -42,7 +42,7 @@ class ServicesProvider extends ServiceProvider
 		// \Fuel\Common\Format
 		$this->register('format', function ($dic, $data = null, $from_type = null, Array $config = array(), $input = null)
 		{
-			return new Format($data, $from_type, $config, $input)
+			return new Format($data, $from_type, $config, $input);
 		});
 	}
 }
