@@ -26,7 +26,7 @@ class ServicesProvider extends ServiceProvider
 	/**
 	 * @var  array  list of service names provided by this provider
 	 */
-	public $provides = array('datacontainer');
+	public $provides = array('datacontainer', 'format');
 
 	/**
 	 * Service provider definitions
@@ -37,6 +37,12 @@ class ServicesProvider extends ServiceProvider
 		$this->register('datacontainer', function ($dic, array $data = array(), $readOnly = false)
 		{
 			return new DataContainer($data, $readOnly);
+		});
+
+		// \Fuel\Common\Format
+		$this->register('format', function ($dic, $data = null, $from_type = null, Array $config = array(), $input = null)
+		{
+			return new Format($data, $from_type, $config, $input)
 		});
 	}
 }
