@@ -71,13 +71,17 @@ abstract class Html
 
 		foreach ( $attributes as $key => $value )
 		{
-			if ( is_string($key) )
+			// If the value is not false add the attribute. This allows attributes to not be shown.
+			if ( $value !== false )
 			{
-				$attributeList[] = $key . '="' . $value . '"';
-			}
-			else
-			{
-				$attributeList[] = $value;
+				if ( is_string($key) )
+				{
+					$attributeList[] = $key . '="' . $value . '"';
+				}
+				else
+				{
+					$attributeList[] = $value;
+				}
 			}
 		}
 
