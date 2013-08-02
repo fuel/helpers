@@ -16,7 +16,6 @@ namespace Fuel\Common;
  */
 abstract class Arr
 {
-
 	/**
 	 * Gets a dot-notated key from an array, with a default value if it does
 	 * not exist.
