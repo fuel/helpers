@@ -16,7 +16,7 @@ namespace Fuel\Common;
  * PHP needs to be compiled with --enable-mbstring
  * or a fallback without encoding support is used
  */
-class Str
+abstract class Str
 {
 
 	protected static $encoding = 'UTF-8';

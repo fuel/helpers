@@ -168,10 +168,10 @@ class DataContainerTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testIsAssoc()
 	{
-		$this->assertTrue(arr_is_assoc(array('yeah' => 'assoc')));
-		$this->assertTrue(arr_is_assoc(array(1 => 'assoc', 0 => 'yeah')));
-		$this->assertFalse(arr_is_assoc(array(0 => 'assoc', 1 => 'yeah')));
-		$this->assertFalse(arr_is_assoc(array('yeah', 'assoc')));
+		$this->assertTrue(\Arr::isAssoc(array('yeah' => 'assoc')));
+		$this->assertTrue(\Arr::isAssoc(array(1 => 'assoc', 0 => 'yeah')));
+		$this->assertFalse(\Arr::isAssoc(array(0 => 'assoc', 1 => 'yeah')));
+		$this->assertFalse(\Arr::isAssoc(array('yeah', 'assoc')));
 	}
 
 	public function testIteratorAggregate()

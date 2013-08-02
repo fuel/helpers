@@ -131,7 +131,7 @@ class DataContainer implements ArrayAccess, IteratorAggregate, Countable
 	{
 		if ($this->parentEnabled and $this->parent)
 		{
-			return arr_merge($this->parent->getContents($all), $this->data);
+			return \Arr::merge($this->parent->getContents($all), $this->data);
 		}
 		else
 		{
@@ -180,7 +180,7 @@ class DataContainer implements ArrayAccess, IteratorAggregate, Countable
 		}, func_get_args());
 
 		array_unshift($arguments, $this->data);
-		$this->data = call_user_func_array('arr_merge', $arguments);
+		$this->data = call_user_func_array('Arr::merge', $arguments);
 
 		return $this;
 	}
@@ -205,7 +205,7 @@ class DataContainer implements ArrayAccess, IteratorAggregate, Countable
 	 */
 	public function has($key)
 	{
-		$result = arr_has($this->data, $key);
+		$result = \Arr::has($this->data, $key);
 
 		if ($this->parentEnabled and $this->parent)
 		{
@@ -235,7 +235,7 @@ class DataContainer implements ArrayAccess, IteratorAggregate, Countable
 	{
 		$fail = uniqid('__FAIL__', true);
 
-		if (($result = arr_get($this->data, $key, $fail)) === $fail)
+		if (($result = \Arr::get($this->data, $key, $fail)) === $fail)
 		{
 			if ($this->parentEnabled and $this->parent)
 			{
@@ -280,7 +280,7 @@ class DataContainer implements ArrayAccess, IteratorAggregate, Countable
 			return $this;
 		}
 
-		arr_set($this->data, $key, $value);
+		\Arr::set($this->data, $key, $value);
 
 		return $this;
 	}
@@ -299,7 +299,7 @@ class DataContainer implements ArrayAccess, IteratorAggregate, Countable
 			throw new \RuntimeException('Changing values on this Data Container is not allowed.');
 		}
 
-		if (($result = arr_delete($this->data, $key)) === false and $this->parentEnabled and $this->parent)
+		if (($result = \Arr::delete($this->data, $key)) === false and $this->parentEnabled and $this->parent)
 		{
 			$result = $this->parent->delete($key);
 		}

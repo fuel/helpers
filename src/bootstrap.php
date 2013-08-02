@@ -18,6 +18,7 @@ namespace Fuel\Common;
 \Dependency::getInstance()->registerService(new ServicesProvider);
 
 // alias helper classes to global
+\Alias::alias('Fuel\Common\Arr', 'Arr');
 \Alias::alias('Fuel\Common\Str', 'Str');
 \Alias::alias('Fuel\Common\Inflector', 'Inflector');
 

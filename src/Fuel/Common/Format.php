@@ -186,10 +186,10 @@ class Format
 	public function toCsv($data = null, $delimiter = null)
 	{
 		// csv format settings
-		$newline = arr_get($this->config, 'csv.newline', "\n");
-		$delimiter or $delimiter = arr_get($this->config, 'csv.delimiter', ',');
-		$enclosure = arr_get($this->config, 'csv.enclosure', '"');
-		$escape = arr_get($this->config, 'csv.escape', '\\');
+		$newline = \Arr::get($this->config, 'csv.newline', "\n");
+		$delimiter or $delimiter = \Arr::get($this->config, 'csv.delimiter', ',');
+		$enclosure = \Arr::get($this->config, 'csv.enclosure', '"');
+		$escape = \Arr::get($this->config, 'csv.escape', '\\');
 
 		// escape function
 		$escaper = function($items) use($enclosure, $escape) {
@@ -209,11 +209,11 @@ class Format
 		}
 
 		// Multi-dimensional array
-		if (is_array($data) and arr_is_multi($data))
+		if (is_array($data) and \Arr::isMulti($data))
 		{
 			$data = array_values($data);
 
-			if (arr_is_assoc($data[0]))
+			if (\Arr::isAssoc($data[0]))
 			{
 				$headings = array_keys($data[0]);
 			}
@@ -382,12 +382,12 @@ class Format
 	{
 		$data = array();
 
-		$rows = preg_split('/(?<='.preg_quote(arr_get($this->config, 'csv.enclosure', '"')).')'.arr_get($this->config, 'csv.regex_newline', '\n').'/', trim($string));
+		$rows = preg_split('/(?<='.preg_quote(\Arr::get($this->config, 'csv.enclosure', '"')).')'.\Arr::get($this->config, 'csv.regex_newline', '\n').'/', trim($string));
 
 		// csv config
-		$delimiter = arr_get($this->config, 'csv.delimiter', ',');
-		$enclosure = arr_get($this->config, 'csv.enclosure', '"');
-		$escape = arr_get($this->config, 'csv.escape', '\\');
+		$delimiter = \Arr::get($this->config, 'csv.delimiter', ',');
+		$enclosure = \Arr::get($this->config, 'csv.enclosure', '"');
+		$escape = \Arr::get($this->config, 'csv.escape', '\\');
 
 		// Get the headings
 		$headings = str_replace($escape.$enclosure, $enclosure, str_getcsv(array_shift($rows), $delimiter, $enclosure, $escape));
