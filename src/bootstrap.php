@@ -18,9 +18,9 @@ namespace Fuel\Common;
 \Dependency::getInstance()->registerService(new ServicesProvider);
 
 // alias helper classes to global
-\Alias::alias('Fuel\Common\Arr', 'Arr');
-\Alias::alias('Fuel\Common\Str', 'Str');
-\Alias::alias('Fuel\Common\Inflector', 'Inflector');
+\Alias::alias('Arr', 'Fuel\Common\Arr');
+\Alias::alias('Str', 'Fuel\Common\Str');
+\Alias::alias('Inflector', 'Fuel\Common\Inflector');
 
 /**
  * FuelPHP Composer library application bootstrap
