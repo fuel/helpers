@@ -102,7 +102,7 @@ if ( ! function_exists('arr_get'))
 	{
 		$keys = explode('.', $dotkey);
 
-		while($key = array_shift($keys))
+		while( ($key = array_shift($keys)) !== null)
 		{
 			if ( ! isset($array[$key]))
 			{
