@@ -131,7 +131,7 @@ class DataContainer implements ArrayAccess, IteratorAggregate, Countable
 	{
 		if ($this->parentEnabled and $this->parent)
 		{
-			return \Arr::merge($this->parent->getContents($all), $this->data);
+			return \Arr::merge($this->parent->getContents(), $this->data);
 		}
 		else
 		{
