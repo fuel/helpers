@@ -56,22 +56,6 @@ class Date implements DateTimeInterface
 	 * @var  array  custom defined datetime formats
 	 */
 	protected static $patterns = array(
-		'local'		 => '%c',
-
-		'mysql'		 => '%Y-%m-%d %H:%M:%S',
-		'mysql_date' => '%Y-%m-%d',
-
-		'us'		 => '%m/%d/%Y',
-		'us_short'	 => '%m/%d',
-		'us_named'	 => '%B %d %Y',
-		'us_full'	 => '%I:%M %p, %B %d %Y',
-		'eu'		 => '%d/%m/%Y',
-		'eu_short'	 => '%d/%m',
-		'eu_named'	 => '%d %B %Y',
-		'eu_full'	 => '%H:%M, %d %B %Y',
-
-		'24h'		 => '%H:%M',
-		'12h'		 => '%I:%M %p'
 	);
 
 	/**
@@ -221,10 +205,10 @@ class Date implements DateTimeInterface
 			static::defaultTimezone(date_default_timezone_get());
 		}
 
-		// any custom formats?
-		if (isset($config['formats']) and is_array($config['formats']))
+		// any custom format patterns?
+		if (isset($config['patterns']) and is_array($config['patterns']))
 		{
-			static::$patterns = $config['formats'];
+			static::$patterns = $config['patterns'];
 		}
 
 		// default to current time if none is given
