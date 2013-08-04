@@ -26,7 +26,7 @@ class ServicesProvider extends ServiceProvider
 	/**
 	 * @var  array  list of service names provided by this provider
 	 */
-	public $provides = array('datacontainer', 'format');
+	public $provides = array('datacontainer', 'format', 'date');
 
 	/**
 	 * Service provider definitions
@@ -43,6 +43,12 @@ class ServicesProvider extends ServiceProvider
 		$this->register('format', function ($dic, $data = null, $from_type = null, Array $config = array(), $input = null)
 		{
 			return new Format($data, $from_type, $config, $input);
+		});
+
+		// \Fuel\Common\Date
+		$this->register('date', function ($dic, $time = "now", $timezone = null, Array $config = array())
+		{
+			return new Date($time, $timezone, $config);
 		});
 	}
 }

@@ -19,8 +19,9 @@ namespace Fuel\Common;
 
 // alias helper classes to global
 \Alias::alias('Arr', 'Fuel\Common\Arr');
-\Alias::alias('Str', 'Fuel\Common\Str');
+\Alias::alias('DateRange', 'Fuel\Common\DateRange');
 \Alias::alias('Inflector', 'Fuel\Common\Inflector');
+\Alias::alias('Str', 'Fuel\Common\Str');
 
 /**
  * FuelPHP Composer library application bootstrap

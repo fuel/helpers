@@ -13,6 +13,9 @@ namespace Fuel\Common;
 /**
  * The Arr class provides a few nice functions for making
  * dealing with arrays easier
+ *
+ * @package  Fuel\Common
+ * @since  1.0.0
  */
 abstract class Arr
 {

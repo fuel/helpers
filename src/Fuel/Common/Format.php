@@ -15,11 +15,8 @@ namespace Fuel\Common;
  *
  * Help convert between various formats such as XML, JSON, CSV, etc.
  *
- * @package    Fuel
- * @category   Core
- * @author     Fuel Development Team
- * @copyright  2010 - 2012 Fuel Development Team
- * @link       http://docs.fuelphp.com/classes/format.html
+ * @package  Fuel\Common
+ * @since  1.0.0
  */
 class Format
 {
