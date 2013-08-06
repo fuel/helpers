@@ -79,8 +79,6 @@ class SimpleTableTest extends \PHPUnit_Framework_TestCase
 		
 		$result = $this->object->renderTable($table);
 		
-		echo "\n$result\n";
-		
 		$this->assertXmlStringEqualsXmlString(
 			$expected, 
 			$result
