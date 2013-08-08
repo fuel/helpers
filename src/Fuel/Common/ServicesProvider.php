@@ -26,7 +26,7 @@ class ServicesProvider extends ServiceProvider
 	/**
 	 * @var  array  list of service names provided by this provider
 	 */
-	public $provides = array('datacontainer', 'format', 'date');
+	public $provides = array('datacontainer', 'cookiejar', 'format', 'date');
 
 	/**
 	 * Service provider definitions
@@ -37,6 +37,12 @@ class ServicesProvider extends ServiceProvider
 		$this->register('datacontainer', function ($dic, array $data = array(), $readOnly = false)
 		{
 			return new DataContainer($data, $readOnly);
+		});
+
+		// \Fuel\Common\CookieJar
+		$this->register('cookiejar', function ($dic, array $config = array(), array $data = array())
+		{
+			return new CookieJar($config, $data);
 		});
 
 		// \Fuel\Common\Format
