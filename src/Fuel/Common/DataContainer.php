@@ -34,7 +34,7 @@ class DataContainer implements ArrayAccess, IteratorAggregate, Countable
 	 * @var    bool  wether we want to use parent cascading
 	 * @since  2.0.0
 	 */
-	protected $parentEnabled = true;
+	protected $parentEnabled = false;
 
 	/**
 	 * @var    array  container data
@@ -71,6 +71,7 @@ class DataContainer implements ArrayAccess, IteratorAggregate, Countable
 	public function setParent(DataContainer $parent = null)
 	{
 		$this->parent = $parent;
+		$this->enableParent();
 
 		return $this;
 	}
@@ -207,7 +208,7 @@ class DataContainer implements ArrayAccess, IteratorAggregate, Countable
 	{
 		$result = Arr::has($this->data, $key);
 
-		if ($this->parentEnabled and $this->parent)
+		if ( ! $result and $this->parentEnabled and $this->parent)
 		{
 			$result = $this->parent->has($key);
 		}
