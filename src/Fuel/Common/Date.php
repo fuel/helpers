@@ -14,7 +14,6 @@ use DateInterval;
 use DateTimeZone;
 use DateTime;
 use DateTimeInterface;
-use IntlDateFormatter;
 
 /**
  * Date Class
