@@ -31,6 +31,12 @@ class CookieJar implements ArrayAccess, IteratorAggregate, Countable
 	protected $parent;
 
 	/**
+	 * @var    CookieJar  child jars, to maintain a chain
+	 * @since  2.0.0
+	 */
+	protected $children = array();
+
+	/**
 	 * @var    bool  wether we want to use parent cascading
 	 * @since  2.0.0
 	 */
@@ -83,6 +89,8 @@ class CookieJar implements ArrayAccess, IteratorAggregate, Countable
 	{
 		$this->parent = $parent;
 		$this->enableParent();
+
+		$this->parent->setChild($this);
 
 		return $this;
 	}
@@ -196,7 +204,7 @@ class CookieJar implements ArrayAccess, IteratorAggregate, Countable
 		}
 		else
 		{
-			throw new \InvalidArgumentException('There is no cookie defined called: '.$key);
+			$this->jar[$key] = new Cookie($key, $this->config, $value);
 		}
 
 		return $this;
@@ -209,7 +217,14 @@ class CookieJar implements ArrayAccess, IteratorAggregate, Countable
 	 */
 	public function send()
 	{
-		foreach ($this as $cookie)
+		// process the cookies in this jar
+		foreach ($this->jar as $cookie)
+		{
+			$cookie->send();
+		}
+
+		// and the cookies in this jar's children
+		foreach ($this->children as $cookie)
 		{
 			$cookie->send();
 		}
@@ -255,6 +270,8 @@ class CookieJar implements ArrayAccess, IteratorAggregate, Countable
 
 	/**
 	 * Allows the ArrayIterator to fetch parent data
+	 *
+	 * @since   2.0.0
 	 */
 	protected function getJar()
 	{
@@ -269,10 +286,27 @@ class CookieJar implements ArrayAccess, IteratorAggregate, Countable
 	}
 
 	/**
+	 * Register a child of this cookie jar, to support inheritance
+	 *
+	 * @param   CookieJar  $child  the child cookie jar object
+	 *
+	 * @since   2.0.0
+	 */
+	protected function setChild(CookieJar $child)
+	{
+		if ( ! in_array($child, $this->children))
+		{
+			$this->children[] = $child;
+		}
+	}
+
+	/**
 	 * Allow usage of isset() on the cookie jar as an array
 	 *
 	 * @param   string  $key
+	 *
 	 * @return  bool
+	 *
 	 * @since   2.0.0
 	 */
 	public function offsetExists($key)
@@ -291,12 +325,18 @@ class CookieJar implements ArrayAccess, IteratorAggregate, Countable
 	 */
 	public function offsetGet($key)
 	{
-		if (($result = $this->get($key, '__FAIL__')) === '__FAIL__')
+		if (isset($this->jar[$key]) and ! $this->jar[$key]->isDeleted())
+		{
+			return $this->jar[$key];
+		}
+		elseif ($this->has($key))
+		{
+			return $this->parent[$key];
+		}
+		else
 		{
 			throw new \OutOfBoundsException('Access to undefined cookie: '.$key);
 		}
-
-		return $result;
 	}
 
 	/**
