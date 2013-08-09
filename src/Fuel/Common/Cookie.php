@@ -137,18 +137,15 @@ class Cookie
 	 */
 	public function send()
 	{
-		if ( ! $this->isSent)
+		if ($this->isNew)
 		{
-			if ($this->isDeleted)
-			{
-				// delete the cookie by nullifying and expiring it
-				return setcookie($this->name, null, -86400, $this->config['path'], $this->config['domain'], $this->config['secure'], $this->config['http_only']);
-			}
-			else
-			{
-				// set the cookie
-				return setcookie($this->name, $this->value, $this->config['expiration'], $this->config['path'], $this->config['domain'], $this->config['secure'], $this->config['http_only']);
-			}
+			// set the cookie
+			return setcookie($this->name, $this->value, $this->config['expiration'], $this->config['path'], $this->config['domain'], $this->config['secure'], $this->config['http_only']);
+		}
+		elseif ($this->isDeleted)
+		{
+			// delete the cookie by nullifying and expiring it
+			return setcookie($this->name, null, -86400, $this->config['path'], $this->config['domain'], $this->config['secure'], $this->config['http_only']);
 		}
 
 		$this->isSent = true;
