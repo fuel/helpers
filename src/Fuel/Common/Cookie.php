@@ -101,7 +101,7 @@ class Cookie
 
 			if (isset($this->config[$var = strtolower(substr($method, 3))]))
 			{
-				$this->config[$var] = (string) $arguments[0];
+				$this->config[$var] = $arguments[0];
 			}
 			elseif ($var == 'value')
 			{
@@ -139,7 +139,7 @@ class Cookie
 	{
 		if ( ! $this->isSent)
 		{
-			if ($this->deleted)
+			if ($this->isDeleted)
 			{
 				// delete the cookie by nullifying and expiring it
 				return setcookie($this->name, null, -86400, $this->config['path'], $this->config['domain'], $this->config['secure'], $this->config['http_only']);
