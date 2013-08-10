@@ -20,6 +20,7 @@ namespace Fuel\Common;
 // alias helper classes to global
 \Alias::alias('Arr', 'Fuel\Common\Arr');
 \Alias::alias('DateRange', 'Fuel\Common\DateRange');
+\Alias::alias('Debug', 'Fuel\Common\Debug');
 \Alias::alias('Inflector', 'Fuel\Common\Inflector');
 \Alias::alias('Str', 'Fuel\Common\Str');
 
