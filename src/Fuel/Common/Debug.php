@@ -373,8 +373,8 @@ JS;
 		}
 
 		$start = max(0, $line_num - $padding);
-
 		$length = ($line_num - $start) + $padding + 1;
+
 		if (($start + $length) > count(static::$filesCache[$filepath]) - 1)
 		{
 			$length = null;
