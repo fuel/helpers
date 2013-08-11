@@ -110,44 +110,78 @@ class Debug
 
 				// get info about what was dumped
 				$callee['code'] = static::fileLines($callee['file'], $callee['line'], false, 0);
-				$callee['code'] = reset($callee['code']);
-				if (preg_match('/(.*dump\()(.*?)\);(.*)/', $callee['code'], $matches))
+				$tokens = token_get_all('<?php '.reset($callee['code']));
+
+				$results = array();
+				$r = false;
+				$c = 0;
+
+				foreach($tokens as $token)
 				{
-					$results = array();
-					$r = 0;
-					foreach(explode(',', $matches[2]) as $part)
+					// skip everything before our function call
+					if ($r === false)
 					{
-						if ( ! isset($results[$r]))
+						if (isset($token[1]) and $token[1] == $callee['function'])
 						{
-							$results[$r] = '';
-							$s = $e = 0;
+							$r = 0;
 						}
+						continue;
+					}
 
-						$s += substr_count($part, '(');
-						$e += substr_count($part, ')');
+					// and quit if we find an end-of-statement
+					if ($token == ';')
+					{
+						break;
+					}
 
-						if ($s === $e)
+					// check for a start-of-expresssion
+					elseif ($token == '(')
+					{
+						$c++;
+						if ($c === 1)
 						{
-							$results[$r++] .= $part;
-						}
-						else
-						{
-							$results[$r] .= $part;
+							continue;
 						}
 					}
 
-					if (count($results) == $total)
+					// check for an end-of-expresssion
+					elseif ($token == ')')
 					{
-						$callee['code'] = $results;
+						$c--;
+						if ($c === 0)
+						{
+							$r++;
+							continue;
+						}
 					}
-					else
+
+					// new expression in the same dump
+					elseif ($token == ',' and $c === 1)
 					{
-						$callee['code'] = 'Variable'.($total==1?'':'s').' dumped: '.$matches[2];
+						$r++;
+						continue;
 					}
+
+					// make sure we have an array entry to add to, and add the token
+					if ( ! isset($results[$r]))
+					{
+						$results[$r] = '';
+					}
+					$results[$r] .= is_array($token) ? $token[1] : $token;
+				}
+
+				// make sure we've parsed the same number of expressions as we have arguments
+				if (count($results) == $total)
+				{
+					$callee['code'] = $results;
 				}
 				else
 				{
-					$callee['code'] = 'Statement: '.$callee['code'];
+					// parsing failed, try it the old fashioned way
+					if (preg_match('/(.*'.$callee['function'].'\()(.*?)\);(.*)/', $callee['code'], $matches))
+					{
+						$callee['code'] = 'Variable'.($total==1?'':'s').' dumped: '.$matches[2];
+					}
 				}
 
 				$callee['file'] = cleanpath($callee['file']);
