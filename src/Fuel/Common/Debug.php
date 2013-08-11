@@ -109,8 +109,17 @@ class Debug
 				$label = \Inflector::humanize($backtrace[$stack+1]['function']);
 
 				// get info about what was dumped
-				$callee['code'] = static::fileLines($callee['file'], $callee['line'], false, 0);
-				$tokens = token_get_all('<?php '.reset($callee['code']));
+				$callee['code'] = '';
+				for ($i = $callee['line']; $i > 0; $i--)
+				{
+					$line = static::fileLines($callee['file'], $i, false, 0);
+					$callee['code'] = reset($line).' '.trim($callee['code']);
+					$tokens = token_get_all('<?php '.$callee['code']);
+					if (is_array($tokens[1]) and isset($tokens[1][0]) and $tokens[1][0] != 377)
+					{
+						break;
+					}
+				}
 
 				$results = array();
 				$r = false;
