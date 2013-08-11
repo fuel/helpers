@@ -31,7 +31,7 @@ class Format
 	protected $config = array();
 
 	/**
-	 * @var  \Fuel\Foundation\Input  current input object at time of instantiation
+	 * @var  Fuel\Foundation\Input  current Input object
 	 */
 	protected $input;
 
@@ -58,6 +58,8 @@ class Format
 		$this->data = $data;
 
 		$this->config = $config;
+
+		$this->input = $input;
 	}
 
 	// FORMATING OUTPUT ---------------------------------------------------------
@@ -266,8 +268,14 @@ class Format
 	 */
 	public function toJsonp($data = null, $pretty = false, $callback = null)
 	{
-		$callback or $callback = $this->input->param('callback', null);
-		is_null($callback) and $callback = 'response';
+		if ( ! $callback and $this->input)
+		{
+			$callback = $this->input->getParam('callback');
+			if ( ! $callback)
+			{
+				$callback = 'response';
+			}
+		}
 
 		return $callback.'('.$this->toJson($data, $pretty).')';
 	}
