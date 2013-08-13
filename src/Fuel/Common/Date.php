@@ -58,74 +58,6 @@ class Date implements DateTimeInterface
 	);
 
 	/**
-	 * Returns new Date object formatted according to the specified format. The
-	 * method supports both strptime() formats and DateTime formats
-	 *
-	 * @param  string               $format  any format supported by DateTime, or a format name configured
-	 * @param  string               $time    string representing the time.
-	 * @param  string|DateTimeZone  $time    timezone, if null the default timezone will be used
-	 *
-	 * @return  bool|Date  new Date instance, or false on failure
-	 */
-	public static function createFromFormat($format = 'local', $time, $timezone = null)
-	{
-		// deal with the timezone passed
-		if ($timezone !== null)
-		{
-			if ( ! $timezone instanceOf DateTimeZone)
-			{
-				if ( ! $timezone = new DateTimeZone($timezone))
-				{
-					return false;
-				}
-			}
-		}
-		else
-		{
-			$timezone = static::defaultTimezone();
-		}
-
-		// custom format pattern lookup
-		if (array_key_exists($format, static::$patterns))
-		{
-			$format = static::$patterns[$format];
-		}
-
-		// do we have a possible strptime() format to work with?
-		if (strpos($format, '%') !== false and $timestamp = strptime($time, $format))
-		{
-			$time = mktime($timestamp['tm_hour'], $timestamp['tm_min'],
-				$timestamp['tm_sec'], $timestamp['tm_mon'] + 1,
-				$timestamp['tm_mday'], $timestamp['tm_year'] + 1900);
-
-			if ($time === false)
-			{
-				throw new \OutOfBoundsException('Input was invalid.'.(PHP_INT_SIZE == 4?' A 32-bit system only supports dates between 1901 and 2038.':''));
-			}
-			$format = 'U';
-		}
-		try
-		{
-			if ($datetime = DateTime::createFromFormat($format, $time, $timezone))
-			{
-				$datetime = new static('@'.$datetime->getTimestamp(), $timezone);
-			}
-		}
-		catch (\Exception $e)
-		{
-			static::$lastErrors = DateTime::getLastErrors();
-			throw $e;
-		}
-
-		if ( ! $datetime)
-		{
-			return false;
-		}
-
-		return $datetime;
-	}
-
-	/**
 	 * Returns the warnings and errors from the last parsing operation
 	 *
 	 * @return  array  array of warnings and errors found while parsing a date/time string.
@@ -229,8 +161,14 @@ class Date implements DateTimeInterface
 		}
 		else
 		{
+			// if timezone is given as a string, convert it
+			if (is_string($timezone))
+			{
+				$timezone = new DateTimeZone($timezone);
+			}
+
 			// default to default timezone if none is given
-			if ($timezone === null)
+			elseif ($timezone === null)
 			{
 				$timezone = static::defaultTimezone();
 			}
@@ -266,6 +204,86 @@ class Date implements DateTimeInterface
 	public function __toString()
 	{
 		return $this->format();
+	}
+
+	/**
+	 * Returns new Date object formatted according to the specified format. The
+	 * method supports both strptime() formats and DateTime formats
+	 *
+	 * @param  string               $format  any format supported by DateTime, or a format name configured
+	 * @param  string               $time    string representing the time.
+	 * @param  string|DateTimeZone  $time    timezone, if null the default timezone will be used
+	 *
+	 * @return  bool|Date  new Date instance, or false on failure
+	 */
+	public function createFromFormat($format = 'local', $time, $timezone = null)
+	{
+		// deal with the timezone passed
+		if ($timezone !== null)
+		{
+			if ( ! $timezone instanceOf DateTimeZone)
+			{
+				if ( ! $timezone = new DateTimeZone($timezone))
+				{
+					return false;
+				}
+			}
+		}
+		else
+		{
+			$timezone = static::defaultTimezone();
+		}
+
+		// custom format pattern lookup
+		if (array_key_exists($format, static::$patterns))
+		{
+			$format = static::$patterns[$format];
+		}
+
+		// do we have a possible strptime() format to work with?
+		if (strpos($format, '%') !== false and $timestamp = strptime($time, $format))
+		{
+			$time = mktime($timestamp['tm_hour'], $timestamp['tm_min'],
+				$timestamp['tm_sec'], $timestamp['tm_mon'] + 1,
+				$timestamp['tm_mday'], $timestamp['tm_year'] + 1900);
+
+			if ($time === false)
+			{
+				throw new \OutOfBoundsException('Input was invalid.'.(PHP_INT_SIZE == 4?' A 32-bit system only supports dates between 1901 and 2038.':''));
+			}
+
+			// mktime will always do UTC, and strptime() does timezones but no daylight savings, so we might need a correction here
+			if (($delta = static::defaultTimezone()->getOffset(new DateTime("2013-01-01 12:00:00", $timezone))) !== 0)
+			{
+				$time += $delta;
+			}
+			$format = 'U';
+		}
+
+		try
+		{
+			if ($datetime = DateTime::createFromFormat($format, $time, $timezone))
+			{
+				// if we had a delta, we're working with UTC, so we have to do some adjusting again
+				if (isset($delta))
+				{
+					$datetime->sub(new DateInterval('PT'.$timezone->getOffset($datetime).'S'));
+				}
+				$datetime = new static('@'.$datetime->getTimestamp(), $timezone);
+			}
+		}
+		catch (\Exception $e)
+		{
+			static::$lastErrors = DateTime::getLastErrors();
+			throw $e;
+		}
+
+		if ( ! $datetime)
+		{
+			return false;
+		}
+
+		return $datetime;
 	}
 
 	/**
@@ -488,12 +506,14 @@ class Date implements DateTimeInterface
 					return false;
 				}
 			}
+
 			if ( ! $this->datetime->setTimezone($timezone))
 			{
 				return false;
 			}
 
-			$offset = $this->datetime->getOffset();
+			// strftime will always do UTC to local time, and strptime() does timezones but no daylight savings, so we might need a correction here
+			$offset = static::defaultTimezone()->getOffset(new DateTime("2013-01-01 12:00:00", $timezone));
 		}
 
 		// Create output
@@ -503,7 +523,9 @@ class Date implements DateTimeInterface
 		}
 		else
 		{
-			$result = strftime($format, $this->datetime->getTimestamp() - $offset);
+			$time = $this->datetime->getTimestamp();
+
+			$result = strftime($format, $time - $offset);
 			if (static::$encoding)
 			{
 				$result = static::$encoding == 'UTF8' ? utf8_encode($result) : iconv('ISO8859-1', static::$encoding, $result);
