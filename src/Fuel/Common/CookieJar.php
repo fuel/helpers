@@ -277,7 +277,7 @@ class CookieJar implements ArrayAccess, IteratorAggregate, Countable
 	{
 		if ($this->parentEnabled and $this->parent)
 		{
-			array_merge($this->parent->getJar(), $this->jar);
+			return array_merge($this->parent->getJar(), $this->jar);
 		}
 		else
 		{
