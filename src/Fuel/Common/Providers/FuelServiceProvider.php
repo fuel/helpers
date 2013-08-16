@@ -44,17 +44,19 @@ class FuelServiceProvider extends ServiceProvider
 		});
 
 		// \Fuel\Common\Format
-		$this->register('format', function ($dic, $data = null, $from_type = null, Array $config = array(), $input = null)
+		$this->register('format', function ($dic, $data = null, $from_type = null, Array $config = array())
 		{
 			// get the format config
 			$stack = $this->container->resolve('requeststack');
 			if ($request = $stack->top())
 			{
 				$instance = $request->getApplication()->getConfig();
+				$input = $request->getInput();
 			}
 			else
 			{
 				$instance = $this->container->resolve('application.main')->getConfig();
+				$input = $this->container->resolve('application.main')->getInput();
 			}
 			$config = \Arr::merge($instance->load('format', true), $config);
 
@@ -80,9 +82,24 @@ class FuelServiceProvider extends ServiceProvider
 		});
 
 		// \Fuel\Common\Num
-		$this->register('num', function ($dic, Array $config = array(), Array $byteUnits = array())
+		$this->register('num', function ($dic, Array $config = array(), Array $lang = array())
 		{
-			return $dic->resolve('Fuel\Common\Num', array($config, $byteUnits));
+			// get the format config
+			$stack = $this->container->resolve('requeststack');
+			if ($request = $stack->top())
+			{
+				$configInstance = $request->getApplication()->getConfig();
+				$langInstance = $request->getApplication()->getLang();
+			}
+			else
+			{
+				$configInstance = $this->container->resolve('application.main')->getConfig();
+				$langInstance = $this->container->resolve('application.main')->getLang();
+			}
+			$config = \Arr::merge($configInstance->load('num', true), $config);
+			$lang = \Arr::merge($langInstance->load('byteunits', true), $lang);
+
+			return $dic->resolve('Fuel\Common\Num', array($config, $lang));
 		});
 	}
 }
