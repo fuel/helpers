@@ -236,7 +236,16 @@ class DataContainer implements ArrayAccess, IteratorAggregate, Countable
 	{
 		$fail = uniqid('__FAIL__', true);
 
-		if (($result = Arr::get($this->data, $key, $fail)) === $fail)
+		if (strpos($key, '.') === false)
+		{
+			$result = isset($this->data[$key]) ? $this->data[$key] : $fail;
+		}
+		else
+		{
+			$result = Arr::get($this->data, $key, $fail);
+		}
+
+		if ($result === $fail)
 		{
 			if ($this->parentEnabled and $this->parent)
 			{
