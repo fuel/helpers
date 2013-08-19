@@ -63,6 +63,25 @@ class FuelServiceProvider extends ServiceProvider
 			return $dic->resolve('Fuel\Common\Format', array($data, $from_type, $config, $input));
 		});
 
+		// \Fuel\Common\Pagination
+		$this->register('pagination', function ($dic, $view)
+		{
+			$stack = $this->container->resolve('requeststack');
+			if ($request = $stack->top())
+			{
+				$input = $request->getInput();
+				$viewmanager = $request->getApplication()->getViewManager();
+			}
+			else
+			{
+				$app = $this->container->resolve('application.main');
+				$input = $app->getInput();
+				$viewmanager = $app->getViewManager();
+			}
+
+			return $dic->resolve('Fuel\Common\Pagination', array($viewmanager, $input, $view));
+		});
+
 		// \Fuel\Common\Date
 		$this->register('date', function ($dic, $time = "now", $timezone = null, Array $config = array())
 		{
