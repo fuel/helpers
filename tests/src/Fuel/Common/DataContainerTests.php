@@ -94,6 +94,19 @@ class DataContainerTest extends \PHPUnit_Framework_TestCase
 	/**
 	 * @group Common
 	 */
+	public function testIsModified()
+	{
+		$c = new DataContainer(array(
+			'yes' => true,
+		));
+		$this->assertFalse($c->isModified());
+		$c->set('yes', false);
+		$this->assertTrue($c->isModified());
+	}
+
+	/**
+	 * @group Common
+	 */
 	public function testHas()
 	{
 		$c = new DataContainer(array(

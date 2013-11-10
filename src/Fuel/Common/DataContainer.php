@@ -49,6 +49,12 @@ class DataContainer implements ArrayAccess, IteratorAggregate, Countable
 	protected $readOnly = false;
 
 	/**
+	 * @var    bool   wether the container data has been modified
+	 * @since  2.0.0
+	 */
+	protected $isModified = false;
+
+	/**
 	 * Constructor
 	 *
 	 * @param  array    $data      container data
@@ -103,6 +109,17 @@ class DataContainer implements ArrayAccess, IteratorAggregate, Countable
 	}
 
 	/**
+	 * Retrieve the modified state of the container
+	 *
+	 * @return  bool
+	 * @since   2.0.0
+	 */
+	public function isModified()
+	{
+		return $this->isModified;
+	}
+
+	/**
 	 * Replace the container's data.
 	 *
 	 * @param   array  $data  new data
@@ -118,6 +135,8 @@ class DataContainer implements ArrayAccess, IteratorAggregate, Countable
 		}
 
 		$this->data = $data;
+
+		$this->isModified = true;
 
 		return $this;
 	}
@@ -182,6 +201,8 @@ class DataContainer implements ArrayAccess, IteratorAggregate, Countable
 
 		array_unshift($arguments, $this->data);
 		$this->data = call_user_func_array('Arr::merge', $arguments);
+
+		$this->isModified = true;
 
 		return $this;
 	}
@@ -283,6 +304,8 @@ class DataContainer implements ArrayAccess, IteratorAggregate, Countable
 			throw new \RuntimeException('Changing values on this Data Container is not allowed.');
 		}
 
+		$this->isModified = true;
+
 		if ($key === null)
 		{
 			$this->data[] = $value;
@@ -308,6 +331,8 @@ class DataContainer implements ArrayAccess, IteratorAggregate, Countable
 		{
 			throw new \RuntimeException('Changing values on this Data Container is not allowed.');
 		}
+
+		$this->isModified = true;
 
 		if (($result = Arr::delete($this->data, $key)) === false and $this->parentEnabled and $this->parent)
 		{
