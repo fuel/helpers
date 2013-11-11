@@ -40,7 +40,7 @@ class RegexFactory
 	/**
 	 * Contains the status of any flags that have been added
 	 *
-	 * @var array
+	 * @var string
 	 */
 	protected $flags;
 
@@ -60,6 +60,7 @@ class RegexFactory
 	{
 		$this->expression = '';
 		$this->openDelimiters = 0;
+		$this->flags = '';
 
 		return $this;
 	}
@@ -85,7 +86,7 @@ class RegexFactory
 
 		if ($delimit)
 		{
-			$expression = '/' . $expression . '/'; //TODO: append modifiers
+			$expression = '/' . $expression . '/'  . $this->flags;
 		}
 
 		return $expression;
@@ -341,6 +342,62 @@ class RegexFactory
 		$match .= '}';
 
 		$this->value($match);
+
+		return $this;
+	}
+
+	/**
+	 * Makes the regex case insensitive by adding the i flag
+	 *
+	 * @return $this
+	 *
+	 * @since 2.0
+	 */
+	public function caseInsensitive()
+	{
+		$this->flags .= 'i';
+
+		return $this;
+	}
+
+	/**
+	 * Ignores whitespace in the regex by adding the x flag
+	 *
+	 * @return $this
+	 *
+	 * @since 2.0
+	 */
+	public function ignoreWhitespace()
+	{
+		$this->flags .= 'x';
+
+		return $this;
+	}
+
+	/**
+	 * Makes #{} substitutions happen only once by adding the o flag
+	 *
+	 * @return $this
+	 *
+	 * @since 2.0
+	 */
+	public function singleSubstitution()
+	{
+		$this->flags .= 'o';
+
+		return $this;
+	}
+
+	/**
+	 * Makes dot match newline characters using the m flag
+	 *
+	 * @return $this
+	 *
+	 * @since 2.0
+	 */
+	public function dotNewline()
+	{
+		$this->flags .= 'm';
 
 		return $this;
 	}

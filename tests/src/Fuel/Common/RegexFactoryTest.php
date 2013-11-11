@@ -285,4 +285,60 @@ class RegexFactoryTest extends \PHPUnit_Framework_TestCase
 		);
 	}
 
+	/**
+	 * @coversDefaultClass caseInsensitive
+	 * @group              Common
+	 */
+	public function testCaseInsensitive()
+	{
+		$this->object->caseInsensitive();
+
+		$this->assertEquals(
+			'//i',
+			$this->object->get()
+		);
+	}
+
+	/**
+	 * @coversDefaultClass ignoreWhitespace
+	 * @group              Common
+	 */
+	public function testIgnoreWhitespace()
+	{
+		$this->object->ignoreWhitespace();
+
+		$this->assertEquals(
+			'//x',
+			$this->object->get()
+		);
+	}
+
+	/**
+	 * @coversDefaultClass singleSubstitution
+	 * @group              Common
+	 */
+	public function testSingleSubstitution()
+	{
+		$this->object->singleSubstitution();
+
+		$this->assertEquals(
+			'//o',
+			$this->object->get()
+		);
+	}
+
+	/**
+	 * @coversDefaultClass dotNewline
+	 * @group              Common
+	 */
+	public function testDotNewline()
+	{
+		$this->object->dotNewline();
+
+		$this->assertEquals(
+			'//m',
+			$this->object->get()
+		);
+	}
+
 }
