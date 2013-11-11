@@ -17,7 +17,12 @@
 	<filter>
 		<blacklist>
 			<directory suffix=".php">./vendor/</directory>
+			<directory suffix=".php">./tests/</directory>
 			<file>phpunit.php</file>
 		</blacklist>
 	</filter>
+    <logging>
+        <log type="coverage-html" target="./coverage" charset="UTF-8" yui="true" highlight="false" lowUpperBound="49" highLowerBound="75"/>
+        <log type="coverage-text" target="php://stdout" howUncoveredFiles="true"/>
+    </logging>
 </phpunit>
