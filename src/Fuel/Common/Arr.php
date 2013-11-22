@@ -1100,6 +1100,39 @@ abstract class Arr
 		return $get_value ? $array[$keys[$index-1]] : $keys[$index-1];
 	}
 
+         /**
+          * Returns a string from an array based on delimiter, with optional left and right characters
+          *
+          * @param     array $array the array containing the values
+          * @param string $delimiter delimiter for the output string
+          * @param string $left value to be used on left of each delimited string
+          * @param string $right value to be used on right  of each delimited string
+          * @return string
+          */
+         public static function toDelimitedString( array $array, $delimiter = ',', $left = '', $right = '' )
+         {
+		if ( ! is_array($array) )
+		{
+			throw new \InvalidArgumentException('First parameter must be an array.');
+		}
+		
+                $result = '';
+                foreach ( $array as $value )
+                {
+                     // append the left and right chars for each value seperated with delimiter
+                     $result .= ( $left . $value . $right . $delimiter);
+                }
+                 
+                $length = mb_strlen($result);
+                 
+                if ( $length > 0 )
+                {
+                     $result = mb_substr($result, 0, $length - 1);
+                }
+                 
+                return $result;
+         }
+    
 	/**
 	 * Get the next value or key from an array using the current array value
 	 *
