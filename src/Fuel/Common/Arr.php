@@ -35,6 +35,11 @@ abstract class Arr
 			throw new \InvalidArgumentException('First parameter must be an array or ArrayAccess object.');
 		}
 
+		if (array_key_exists($key, $array))
+		{
+			return $array[$key];
+		}
+
 		if (is_null($key))
 		{
 			return $array;
