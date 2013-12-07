@@ -17,12 +17,27 @@ class DataContainerTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals(array(), $c->getContents());
 		$c->setContents($data);
 		$this->assertEquals($data, $c->getContents());
+
+		$p = new DataContainer;
+		$p->what = 'where';
+		$c->setParent($p);
+		$data = array('this' => 'here', 'what' => 'where');
+		$this->assertEquals($data, $c->getContents());
+		$c->has('what');
+		$this->assertEquals('where', $c->what);
+		$this->assertTrue($c->delete('what'));
+		$this->assertEquals(null, $c->what);
+		$c->disableParent();
+
 		$c->set('this', 'new');
 		$this->assertEquals('new', $c->get('this'));
 		$this->assertEquals('default', $c->get('nothing', 'default'));
 		$c['what'] = 'this';
 		$this->assertEquals('this', $c['what']);
+		$this->assertEquals($c['what'], $c->what);
+
 		$c['exception'];
+
 	}
 
 	/**
@@ -179,14 +194,6 @@ class DataContainerTest extends \PHPUnit_Framework_TestCase
 	/**
 	 * @group Common
 	 */
-	public function testIsAssoc()
-	{
-		$this->assertTrue(\Arr::isAssoc(array('yeah' => 'assoc')));
-		$this->assertTrue(\Arr::isAssoc(array(1 => 'assoc', 0 => 'yeah')));
-		$this->assertFalse(\Arr::isAssoc(array(0 => 'assoc', 1 => 'yeah')));
-		$this->assertFalse(\Arr::isAssoc(array('yeah', 'assoc')));
-	}
-
 	public function testIteratorAggregate()
 	{
 		$c = new DataContainer(array(
@@ -199,5 +206,29 @@ class DataContainerTest extends \PHPUnit_Framework_TestCase
 			$this->assertTrue($c->has($key));
 			$this->assertEquals($value, $c[$key]);
 		}
+	}
+
+	/**
+	 * @group Common
+	 */
+	public function testParents()
+	{
+		$p = new DataContainer;
+		$c = new DataContainer;
+
+		$this->assertEquals(null, $c->getParent());
+		$this->assertFalse($c->hasParent());
+
+		$this->assertEquals($c, $c->setParent($p));
+		$this->assertEquals($p, $c->getParent());
+		$this->assertTrue($c->hasParent());
+
+		$this->assertEquals($c, $c->disableParent());
+		$this->assertFalse($c->hasParent());
+		$this->assertEquals($c, $c->enableParent());
+		$this->assertTrue($c->hasParent());
+
+		$this->assertEquals($c, $c->setParent(null));
+		$this->assertFalse($c->hasParent());
 	}
 }
