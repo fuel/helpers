@@ -35,11 +35,6 @@ abstract class Arr
 			throw new \InvalidArgumentException('First parameter must be an array or ArrayAccess object.');
 		}
 
-		if (array_key_exists($key, $array))
-		{
-			return $array[$key];
-		}
-
 		if (is_null($key))
 		{
 			return $array;
@@ -53,6 +48,11 @@ abstract class Arr
 				$return[$k] = static::get($array, $k, $default);
 			}
 			return $return;
+		}
+
+		if (array_key_exists($key, $array))
+		{
+			return $array[$key];
 		}
 
 		foreach (explode('.', $key) as $key_part)
@@ -821,11 +821,54 @@ abstract class Arr
 				// numeric keys are appended
 				if (is_int($k))
 				{
-					array_key_exists($k, $array) ? array_push($array, $v) : $array[$k] = $v;
+					array_key_exists($k, $array) ? $array[] = $v : $array[$k] = $v;
 				}
 				elseif (is_array($v) and array_key_exists($k, $array) and is_array($array[$k]))
 				{
 					$array[$k] = static::merge($array[$k], $v);
+				}
+				else
+				{
+					$array[$k] = $v;
+				}
+			}
+		}
+
+		return $array;
+	}
+
+	/**
+	 * Merge 2 arrays recursively, differs in 2 important ways from array_merge_recursive()
+	 * - When there's 2 different values and not both arrays, the latter value overwrites the earlier
+	 *   instead of merging both into an array
+	 * - Numeric keys are never changed
+	 *
+	 * @param   array  multiple variables all of which must be arrays
+	 * @return  array
+	 * @throws  \InvalidArgumentException
+	 */
+	public static function mergeAssoc()
+	{
+		$array  = func_get_arg(0);
+		$arrays = array_slice(func_get_args(), 1);
+
+		if ( ! is_array($array))
+		{
+			throw new \InvalidArgumentException('Arr::mergeAssoc() - all arguments must be arrays.');
+		}
+
+		foreach ($arrays as $arr)
+		{
+			if ( ! is_array($arr))
+			{
+				throw new \InvalidArgumentException('Arr::mergeAssoc() - all arguments must be arrays.');
+			}
+
+			foreach ($arr as $k => $v)
+			{
+				if (is_array($v) and array_key_exists($k, $array) and is_array($array[$k]))
+				{
+					$array[$k] = static::mergeAssoc($array[$k], $v);
 				}
 				else
 				{
@@ -902,9 +945,10 @@ abstract class Arr
 	 * @param   string  $default   The default value
 	 * @param   bool    $recursive Whether to get keys recursive
 	 * @param   string  $delimiter The delimiter, when $recursive is true
+	 * @param   bool    $strict    If true, do a strict key comparison
 	 * @return  mixed
 	 */
-	public static function search($array, $value, $default = null, $recursive = true, $delimiter = '.')
+	public static function search($array, $value, $default = null, $recursive = true, $delimiter = '.', $strict = false)
 	{
 		if ( ! is_array($array) and ! $array instanceof \ArrayAccess)
 		{
@@ -921,7 +965,7 @@ abstract class Arr
 			throw new \InvalidArgumentException('Expects parameter 5 must be an string.');
 		}
 
-		$key = array_search($value, $array);
+		$key = array_search($value, $array, $strict);
 
 		if ($recursive and $key === false)
 		{
@@ -930,7 +974,7 @@ abstract class Arr
 			{
 				if (is_array($v))
 				{
-					$rk = static::search($v, $value, $default, true, $delimiter);
+					$rk = static::search($v, $value, $default, true, $delimiter, $strict);
 					if ($rk !== $default)
 					{
 						$keys = array($k, $rk);
@@ -989,6 +1033,25 @@ abstract class Arr
 		}
 
 		return array_sum(static::pluck($array, $key));
+	}
+
+	/**
+	 * Returns the array with all numeric keys re-indexed, and string keys untouched
+	 *
+	 * @param   array  $arr       the array to reindex
+	 * @return  array   reindexed array
+	 */
+	public static function reIndex($arr)
+	{
+		// reindex this level
+		$arr = array_merge($arr);
+
+		foreach ($arr as $k => &$v)
+		{
+			is_array($v) and $v = static::reIndex($v);
+		}
+
+		return $arr;
 	}
 
 	/**
@@ -1141,5 +1204,28 @@ abstract class Arr
 
 		// return the value or the key of the array entry the next key points to
 		return $get_value ? $array[$keys[$index+1]] : $keys[$index+1];
+	}
+
+	/**
+	 * Return the subset of the array defined by the supplied keys.
+	 *
+	 * Returns $default for missing keys, as with Arr::get()
+	 *
+	 * @param   array    $array    the array containing the values
+	 * @param   array    $keys     list of keys (or indices) to return
+	 * @param   mixed    $default  value of missing keys; default null
+	 *
+	 * @return  array  An array containing the same set of keys provided.
+	 */
+	public static function subset(array $array, array $keys, $default = null)
+	{
+		$result = array();
+
+		foreach ($keys as $key)
+		{
+			static::set($result, $key, static::get($array, $key, $default));
+		}
+
+		return $result;
 	}
 }
