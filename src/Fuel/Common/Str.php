@@ -253,7 +253,15 @@ abstract class Str
 		switch($type)
 		{
 			case 'basic':
-				return mt_rand();
+				$result = mt_rand();
+				break;
+
+			case 'unique':
+				$result = md5(uniqid(mt_rand()));
+				break;
+
+			case 'sha1' :
+				$result = sha1(uniqid(mt_rand(), true));
 				break;
 
 			default:
@@ -267,11 +275,6 @@ abstract class Str
 				{
 					case 'alpha':
 						$pool = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-						break;
-
-					default:
-					case 'alnum':
-						$pool = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 						break;
 
 					case 'numeric':
@@ -289,24 +292,20 @@ abstract class Str
 					case 'hexdec':
 						$pool = '0123456789abcdef';
 						break;
+
+					default:
+					case 'alnum':
+						$pool = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 				}
 
-				$str = '';
+				$result = '';
 				for ($i=0; $i < $length; $i++)
 				{
-					$str .= substr($pool, mt_rand(0, strlen($pool) -1), 1);
+					$result .= substr($pool, mt_rand(0, strlen($pool) -1), 1);
 				}
-				return $str;
-				break;
-
-			case 'unique':
-				return md5(uniqid(mt_rand()));
-				break;
-
-			case 'sha1' :
-				return sha1(uniqid(mt_rand(), true));
-				break;
 		}
+
+		return $result;
 	}
 
 	/**
@@ -376,11 +375,6 @@ abstract class Str
 	 */
 	public static function is_xml($string)
 	{
-		if ( ! defined('LIBXML_COMPACT'))
-		{
-			throw new \FuelException('libxml is required to use Str::is_xml()');
-		}
-
 		$internal_errors = libxml_use_internal_errors();
 		libxml_use_internal_errors(true);
 		$result = simplexml_load_string($string) !== false;
