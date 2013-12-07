@@ -70,6 +70,18 @@ class StrTest extends \PHPUnit_Framework_TestCase
 		$output = Str::truncate($string, $limit, '...', true);
 		$expected = '<h1>Lorem ipsum dol...</h1>';
 		$this->assertEquals($expected, $output);
+
+		$string .= '&ellip; <h1>additional header</h1>';
+
+		$output = Str::truncate($string, $limit, '...', true);
+		$expected = '<h1>Lorem ipsum dol...</h1>';
+		$this->assertEquals($expected, $output);
+
+		$string = '&ellip; <h1>short text</h1>';
+
+		$output = Str::truncate($string, $limit, '...', true);
+		$expected = '&ellip; <h1>short text</h1>';
+		$this->assertEquals($expected, $output);
 	}
 
 	/**
@@ -171,6 +183,26 @@ class StrTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
+	 * Test for Str::tr()
+	 *
+	 * @test
+	 */
+	public function test_tr()
+	{
+		$output = Str::tr(10);
+		$expected = 10;
+		$this->assertEquals($expected, $output);
+
+		$output = Str::tr(array('test'));
+		$expected = array('test');
+		$this->assertEquals($expected, $output);
+
+		$output = Str::tr('Your name is :name', array('name' => 'John'));
+		$expected = 'Your name is John';
+		$this->assertEquals($expected, $output);
+	}
+
+	/**
 	 * Test for Str::random()
 	 *
 	 * @test
@@ -189,6 +221,10 @@ class StrTest extends \PHPUnit_Framework_TestCase
 		$output = Str::random('numeric', 20);
 		$this->assertTrue(ctype_digit($output));
 
+		// testing hexdec
+		$output = Str::random('hexdec', 22);
+		$this->assertTrue(ctype_xdigit($output));
+
 		// testing alpha
 		$output = Str::random('alpha', 35);
 		$this->assertTrue(ctype_alpha($output));
@@ -196,6 +232,24 @@ class StrTest extends \PHPUnit_Framework_TestCase
 		// testing nozero
 		$output = Str::random('nozero', 22);
 		$this->assertFalse(strpos($output, '0'));
+
+		// testing distinct
+		$output = Str::random('distinct', 34);
+		$this->assertEquals(34, strlen($output));
+
+		// testing unique
+		$output = Str::random('unique');
+		$this->assertEquals(32, strlen($output));
+		$this->assertTrue(ctype_xdigit($output));
+
+		// testing sha1
+		$output = Str::random('sha1');
+		$this->assertEquals(40, strlen($output));
+		$this->assertTrue(ctype_xdigit($output));
+
+		// testing basic
+		$output = Str::random('basic');
+		$this->assertTrue(ctype_digit($output));
 	}
 
 	/**
@@ -244,6 +298,16 @@ class StrTest extends \PHPUnit_Framework_TestCase
 
 		$this->assertTrue(Str::is_xml($valid_xml));
 		$this->assertFalse(Str::is_xml($invalid_xml));
+	}
+
+	/**
+	 * Test for Str::is_xml()
+	 *
+	 * @test
+	 * @requires extension libxml
+	 */
+	public function test_is_xml_exception()
+	{
 	}
 
 	/**
