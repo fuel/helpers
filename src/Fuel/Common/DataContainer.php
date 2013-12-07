@@ -68,6 +68,17 @@ class DataContainer implements ArrayAccess, IteratorAggregate, Countable
 	}
 
 	/**
+	 * Get the parent of this container
+	 *
+	 * @return  DataContainer
+	 * @since   2.0.0
+	 */
+	public function getParent()
+	{
+		return $this->parent;
+	}
+
+	/**
 	 * Set the parent of this container, to support inheritance
 	 *
 	 * @param   DataContainer  $parent  the parent container object
@@ -77,7 +88,15 @@ class DataContainer implements ArrayAccess, IteratorAggregate, Countable
 	public function setParent(DataContainer $parent = null)
 	{
 		$this->parent = $parent;
-		$this->enableParent();
+
+		if ($this->parent)
+		{
+			$this->enableParent();
+		}
+		else
+		{
+			$this->disableParent();
+		}
 
 		return $this;
 	}
@@ -90,7 +109,10 @@ class DataContainer implements ArrayAccess, IteratorAggregate, Countable
 	 */
 	public function enableParent()
 	{
-		$this->parentEnabled = true;
+		if ($this->parent)
+		{
+			$this->parentEnabled = true;
+		}
 
 		return $this;
 	}
@@ -106,6 +128,17 @@ class DataContainer implements ArrayAccess, IteratorAggregate, Countable
 		$this->parentEnabled = false;
 
 		return $this;
+	}
+
+	/**
+	 * Check whether or not this container has an active parent
+	 *
+	 * @return  bool
+	 * @since   2.0.0
+	 */
+	public function hasParent()
+	{
+		return $this->parentEnabled;
 	}
 
 	/**
@@ -149,7 +182,7 @@ class DataContainer implements ArrayAccess, IteratorAggregate, Countable
 	 */
 	public function getContents()
 	{
-		if ($this->parentEnabled and $this->parent)
+		if ($this->parentEnabled)
 		{
 			return Arr::merge($this->parent->getContents(), $this->data);
 		}
@@ -229,7 +262,7 @@ class DataContainer implements ArrayAccess, IteratorAggregate, Countable
 	{
 		$result = Arr::has($this->data, $key);
 
-		if ( ! $result and $this->parentEnabled and $this->parent)
+		if ( ! $result and $this->parentEnabled)
 		{
 			$result = $this->parent->has($key);
 		}
@@ -257,18 +290,11 @@ class DataContainer implements ArrayAccess, IteratorAggregate, Countable
 	{
 		$fail = uniqid('__FAIL__', true);
 
-		if (strpos($key, '.') === false)
-		{
-			$result = isset($this->data[$key]) ? $this->data[$key] : $fail;
-		}
-		else
-		{
-			$result = Arr::get($this->data, $key, $fail);
-		}
+		$result = Arr::get($this->data, $key, $fail);
 
 		if ($result === $fail)
 		{
-			if ($this->parentEnabled and $this->parent)
+			if ($this->parentEnabled)
 			{
 				$result = $this->parent->get($key, $default);
 			}
@@ -334,7 +360,7 @@ class DataContainer implements ArrayAccess, IteratorAggregate, Countable
 
 		$this->isModified = true;
 
-		if (($result = Arr::delete($this->data, $key)) === false and $this->parentEnabled and $this->parent)
+		if (($result = Arr::delete($this->data, $key)) === false and $this->parentEnabled)
 		{
 			$result = $this->parent->delete($key);
 		}
