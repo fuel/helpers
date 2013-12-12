@@ -50,6 +50,11 @@ abstract class Arr
 			return $return;
 		}
 
+		if (is_object($key))
+		{
+			$key = (string) $key;
+		}
+
 		if (array_key_exists($key, $array))
 		{
 			return $array[$key];
