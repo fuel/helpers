@@ -17,7 +17,7 @@ namespace Fuel\Common;
  * @package  Fuel\Common
  * @since  1.0.0
  */
-abstract class Arr
+class Arr
 {
 	/**
 	 * Gets a dot-notated key from an array, with a default value if it does
