@@ -63,7 +63,7 @@ class ArrTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testGet()
 	{
-		$array = array('one', 'two' => array('child' => 'value'), 'last' => 'three');
+		$array = array('one', 'two' => array('child' => 'value'), 'last' => 'three', 'with.key' => 'found ya!');
 
 		$this->assertEquals('one', Arr::get($array, 0));
 		$this->assertEquals('three',  Arr::get($array, 'last'));
@@ -71,6 +71,11 @@ class ArrTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals($array, Arr::get($array, null));
 		$this->assertEquals(array('one', 'last' => 'three'), Arr::get($array, array(0, 'last')));
 		$this->assertEquals('default', Arr::get($array, 99, 'default'));
+		$this->assertEquals('found ya!',  Arr::get($array, 'with.key'));
+
+		include_once __DIR__.'/../../../../resources/ArrKeyObject.php';
+		$object = new ArrKeyObject();
+		$this->assertEquals('three',  Arr::get($array, $object));
 	}
 
 	/**
