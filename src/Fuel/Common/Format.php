@@ -31,35 +31,54 @@ class Format
 	protected $config = array();
 
 	/**
-	 * @var  Fuel\Foundation\Input  current Input object
+	 * @var  bool 	whether to ignore namespaces when parsing xml
+	 */
+	protected $xmlIgnoreNamespaces = true;
+
+	/**
+	 * @var  Fuel\Common\Datacontainer  Input Container
 	 */
 	protected $input;
 
 	/**
+	 * @var  Fuel\Common\Inflector  Inflector object
+	 */
+	protected $inflector;
+
+	/**
 	 * @param  mixed $data  Input data to format or convert
 	 * @param  mixed $from_type  The data type of the input data
+	 *
+	 * @throws InvalidArgumentException if the from_type isn't a known type
 	 */
-	public function __construct($data = null, $from_type = null, Array $config = array(), $input = null)
+	public function __construct($data = null, $from_type = null, Array $config = array(), $input = null, $inflector = null)
 	{
 		// If the provided data is already formatted we should probably convert it to an array
 		if ($from_type !== null)
 		{
-			if (method_exists($this, '_from' . ucfirst($from_type)))
+			if ($from_type == 'xml:ns')
 			{
-				$data = call_user_func(array($this, '_from' . $ucfirst($from_type)), $data);
+				$this->xmlIgnoreNamespaces = false;
+				$from_type = 'xml';
 			}
 
+			if (method_exists($this, $method = '_from'.ucfirst($from_type)))
+			{
+				$data = call_user_func(array($this, $method), $data);
+			}
 			else
 			{
-				throw new \FuelException('Format class does not support conversion from "' . $from_type . '".');
+				throw new \InvalidArgumentException('Format class does not support conversion from "' . $from_type . '".');
 			}
 		}
 
+		// store the passed data and config
 		$this->data = $data;
-
 		$this->config = $config;
 
+		// store the injected objects
 		$this->input = $input;
+		$this->inflector = $inflector;
 	}
 
 	// FORMATING OUTPUT ---------------------------------------------------------
@@ -112,22 +131,27 @@ class Format
 	 * @param   mixed        $data
 	 * @param   null         $structure
 	 * @param   null|string  $basenode
+	 * @param   null|bool    whether to use CDATA in nodes
 	 * @return  string
 	 */
-	public function toXml($data = null, $structure = null, $basenode = 'xml')
+	public function toXml($data = null, $structure = null, $basenode = null, $usecdata = null)
 	{
-		if ($data == null)
+		if ($data === null)
 		{
 			$data = $this->data;
 		}
 
-		// turn off compatibility mode as simple xml throws a wobbly if you don't.
-		if (ini_get('zend.ze1_compatibility_mode') == 1)
+		if ($basenode === null)
 		{
-			ini_set('zend.ze1_compatibility_mode', 0);
+			$basenode = Arr::get($this->config, 'xml.basenode', 'xml');
 		}
 
-		if ($structure == null)
+		if ($usecdata === null)
+		{
+			$usecdata = Arr::get($this->config, 'xml.usecdata', false);
+		}
+
+		if ($structure === null)
 		{
 			$structure = simplexml_load_string("<?xml version='1.0' encoding='utf-8'?><$basenode />");
 		}
@@ -147,7 +171,7 @@ class Format
 			if (is_numeric($key))
 			{
 				// make string key...
-				$key = (\Inflector::singularize($basenode) != $basenode) ? \Inflector::singularize($basenode) : 'item';
+				$key = ($this->inflector->singularize($basenode) != $basenode) ? $this->inflector->singularize($basenode) : 'item';
 			}
 
 			// if there is another array found recrusively call this function
@@ -158,16 +182,25 @@ class Format
 				// recursive call if value is not empty
 				if( ! empty($value))
 				{
-					$this->toXml($value, $node, $key);
+					$this->toXml($value, $node, $key, $usecdata);
 				}
 			}
 
 			else
 			{
 				// add single node.
-				$value = htmlspecialchars(html_entity_decode($value, ENT_QUOTES, 'UTF-8'), ENT_QUOTES, "UTF-8");
+				$encoded = htmlspecialchars(html_entity_decode($value, ENT_QUOTES, 'UTF-8'), ENT_QUOTES, 'UTF-8');
 
-				$structure->addChild($key, $value);
+				if ($usecdata and ($encoded !== (string) $value))
+				{
+					$dom = dom_import_simplexml($structure->addChild($key));
+					$owner = $dom->ownerDocument;
+					$dom->appendChild($owner->createCDATASection($value));
+				}
+				else
+				{
+					$structure->addChild($key, $encoded);
+				}
 			}
 		}
 
@@ -185,10 +218,10 @@ class Format
 	public function toCsv($data = null, $delimiter = null)
 	{
 		// csv format settings
-		$newline = \Arr::get($this->config, 'csv.newline', "\n");
-		$delimiter or $delimiter = \Arr::get($this->config, 'csv.delimiter', ',');
-		$enclosure = \Arr::get($this->config, 'csv.enclosure', '"');
-		$escape = \Arr::get($this->config, 'csv.escape', '\\');
+		$newline = Arr::get($this->config, 'csv.newline', "\n");
+		$delimiter or $delimiter = Arr::get($this->config, 'csv.delimiter', ',');
+		$enclosure = Arr::get($this->config, 'csv.enclosure', '"');
+		$escape = Arr::get($this->config, 'csv.escape', '\\');
 
 		// escape function
 		$escaper = function($items) use($enclosure, $escape) {
@@ -208,11 +241,11 @@ class Format
 		}
 
 		// Multi-dimensional array
-		if (is_array($data) and \Arr::isMulti($data))
+		if (is_array($data) and Arr::isMulti($data))
 		{
 			$data = array_values($data);
 
-			if (\Arr::isAssoc($data[0]))
+			if (Arr::isAssoc($data[0]))
 			{
 				$headings = array_keys($data[0]);
 			}
@@ -255,7 +288,7 @@ class Format
 		// To allow exporting ArrayAccess objects like Orm\Model instances they need to be
 		// converted to an array first
 		$data = (is_array($data) or is_object($data)) ? $this->toArray($data) : $data;
-		return $pretty ? $this->pretty_json($data) : json_encode($data);
+		return $pretty ? $this->prettyJson($data) : json_encode($data, Arr::get($this->config, 'json.encode.options', JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP));
 	}
 
 	/**
@@ -328,7 +361,9 @@ class Format
 
 		if ( ! class_exists('Symfony\Component\Yaml\Yaml'))
 		{
+			// @codeCoverageIgnoreStart
 			throw new \RuntimeException('You need to install the "symfony/yaml" composer package to use Format::toYaml()');
+			// @codeCoverageIgnoreEnd
 		}
 
 		$parser = new \Symfony\Component\Yaml\Yaml();
@@ -341,15 +376,51 @@ class Format
 	 * @param   string  $string
 	 * @return  array
 	 */
-	protected function _fromXml($string)
+	protected function _fromXml($string, $recursive = false)
 	{
+		// If it forged with 'xml:ns'
+		if ( ! $this->xmlIgnoreNamespaces)
+		{
+			static $escape_keys = array();
+
+			if ( ! $recursive)
+			{
+				$escape_keys = array('_xmlns' => 'xmlns');
+			}
+
+			if ( ! $recursive and strpos($string, 'xmlns') !== false and preg_match_all('/(\<.+?\>)/s', $string, $matches))
+			{
+				foreach ($matches[1] as $tag)
+				{
+					$escaped_tag = $tag;
+
+					strpos($tag, 'xmlns=') !== false and $escaped_tag = str_replace('xmlns=', '_xmlns=', $tag);
+
+					if (preg_match_all('/[\s\<\/]([^\/\s\'"]*?:\S*?)[=\/\>\s]/s', $escaped_tag, $xmlns))
+					{
+						foreach ($xmlns[1] as $ns)
+						{
+							$escaped = Arr::search($escape_keys, $ns);
+							$escaped or $escape_keys[$escaped = str_replace(':', '_', $ns)] = $ns;
+							$string = str_replace($tag, $escaped_tag = str_replace($ns, $escaped, $escaped_tag), $string);
+							$tag = $escaped_tag;
+						}
+					}
+				}
+			}
+		}
+
 		$_arr = is_string($string) ? simplexml_load_string($string, 'SimpleXMLElement', LIBXML_NOCDATA) : $string;
 		$arr = array();
 
 		// Convert all objects SimpleXMLElement to array recursively
 		foreach ((array)$_arr as $key => $val)
 		{
-			$arr[$key] = (is_array($val) or is_object($val)) ? $this->_fromXml($val) : $val;
+			if ( ! $this->xmlIgnoreNamespaces)
+			{
+				$key = Arr::get($escape_keys, $key, $key);
+			}
+			$arr[$key] = (is_array($val) or is_object($val)) ? $this->_fromXml($val, true) : $val;
 		}
 
 		return $arr;
@@ -361,16 +432,13 @@ class Format
 	 * @param   string  $string
 	 * @return  array
 	 */
-	protected function _fromYaml($string)
+	protected function _fromYaml($data)
 	{
-		if ($data == null)
-		{
-			$data = $this->data;
-		}
-
 		if ( ! class_exists('Symfony\Component\Yaml\Yaml'))
 		{
+			// @codeCoverageIgnoreStart
 			throw new \RuntimeException('You need to install the "symfony/yaml" composer package to use Format::fromYaml()');
+			// @codeCoverageIgnoreEnd
 		}
 
 		$parser = new \Symfony\Component\Yaml\Yaml();
@@ -387,12 +455,12 @@ class Format
 	{
 		$data = array();
 
-		$rows = preg_split('/(?<='.preg_quote(\Arr::get($this->config, 'csv.enclosure', '"')).')'.\Arr::get($this->config, 'csv.regex_newline', '\n').'/', trim($string));
+		$rows = preg_split('/(?<='.preg_quote(Arr::get($this->config, 'csv.enclosure', '"')).')'.Arr::get($this->config, 'csv.regex_newline', '\n').'/', trim($string));
 
 		// csv config
-		$delimiter = \Arr::get($this->config, 'csv.delimiter', ',');
-		$enclosure = \Arr::get($this->config, 'csv.enclosure', '"');
-		$escape = \Arr::get($this->config, 'csv.escape', '\\');
+		$delimiter = Arr::get($this->config, 'csv.delimiter', ',');
+		$enclosure = Arr::get($this->config, 'csv.enclosure', '"');
+		$escape = Arr::get($this->config, 'csv.escape', '\\');
 
 		// Get the headings
 		$headings = str_replace($escape.$enclosure, $enclosure, str_getcsv(array_shift($rows), $delimiter, $enclosure, $escape));
@@ -428,7 +496,7 @@ class Format
 	 * @param   string  $string
 	 * @return  mixed
 	 */
-	private function _fromSerialize($string)
+	private function _fromSerialized($string)
 	{
 		return unserialize(trim($string));
 	}
@@ -440,9 +508,9 @@ class Format
 	 * @param   string  $json  json encoded array
 	 * @return  string|false  pretty json output or false when the input was not valid
 	 */
-	protected function pretty_json($data)
+	protected function prettyJson($data)
 	{
-		$json = json_encode($data);
+		$json = json_encode($data, Arr::get($this->config, 'json.encode.options', JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP));
 
 		if ( ! $json)
 		{
