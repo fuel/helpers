@@ -522,7 +522,7 @@ class Format
 	{
 		$json = json_encode($data, Arr::get($this->config, 'json.encode.options', JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP));
 
-		if ( ! $json)
+		if (json_last_error() !== JSON_ERROR_NONE)
 		{
 			return false;
 		}
