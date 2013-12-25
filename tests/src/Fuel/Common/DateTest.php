@@ -15,6 +15,9 @@ class DateTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function setup()
 	{
+		// make sure we have a known default timezone
+		date_default_timezone_set('Europe/Amsterdam');
+
 		// @1387751018 == Sun Dec 22 23:23:38 2013 in Europe/Amsterdam
 		$this->instance = new Date('@1387751018', 'Europe/Amsterdam', array(
 			'gmtOffset' => 0,
