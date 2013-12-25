@@ -8,6 +8,14 @@
  * @copyright  2010 - 2013 Fuel Development Team
  */
 
+/**
+ * Define the DateTimeInterface for PHP versions < 5.5
+ */
+if ( ! class_exists('DateTimeInterface', false))
+{
+	include __DIR__.'/../resources/DateTimeInterface.php';
+}
+
 if ( ! function_exists('result'))
 {
 	/**
