@@ -95,7 +95,7 @@ class Num
 	 *
 	 * @since 2.0.0
 	 */
-	public function __constuct(Array $config = array(), Array $byteUnits = array())
+	public function __construct(Array $config = array(), Array $byteUnits = array())
 	{
 		$this->config = array_merge($this->config, $config);
 		$this->byteUnits = array_merge($this->byteUnits, $byteUnits);
@@ -250,6 +250,11 @@ class Num
 	 */
 	public function format($string, $format)
 	{
+		if(empty($format) or empty($string))
+		{
+			return $string;
+		}
+
 		$result = '';
 		$fpos = 0;
 		$spos = 0;
@@ -295,8 +300,13 @@ class Num
 	 *
 	 * @since 1.0.0
 	 */
-	public function maskString($string, $format, $ignore = ' ')
+	public function maskString($string, $format = '', $ignore = ' ')
 	{
+		if(empty($format) or empty($string))
+		{
+			return $string;
+		}
+
 		$result = '';
 		$fpos = 0;
 		$spos = 0;
