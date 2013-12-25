@@ -520,11 +520,10 @@ HTML;
 		$this->instance->phpini();
 		$output = ob_get_contents();
 		ob_end_clean();
+		$output = preg_replace('/(array\(\d+\) \{)/', 'array (#) {', $output);
 
 		$expected = "'PHP' =>
-  array(55) {
-    'engine' =>
-    string(1) \"1\"";
+  array (#) {";
 
 		$this->assertTrue(strpos($output, $expected) > 0);
 	}
