@@ -16,9 +16,23 @@ class DebugTest extends \PHPUnit_Framework_TestCase
 {
 	public $instance;
 
-	// every time you add a new method to this class, or class instances are
-	// created elsewhere, you need to update this counter!
-	public $objectCounter = 574;
+	/**
+	 * helper method to remove platform depended information from dump results
+	 */
+	protected function dump($arg)
+	{
+		// capture the dump result
+		ob_start();
+		call_user_func_array(array($this->instance, 'dumpAsHtml'), func_get_args());
+		$result = ob_get_contents();
+		ob_end_clean();
+		// remove the variable data from the output
+		$result = preg_replace('/(\(Object #\d+\))/', '(Object #id)', $result);
+		$result = preg_replace('/(\@ line: \d+\<)/', '@ line: 001<', $result);
+
+		// return the result
+		return $result;
+	}
 
 	/**
 	 * @covers Fuel\Common\Debug::__construct
@@ -32,15 +46,6 @@ class DebugTest extends \PHPUnit_Framework_TestCase
 
 		include_once __DIR__.'/../../../../resources/InputMock.php';
 		$this->instance = new Debug(new InputMock(), $inflector);
-	}
-
-	protected function dump($arg)
-	{
-		ob_start();
-		call_user_func_array(array($this->instance, 'dumpAsHtml'), func_get_args());
-		$result = ob_get_contents();
-		ob_end_clean();
-		return $result;
 	}
 
 	/**
@@ -93,7 +98,7 @@ class DebugTest extends \PHPUnit_Framework_TestCase
 	public function testDumpAsHtmlExpression()
 	{
 		$expected = <<<HTML
-<script type="text/javascript">function fuel_debug_toggle(a){if(document.getElementById){if(document.getElementById(a).style.display=="none"){document.getElementById(a).style.display="block"}else{document.getElementById(a).style.display="none"}}else{if(document.layers){if(document.id.display=="none"){document.id.display="block"}else{document.id.display="none"}}else{if(document.all.id.style.display=="none"){document.all.id.style.display="block"}else{document.all.id.style.display="none"}}}};</script><div class="fuelphp-dump" style="font-size: 13px;background: #EEE !important; border:1px solid #666; color: #000 !important; padding:10px;"><h1 style="padding: 0 0 5px 0; margin: 0; font: bold 110% sans-serif;">File: VENDORPATH/fuelphp/common/tests/src/Fuel/Common/DebugTest.php @ line: 100</h1><pre style="overflow:auto;font-size:100%;"><strong>Expression: 'a'</strong>
+<script type="text/javascript">function fuel_debug_toggle(a){if(document.getElementById){if(document.getElementById(a).style.display=="none"){document.getElementById(a).style.display="block"}else{document.getElementById(a).style.display="none"}}else{if(document.layers){if(document.id.display=="none"){document.id.display="block"}else{document.id.display="none"}}else{if(document.all.id.style.display=="none"){document.all.id.style.display="block"}else{document.all.id.style.display="none"}}}};</script><div class="fuelphp-dump" style="font-size: 13px;background: #EEE !important; border:1px solid #666; color: #000 !important; padding:10px;"><h1 style="padding: 0 0 5px 0; margin: 0; font: bold 110% sans-serif;">File: VENDORPATH/fuelphp/common/tests/src/Fuel/Common/DebugTest.php @ line: 001</h1><pre style="overflow:auto;font-size:100%;"><strong>Expression: 'a'</strong>
 <i></i> <strong></strong> (String): <span style="color:#E00000;">"a"</span> (1 characters)
 </pre></div>
 HTML;
@@ -111,7 +116,7 @@ HTML;
 	public function testDumpAsHtmlVariable()
 	{
 		$expected = <<<HTML
-<script type="text/javascript">function fuel_debug_toggle(a){if(document.getElementById){if(document.getElementById(a).style.display=="none"){document.getElementById(a).style.display="block"}else{document.getElementById(a).style.display="none"}}else{if(document.layers){if(document.id.display=="none"){document.id.display="block"}else{document.id.display="none"}}else{if(document.all.id.style.display=="none"){document.all.id.style.display="block"}else{document.all.id.style.display="none"}}}};</script><div class="fuelphp-dump" style="font-size: 13px;background: #EEE !important; border:1px solid #666; color: #000 !important; padding:10px;"><h1 style="padding: 0 0 5px 0; margin: 0; font: bold 110% sans-serif;">File: VENDORPATH/fuelphp/common/tests/src/Fuel/Common/DebugTest.php @ line: 119</h1><pre style="overflow:auto;font-size:100%;"><strong>Variable: \$varA</strong>
+<script type="text/javascript">function fuel_debug_toggle(a){if(document.getElementById){if(document.getElementById(a).style.display=="none"){document.getElementById(a).style.display="block"}else{document.getElementById(a).style.display="none"}}else{if(document.layers){if(document.id.display=="none"){document.id.display="block"}else{document.id.display="none"}}else{if(document.all.id.style.display=="none"){document.all.id.style.display="block"}else{document.all.id.style.display="none"}}}};</script><div class="fuelphp-dump" style="font-size: 13px;background: #EEE !important; border:1px solid #666; color: #000 !important; padding:10px;"><h1 style="padding: 0 0 5px 0; margin: 0; font: bold 110% sans-serif;">File: VENDORPATH/fuelphp/common/tests/src/Fuel/Common/DebugTest.php @ line: 001</h1><pre style="overflow:auto;font-size:100%;"><strong>Variable: \$varA</strong>
 <i></i> <strong></strong> (String): <span style="color:#E00000;">"a"</span> (1 characters)
 </pre></div>
 HTML;
@@ -130,7 +135,7 @@ HTML;
 	public function testDumpAsHtmlVariables()
 	{
 		$expected = <<<HTML
-<script type="text/javascript">function fuel_debug_toggle(a){if(document.getElementById){if(document.getElementById(a).style.display=="none"){document.getElementById(a).style.display="block"}else{document.getElementById(a).style.display="none"}}else{if(document.layers){if(document.id.display=="none"){document.id.display="block"}else{document.id.display="none"}}else{if(document.all.id.style.display=="none"){document.all.id.style.display="block"}else{document.all.id.style.display="none"}}}};</script><div class="fuelphp-dump" style="font-size: 13px;background: #EEE !important; border:1px solid #666; color: #000 !important; padding:10px;"><h1 style="padding: 0 0 5px 0; margin: 0; font: bold 110% sans-serif;">File: VENDORPATH/fuelphp/common/tests/src/Fuel/Common/DebugTest.php @ line: 142</h1><pre style="overflow:auto;font-size:100%;"><strong>Variable: \$varA</strong>
+<script type="text/javascript">function fuel_debug_toggle(a){if(document.getElementById){if(document.getElementById(a).style.display=="none"){document.getElementById(a).style.display="block"}else{document.getElementById(a).style.display="none"}}else{if(document.layers){if(document.id.display=="none"){document.id.display="block"}else{document.id.display="none"}}else{if(document.all.id.style.display=="none"){document.all.id.style.display="block"}else{document.all.id.style.display="none"}}}};</script><div class="fuelphp-dump" style="font-size: 13px;background: #EEE !important; border:1px solid #666; color: #000 !important; padding:10px;"><h1 style="padding: 0 0 5px 0; margin: 0; font: bold 110% sans-serif;">File: VENDORPATH/fuelphp/common/tests/src/Fuel/Common/DebugTest.php @ line: 001</h1><pre style="overflow:auto;font-size:100%;"><strong>Variable: \$varA</strong>
 <i></i> <strong></strong> (String): <span style="color:#E00000;">"a"</span> (1 characters)
 
 <strong>Variable: \$varB</strong>
@@ -153,10 +158,10 @@ HTML;
 	public function testDumpAsHtmlComplex()
 	{
 		$expected = <<<HTML
-<script type="text/javascript">function fuel_debug_toggle(a){if(document.getElementById){if(document.getElementById(a).style.display=="none"){document.getElementById(a).style.display="block"}else{document.getElementById(a).style.display="none"}}else{if(document.layers){if(document.id.display=="none"){document.id.display="block"}else{document.id.display="none"}}else{if(document.all.id.style.display=="none"){document.all.id.style.display="block"}else{document.all.id.style.display="none"}}}};</script><div class="fuelphp-dump" style="font-size: 13px;background: #EEE !important; border:1px solid #666; color: #000 !important; padding:10px;"><h1 style="padding: 0 0 5px 0; margin: 0; font: bold 110% sans-serif;">File: VENDORPATH/fuelphp/common/tests/src/Fuel/Common/DebugTest.php @ line: 167</h1><h5 style="border-bottom: 1px solid #CCC;padding: 0 0 5px 0; margin: 0 0 5px 0; font: bold 85% sans-serif;">Variable dumped: \$varB</h5>
+<script type="text/javascript">function fuel_debug_toggle(a){if(document.getElementById){if(document.getElementById(a).style.display=="none"){document.getElementById(a).style.display="block"}else{document.getElementById(a).style.display="none"}}else{if(document.layers){if(document.id.display=="none"){document.id.display="block"}else{document.id.display="none"}}else{if(document.all.id.style.display=="none"){document.all.id.style.display="block"}else{document.all.id.style.display="none"}}}};</script><div class="fuelphp-dump" style="font-size: 13px;background: #EEE !important; border:1px solid #666; color: #000 !important; padding:10px;"><h1 style="padding: 0 0 5px 0; margin: 0; font: bold 110% sans-serif;">File: VENDORPATH/fuelphp/common/tests/src/Fuel/Common/DebugTest.php @ line: 001</h1><h5 style="border-bottom: 1px solid #CCC;padding: 0 0 5px 0; margin: 0 0 5px 0; font: bold 85% sans-serif;">Variable dumped: \$varB</h5>
 <pre style="overflow:auto;font-size:100%;"><strong>Variable #1 of 1:</strong>
 <i></i> <strong></strong> (Integer): 123
-</pre></div><div class="fuelphp-dump" style="font-size: 13px;background: #EEE !important; border:1px solid #666; color: #000 !important; padding:10px;"><h1 style="padding: 0 0 5px 0; margin: 0; font: bold 110% sans-serif;">File: VENDORPATH/fuelphp/common/tests/src/Fuel/Common/DebugTest.php @ line: 167</h1><h5 style="border-bottom: 1px solid #CCC;padding: 0 0 5px 0; margin: 0 0 5px 0; font: bold 85% sans-serif;">Variable dumped: \$varB</h5>
+</pre></div><div class="fuelphp-dump" style="font-size: 13px;background: #EEE !important; border:1px solid #666; color: #000 !important; padding:10px;"><h1 style="padding: 0 0 5px 0; margin: 0; font: bold 110% sans-serif;">File: VENDORPATH/fuelphp/common/tests/src/Fuel/Common/DebugTest.php @ line: 001</h1><h5 style="border-bottom: 1px solid #CCC;padding: 0 0 5px 0; margin: 0 0 5px 0; font: bold 85% sans-serif;">Variable dumped: \$varB</h5>
 <pre style="overflow:auto;font-size:100%;"><strong>Variable #1 of 1:</strong>
 <i></i> <strong></strong> (Integer): 456
 </pre></div>
@@ -168,7 +173,7 @@ HTML;
 		$this->assertEquals($expected, $output);
 
 		$expected = <<<HTML
-<div class="fuelphp-dump" style="font-size: 13px;background: #EEE !important; border:1px solid #666; color: #000 !important; padding:10px;"><h1 style="padding: 0 0 5px 0; margin: 0; font: bold 110% sans-serif;">File: VENDORPATH/fuelphp/common/tests/src/Fuel/Common/DebugTest.php @ line: 176</h1><pre style="overflow:auto;font-size:100%;"><strong>Expression: (\$varA + \$varB)</strong>
+<div class="fuelphp-dump" style="font-size: 13px;background: #EEE !important; border:1px solid #666; color: #000 !important; padding:10px;"><h1 style="padding: 0 0 5px 0; margin: 0; font: bold 110% sans-serif;">File: VENDORPATH/fuelphp/common/tests/src/Fuel/Common/DebugTest.php @ line: 001</h1><pre style="overflow:auto;font-size:100%;"><strong>Expression: (\$varA + \$varB)</strong>
 <i></i> <strong></strong> (Integer): 579
 </pre></div>
 HTML;
@@ -187,7 +192,7 @@ HTML;
 	public function testDumpAsHtmlArray()
 	{
 		$expected = <<<HTML
-<script type="text/javascript">function fuel_debug_toggle(a){if(document.getElementById){if(document.getElementById(a).style.display=="none"){document.getElementById(a).style.display="block"}else{document.getElementById(a).style.display="none"}}else{if(document.layers){if(document.id.display=="none"){document.id.display="block"}else{document.id.display="none"}}else{if(document.all.id.style.display=="none"){document.all.id.style.display="block"}else{document.all.id.style.display="none"}}}};</script><div class="fuelphp-dump" style="font-size: 13px;background: #EEE !important; border:1px solid #666; color: #000 !important; padding:10px;"><h1 style="padding: 0 0 5px 0; margin: 0; font: bold 110% sans-serif;">File: VENDORPATH/fuelphp/common/tests/src/Fuel/Common/DebugTest.php @ line: 200</h1><pre style="overflow:auto;font-size:100%;"><strong>Expression: array(1, 'A', array('B'))</strong>
+<script type="text/javascript">function fuel_debug_toggle(a){if(document.getElementById){if(document.getElementById(a).style.display=="none"){document.getElementById(a).style.display="block"}else{document.getElementById(a).style.display="none"}}else{if(document.layers){if(document.id.display=="none"){document.id.display="block"}else{document.id.display="none"}}else{if(document.all.id.style.display=="none"){document.all.id.style.display="block"}else{document.all.id.style.display="none"}}}};</script><div class="fuelphp-dump" style="font-size: 13px;background: #EEE !important; border:1px solid #666; color: #000 !important; padding:10px;"><h1 style="padding: 0 0 5px 0; margin: 0; font: bold 110% sans-serif;">File: VENDORPATH/fuelphp/common/tests/src/Fuel/Common/DebugTest.php @ line: 001</h1><pre style="overflow:auto;font-size:100%;"><strong>Expression: array(1, 'A', array('B'))</strong>
 <i></i> <strong></strong> (Array, 3 elements) <a href="javascript:fuel_debug_toggle('fuel_debug_1');" title="Click to close">&crarr;</a>
 <span id="fuel_debug_1" style="display: block;">&nbsp;&nbsp;&nbsp;&nbsp;<i></i> <strong>0</strong> (Integer): 1
 &nbsp;&nbsp;&nbsp;&nbsp;<i></i> <strong>1</strong> (String): <span style="color:#E00000;">"A"</span> (1 characters)
@@ -211,7 +216,7 @@ HTML;
 	public function testDumpAsHtmlEmptyArray()
 	{
 		$expected = <<<HTML
-<script type="text/javascript">function fuel_debug_toggle(a){if(document.getElementById){if(document.getElementById(a).style.display=="none"){document.getElementById(a).style.display="block"}else{document.getElementById(a).style.display="none"}}else{if(document.layers){if(document.id.display=="none"){document.id.display="block"}else{document.id.display="none"}}else{if(document.all.id.style.display=="none"){document.all.id.style.display="block"}else{document.all.id.style.display="none"}}}};</script><div class="fuelphp-dump" style="font-size: 13px;background: #EEE !important; border:1px solid #666; color: #000 !important; padding:10px;"><h1 style="padding: 0 0 5px 0; margin: 0; font: bold 110% sans-serif;">File: VENDORPATH/fuelphp/common/tests/src/Fuel/Common/DebugTest.php @ line: 219</h1><pre style="overflow:auto;font-size:100%;"><strong>Expression: array()</strong>
+<script type="text/javascript">function fuel_debug_toggle(a){if(document.getElementById){if(document.getElementById(a).style.display=="none"){document.getElementById(a).style.display="block"}else{document.getElementById(a).style.display="none"}}else{if(document.layers){if(document.id.display=="none"){document.id.display="block"}else{document.id.display="none"}}else{if(document.all.id.style.display=="none"){document.all.id.style.display="block"}else{document.all.id.style.display="none"}}}};</script><div class="fuelphp-dump" style="font-size: 13px;background: #EEE !important; border:1px solid #666; color: #000 !important; padding:10px;"><h1 style="padding: 0 0 5px 0; margin: 0; font: bold 110% sans-serif;">File: VENDORPATH/fuelphp/common/tests/src/Fuel/Common/DebugTest.php @ line: 001</h1><pre style="overflow:auto;font-size:100%;"><strong>Expression: array()</strong>
 <i></i> <strong></strong> (Array, 0 elements)
 </pre></div>
 HTML;
@@ -230,7 +235,7 @@ HTML;
 	public function testDumpAsHtmlValues()
 	{
 		$expected = <<<HTML
-<script type="text/javascript">function fuel_debug_toggle(a){if(document.getElementById){if(document.getElementById(a).style.display=="none"){document.getElementById(a).style.display="block"}else{document.getElementById(a).style.display="none"}}else{if(document.layers){if(document.id.display=="none"){document.id.display="block"}else{document.id.display="none"}}else{if(document.all.id.style.display=="none"){document.all.id.style.display="block"}else{document.all.id.style.display="none"}}}};</script><div class="fuelphp-dump" style="font-size: 13px;background: #EEE !important; border:1px solid #666; color: #000 !important; padding:10px;"><h1 style="padding: 0 0 5px 0; margin: 0; font: bold 110% sans-serif;">File: VENDORPATH/fuelphp/common/tests/src/Fuel/Common/DebugTest.php @ line: 247</h1><pre style="overflow:auto;font-size:100%;"><strong>Expression: 1.23</strong>
+<script type="text/javascript">function fuel_debug_toggle(a){if(document.getElementById){if(document.getElementById(a).style.display=="none"){document.getElementById(a).style.display="block"}else{document.getElementById(a).style.display="none"}}else{if(document.layers){if(document.id.display=="none"){document.id.display="block"}else{document.id.display="none"}}else{if(document.all.id.style.display=="none"){document.all.id.style.display="block"}else{document.all.id.style.display="none"}}}};</script><div class="fuelphp-dump" style="font-size: 13px;background: #EEE !important; border:1px solid #666; color: #000 !important; padding:10px;"><h1 style="padding: 0 0 5px 0; margin: 0; font: bold 110% sans-serif;">File: VENDORPATH/fuelphp/common/tests/src/Fuel/Common/DebugTest.php @ line: 001</h1><pre style="overflow:auto;font-size:100%;"><strong>Expression: 1.23</strong>
 <i></i> <strong></strong> (Float): 1.23
 
 <strong>Expression: 1</strong>
@@ -257,16 +262,14 @@ HTML;
 	 */
 	public function testDumpAsHtmlObject()
 	{
-		$O1 = $this->objectCounter++;
-		$O2 = $this->objectCounter++;
 		$expected = <<<HTML
-<script type="text/javascript">function fuel_debug_toggle(a){if(document.getElementById){if(document.getElementById(a).style.display=="none"){document.getElementById(a).style.display="block"}else{document.getElementById(a).style.display="none"}}else{if(document.layers){if(document.id.display=="none"){document.id.display="block"}else{document.id.display="none"}}else{if(document.all.id.style.display=="none"){document.all.id.style.display="block"}else{document.all.id.style.display="none"}}}};</script><div class="fuelphp-dump" style="font-size: 13px;background: #EEE !important; border:1px solid #666; color: #000 !important; padding:10px;"><h1 style="padding: 0 0 5px 0; margin: 0; font: bold 110% sans-serif;">File: VENDORPATH/fuelphp/common/tests/src/Fuel/Common/DebugTest.php @ line: 278</h1><pre style="overflow:auto;font-size:100%;"><strong>Variable: \$input</strong>
-<i></i> <strong></strong> (Object #$O1): Fuel\Common\DumpTarget <a href="javascript:fuel_debug_toggle('fuel_debug_4');" title="Click to open">&crarr;</a>
+<script type="text/javascript">function fuel_debug_toggle(a){if(document.getElementById){if(document.getElementById(a).style.display=="none"){document.getElementById(a).style.display="block"}else{document.getElementById(a).style.display="none"}}else{if(document.layers){if(document.id.display=="none"){document.id.display="block"}else{document.id.display="none"}}else{if(document.all.id.style.display=="none"){document.all.id.style.display="block"}else{document.all.id.style.display="none"}}}};</script><div class="fuelphp-dump" style="font-size: 13px;background: #EEE !important; border:1px solid #666; color: #000 !important; padding:10px;"><h1 style="padding: 0 0 5px 0; margin: 0; font: bold 110% sans-serif;">File: VENDORPATH/fuelphp/common/tests/src/Fuel/Common/DebugTest.php @ line: 001</h1><pre style="overflow:auto;font-size:100%;"><strong>Variable: \$input</strong>
+<i></i> <strong></strong> (Object #id): Fuel\Common\DumpTarget <a href="javascript:fuel_debug_toggle('fuel_debug_4');" title="Click to open">&crarr;</a>
 <span id="fuel_debug_4" style="display: none;">&nbsp;&nbsp;&nbsp;&nbsp;<i><span style="color:green;">public</span></i> <strong>pub</strong> (Integer): 1
 &nbsp;&nbsp;&nbsp;&nbsp;<i><span style="color:blue;">protected</span></i> <strong>prot</strong> (String): <span style="color:#E00000;">"A"</span> (1 characters)
 &nbsp;&nbsp;&nbsp;&nbsp;<i><span style="color:red;">private</span></i> <strong>priv</strong> (Array, 2 elements)
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;...
-&nbsp;&nbsp;&nbsp;&nbsp;<i><span style="color:green;">public</span></i> <strong>class</strong> (Object #$O2): stdClass<span id="fuel_debug_6" style="display: none;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;...
+&nbsp;&nbsp;&nbsp;&nbsp;<i><span style="color:green;">public</span></i> <strong>class</strong> (Object #id): stdClass<span id="fuel_debug_6" style="display: none;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;...
 </span></span></pre></div>
 HTML;
 
@@ -288,11 +291,9 @@ HTML;
 	 */
 	public function testDumpAsHtmlEmptyObject()
 	{
-		$O1 = 3+$this->objectCounter++;
-
 		$expected = <<<HTML
-<script type="text/javascript">function fuel_debug_toggle(a){if(document.getElementById){if(document.getElementById(a).style.display=="none"){document.getElementById(a).style.display="block"}else{document.getElementById(a).style.display="none"}}else{if(document.layers){if(document.id.display=="none"){document.id.display="block"}else{document.id.display="none"}}else{if(document.all.id.style.display=="none"){document.all.id.style.display="block"}else{document.all.id.style.display="none"}}}};</script><div class="fuelphp-dump" style="font-size: 13px;background: #EEE !important; border:1px solid #666; color: #000 !important; padding:10px;"><h1 style="padding: 0 0 5px 0; margin: 0; font: bold 110% sans-serif;">File: VENDORPATH/fuelphp/common/tests/src/Fuel/Common/DebugTest.php @ line: 299</h1><pre style="overflow:auto;font-size:100%;"><strong>Variable: \$input</strong>
-<i></i> <strong></strong> (Object #$O1): stdClass</pre></div>
+<script type="text/javascript">function fuel_debug_toggle(a){if(document.getElementById){if(document.getElementById(a).style.display=="none"){document.getElementById(a).style.display="block"}else{document.getElementById(a).style.display="none"}}else{if(document.layers){if(document.id.display=="none"){document.id.display="block"}else{document.id.display="none"}}else{if(document.all.id.style.display=="none"){document.all.id.style.display="block"}else{document.all.id.style.display="none"}}}};</script><div class="fuelphp-dump" style="font-size: 13px;background: #EEE !important; border:1px solid #666; color: #000 !important; padding:10px;"><h1 style="padding: 0 0 5px 0; margin: 0; font: bold 110% sans-serif;">File: VENDORPATH/fuelphp/common/tests/src/Fuel/Common/DebugTest.php @ line: 001</h1><pre style="overflow:auto;font-size:100%;"><strong>Variable: \$input</strong>
+<i></i> <strong></strong> (Object #id): stdClass</pre></div>
 HTML;
 
 		$input = new \StdClass;
@@ -310,7 +311,7 @@ HTML;
 	public function testDumpAsHtmlResource()
 	{
 		$expected = <<<HTML
-<script type="text/javascript">function fuel_debug_toggle(a){if(document.getElementById){if(document.getElementById(a).style.display=="none"){document.getElementById(a).style.display="block"}else{document.getElementById(a).style.display="none"}}else{if(document.layers){if(document.id.display=="none"){document.id.display="block"}else{document.id.display="none"}}else{if(document.all.id.style.display=="none"){document.all.id.style.display="block"}else{document.all.id.style.display="none"}}}};</script><div class="fuelphp-dump" style="font-size: 13px;background: #EEE !important; border:1px solid #666; color: #000 !important; padding:10px;"><h1 style="padding: 0 0 5px 0; margin: 0; font: bold 110% sans-serif;">File: VENDORPATH/fuelphp/common/tests/src/Fuel/Common/DebugTest.php @ line: 318</h1><pre style="overflow:auto;font-size:100%;"><strong>Variable: \$fh</strong>
+<script type="text/javascript">function fuel_debug_toggle(a){if(document.getElementById){if(document.getElementById(a).style.display=="none"){document.getElementById(a).style.display="block"}else{document.getElementById(a).style.display="none"}}else{if(document.layers){if(document.id.display=="none"){document.id.display="block"}else{document.id.display="none"}}else{if(document.all.id.style.display=="none"){document.all.id.style.display="block"}else{document.all.id.style.display="none"}}}};</script><div class="fuelphp-dump" style="font-size: 13px;background: #EEE !important; border:1px solid #666; color: #000 !important; padding:10px;"><h1 style="padding: 0 0 5px 0; margin: 0; font: bold 110% sans-serif;">File: VENDORPATH/fuelphp/common/tests/src/Fuel/Common/DebugTest.php @ line: 001</h1><pre style="overflow:auto;font-size:100%;"><strong>Variable: \$fh</strong>
 <i></i> <strong></strong>: Resource id #347
 </pre></div>
 HTML;
