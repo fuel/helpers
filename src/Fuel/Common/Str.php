@@ -16,10 +16,9 @@ namespace Fuel\Common;
  * PHP needs to be compiled with --enable-mbstring
  * or a fallback without encoding support is used
  */
-abstract class Str
+class Str
 {
-
-	protected static $encoding = 'UTF-8';
+	protected $encoding = 'UTF-8';
 
   /**
 	 * Truncates a string to the given length.  It will optionally preserve
@@ -31,7 +30,7 @@ abstract class Str
 	 * @param   bool    $is_html       whether the string has HTML
 	 * @return  string  the truncated string
 	 */
-	public static function truncate($string, $limit, $continuation = '...', $is_html = false)
+	public function truncate($string, $limit, $continuation = '...', $is_html = false)
 	{
 		$offset = 0;
 		$tags = array();
@@ -45,7 +44,7 @@ abstract class Str
 				{
 					break;
 				}
-				$limit += (static::length($match[0][0]) - 1);
+				$limit += ($this->length($match[0][0]) - 1);
 			}
 
 			// Handle all the html tags.
@@ -56,20 +55,20 @@ abstract class Str
 				{
 					break;
 				}
-				$tag = static::sub(strtok($match[0][0], " \t\n\r\0\x0B>"), 1);
+				$tag = $this->sub(strtok($match[0][0], " \t\n\r\0\x0B>"), 1);
 				if($tag[0] != '/')
 				{
 					$tags[] = $tag;
 				}
-				elseif (end($tags) == static::sub($tag, 1))
+				elseif (end($tags) == $this->sub($tag, 1))
 				{
 					array_pop($tags);
 				}
 				$offset += $match[1][1] - $match[0][1];
 			}
 		}
-		$new_string = static::sub($string, 0, $limit = min(static::length($string),  $limit + $offset));
-		$new_string .= (static::length($string) > $limit ? $continuation : '');
+		$new_string = $this->sub($string, 0, $limit = min($this->length($string),  $limit + $offset));
+		$new_string .= ($this->length($string) > $limit ? $continuation : '');
 		$new_string .= (count($tags = array_reverse($tags)) ? '</'.implode('></',$tags).'>' : '');
 		return $new_string;
 	}
@@ -80,7 +79,7 @@ abstract class Str
 	 * @param   string  $str  required
 	 * @return  string
 	 */
-	public static function increment($str, $first = 1, $separator = '_')
+	public function increment($str, $first = 1, $separator = '_')
 	{
 		preg_match('/(.+)'.$separator.'([0-9]+)$/', $str, $match);
 
@@ -95,7 +94,7 @@ abstract class Str
 	 * @param   boolean  $ignore_case  wether to ignore the case
 	 * @return  boolean  wether a string starts with a specified beginning
 	 */
-	public static function startsWith($str, $start, $ignore_case = false)
+	public function startsWith($str, $start, $ignore_case = false)
 	{
 		return (bool) preg_match('/^'.preg_quote($start, '/').'/m'.($ignore_case ? 'i' : ''), $str);
 	}
@@ -108,7 +107,7 @@ abstract class Str
 	 * @param   boolean  $ignore_case  wether to ignore the case
 	 * @return  boolean  wether a string ends with a specified ending
 	 */
-	public static function endsWith($str, $end, $ignore_case = false)
+	public function endsWith($str, $end, $ignore_case = false)
 	{
 		return (bool) preg_match('/'.preg_quote($end, '/').'$/m'.($ignore_case ? 'i' : ''), $str);
 	}
@@ -122,9 +121,9 @@ abstract class Str
 	 * @param   string    $encoding  default UTF-8
 	 * @return  string
 	 */
-	public static function sub($str, $start, $length = null, $encoding = null)
+	public function sub($str, $start, $length = null, $encoding = null)
 	{
-		$encoding or $encoding = static::$encoding;
+		$encoding or $encoding = $this->encoding;
 
 		// substr functions don't parse null correctly
 		$length = is_null($length) ? (function_exists('mb_substr') ? mb_strlen($str, $encoding) : strlen($str)) - $start : $length;
@@ -141,9 +140,9 @@ abstract class Str
 	 * @param   string  $encoding  default UTF-8
 	 * @return  int
 	 */
-	public static function length($str, $encoding = null)
+	public function length($str, $encoding = null)
 	{
-		$encoding or $encoding = static::$encoding;
+		$encoding or $encoding = $this->encoding;
 
 		return function_exists('mb_strlen')
 			? mb_strlen($str, $encoding)
@@ -157,9 +156,9 @@ abstract class Str
 	 * @param   string  $encoding  default UTF-8
 	 * @return  string
 	 */
-	public static function lower($str, $encoding = null)
+	public function lower($str, $encoding = null)
 	{
-		$encoding or $encoding = static::$encoding;
+		$encoding or $encoding = $this->encoding;
 
 		return function_exists('mb_strtolower')
 			? mb_strtolower($str, $encoding)
@@ -173,9 +172,9 @@ abstract class Str
 	 * @param   string  $encoding  default UTF-8
 	 * @return  string
 	 */
-	public static function upper($str, $encoding = null)
+	public function upper($str, $encoding = null)
 	{
-		$encoding or $encoding = static::$encoding;
+		$encoding or $encoding = $this->encoding;
 
 		return function_exists('mb_strtoupper')
 			? mb_strtoupper($str, $encoding)
@@ -191,9 +190,9 @@ abstract class Str
 	 * @param   string  $encoding  default UTF-8
 	 * @return  string
 	 */
-	public static function lcfirst($str, $encoding = null)
+	public function lcfirst($str, $encoding = null)
 	{
-		$encoding or $encoding = static::$encoding;
+		$encoding or $encoding = $this->encoding;
 
 		return function_exists('mb_strtolower')
 			? mb_strtolower(mb_substr($str, 0, 1, $encoding), $encoding).
@@ -210,9 +209,9 @@ abstract class Str
 	 * @param   string $encoding  default UTF-8
 	 * @return   string
 	 */
-	public static function ucfirst($str, $encoding = null)
+	public function ucfirst($str, $encoding = null)
 	{
-		$encoding or $encoding = static::$encoding;
+		$encoding or $encoding = $this->encoding;
 
 		return function_exists('mb_strtoupper')
 			? mb_strtoupper(mb_substr($str, 0, 1, $encoding), $encoding).
@@ -232,9 +231,9 @@ abstract class Str
 	 * @param   string   $encoding  default UTF-8
 	 * @return  string
 	 */
-	public static function ucwords($str, $encoding = null)
+	public function ucwords($str, $encoding = null)
 	{
-		$encoding or $encoding = static::$encoding;
+		$encoding or $encoding = $this->encoding;
 
 		return function_exists('mb_convert_case')
 			? mb_convert_case($str, MB_CASE_TITLE, $encoding)
@@ -248,7 +247,7 @@ abstract class Str
 	  * @param   int     the number of characters
 	  * @return  string  the random string
 	  */
-	public static function random($type = 'alnum', $length = 16)
+	public function random($type = 'alnum', $length = 16)
 	{
 		switch($type)
 		{
@@ -315,7 +314,7 @@ abstract class Str
 	 *
 	 * @return  Closure
 	 */
-	public static function alternator()
+	public function alternator()
 	{
 		// the args are the values to alternate
 		$args = func_get_args();
@@ -334,7 +333,7 @@ abstract class Str
 	 * @param   array   params to str_replace
 	 * @return  string
 	 */
-	public static function tr($string, $array = array())
+	public function tr($string, $array = array())
 	{
 		if (is_string($string))
 		{
@@ -361,7 +360,7 @@ abstract class Str
 	 * @param  string $string string to check
 	 * @return bool
 	 */
-	public static function is_json($string)
+	public function is_json($string)
 	{
 		json_decode($string);
 		return json_last_error() === JSON_ERROR_NONE;
@@ -373,7 +372,7 @@ abstract class Str
 	 * @param  string $string string to check
 	 * @return bool
 	 */
-	public static function is_xml($string)
+	public function is_xml($string)
 	{
 		$internal_errors = libxml_use_internal_errors();
 		libxml_use_internal_errors(true);
@@ -389,7 +388,7 @@ abstract class Str
 	 * @param  string $string string to check
 	 * @return bool
 	 */
-	public static function is_serialized($string)
+	public function is_serialized($string)
 	{
 		$array = @unserialize($string);
 		return ! ($array === false and $string !== 'b:0;');
@@ -401,7 +400,7 @@ abstract class Str
 	 * @param  string $string string to check
 	 * @return bool
 	 */
-	public static function is_html($string)
+	public function is_html($string)
 	{
 		return strlen(strip_tags($string)) < strlen($string);
 	}

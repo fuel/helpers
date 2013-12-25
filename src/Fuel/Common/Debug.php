@@ -21,22 +21,40 @@ class Debug
 	/**
 	 * @var  int  Maximum nesting level for dump output
 	 */
-	protected static $maxNestingLevel = 5;
+	protected $maxNestingLevel = 5;
 
 	/**
 	 * @var  bool  Whether or not the dump nesting is opened by default
 	 */
-	protected static $jsOpenToggle = false;
+	protected $jsOpenToggle = false;
 
 	/**
 	 * @var  bool  Flag to track if the required javascript has already been sent
 	 */
-	protected static $jsDisplayed = false;
+	protected $jsDisplayed = false;
 
 	/**
 	 * @var  array  Cache for fileLines(), to avoid duplicate lookups
 	 */
-	protected static $filesCache = array();
+	protected $filesCache = array();
+
+	/**
+	 * @var  DataContainer  Input datacontainer
+	 */
+	protected $input;
+
+	/**
+	 * @var  Inflector  Inflector instance
+	 */
+	protected $inflector;
+
+	/**
+	 */
+	public function __construct($input, $inflector)
+	{
+		$this->input = $input;
+		$this->inflector = $inflector;
+	}
 
 	/**
 	 * Setter for maxNestingLevel
@@ -45,14 +63,14 @@ class Debug
 	 *
 	 * @return  int  The current nesting level
 	 */
-	public static function setNestingLevel($level = null)
+	public function setNestingLevel($level = null)
 	{
 		if (func_num_args() and is_numeric($level) and $level > 0)
 		{
-			static::$maxNestingLevel = $level;
+			$this->maxNestingLevel = $level;
 		}
 
-		return static::$maxNestingLevel;
+		return $this->maxNestingLevel;
 	}
 
 	/**
@@ -62,22 +80,20 @@ class Debug
 	 *
 	 * @return  bool  The current toggle state
 	 */
-	public static function setOpenToggle($toggle = null)
+	public function setOpenToggle($toggle = null)
 	{
 		if (func_num_args() and is_bool($toggle))
 		{
-			static::$jsOpenToggle = $toggle;
+			$this->jsOpenToggle = $toggle;
 		}
 
-		return static::$jsOpenToggle;
+		return $this->jsOpenToggle;
 	}
 
 	/**
-	 * Quick and nice way to output a mixed variable to the browser
-	 *
-	 * @return	string
+	 * Quick and nice way to output mixed variable(s)
 	 */
-	public static function dump()
+	public function dump()
 	{
 		if ((bool) defined('STDIN'))
 		{
@@ -86,9 +102,20 @@ class Debug
 			{
 				var_dump($arg);
 			}
-			return;
 		}
+		else
+		{
+			// @codeCoverageIgnoreStart
+			call_user_func_array(array($this, 'dumpAsHtml'), func_get_args());
+			// @codeCoverageIgnoreEnd
+		}
+	}
 
+	/**
+	 * Quick and nice way to output mixed variable(s) to the browser
+	 */
+	public function dumpAsHtml()
+	{
 		$arguments = func_get_args();
 		$total = count($arguments);
 
@@ -106,13 +133,13 @@ class Debug
 				}
 
 				$callee = $trace;
-				$label = \Inflector::humanize($backtrace[$stack+1]['function']);
+				$label = $this->inflector->humanize($backtrace[$stack+1]['function']);
 
 				// get info about what was dumped
 				$callee['code'] = '';
 				for ($i = $callee['line']; $i > 0; $i--)
 				{
-					$line = static::fileLines($callee['file'], $i, false, 0);
+					$line = $this->fileLines($callee['file'], $i, false, 0);
 					$callee['code'] = reset($line).' '.trim($callee['code']);
 					$tokens = token_get_all('<?php '.$callee['code']);
 					if (is_array($tokens[1]) and isset($tokens[1][0]) and $tokens[1][0] != 377)
@@ -199,12 +226,12 @@ class Debug
 			}
 		}
 
-		if ( ! static::$jsDisplayed)
+		if ( ! $this->jsDisplayed)
 		{
 			echo <<<JS
 <script type="text/javascript">function fuel_debug_toggle(a){if(document.getElementById){if(document.getElementById(a).style.display=="none"){document.getElementById(a).style.display="block"}else{document.getElementById(a).style.display="none"}}else{if(document.layers){if(document.id.display=="none"){document.id.display="block"}else{document.id.display="none"}}else{if(document.all.id.style.display=="none"){document.all.id.style.display="block"}else{document.all.id.style.display="none"}}}};</script>
 JS;
-			static::$jsDisplayed = true;
+			$this->jsDisplayed = true;
 		}
 
 		echo '<div class="fuelphp-dump" style="font-size: 13px;background: #EEE !important; border:1px solid #666; color: #000 !important; padding:10px;">';
@@ -230,7 +257,7 @@ JS;
 			{
 				echo '<strong>Expression: '.trim($callee['code'][$i++]).'</strong>'.PHP_EOL;
 			}
-			echo static::format('', $argument);
+			echo $this->format('', $argument);
 			if ($i < $total)
 			{
 				echo PHP_EOL;
@@ -250,25 +277,27 @@ JS;
 	 * @param	string	$indent_char	the indentation character
 	 * @return	string	the formatted string.
 	 */
-	public static function format($name, $var, $level = 0, $indent_char = '&nbsp;&nbsp;&nbsp;&nbsp;', $scope = '')
+	public function format($name, $var, $level = 0, $indent_char = '&nbsp;&nbsp;&nbsp;&nbsp;', $scope = '')
 	{
+		static $itemCounter = 1;
+
 		$return = str_repeat($indent_char, $level);
 
 		if (is_array($var))
 		{
-			$id = 'fuel_debug_'.mt_rand();
+			$id = 'fuel_debug_'.$itemCounter++;
 			$return .= "<i>{$scope}</i> <strong>{$name}</strong>";
 			$return .=  " (Array, ".count($var)." element".(count($var)!=1?"s":"").")";
-			if (count($var) > 0 and static::$maxNestingLevel > $level)
+			if (count($var) > 0 and $this->maxNestingLevel > $level)
 			{
-				$return .= " <a href=\"javascript:fuel_debug_toggle('$id');\" title=\"Click to ".((static::$jsOpenToggle or $level == 0)?"close":"open")."\">&crarr;</a>".PHP_EOL;
+				$return .= " <a href=\"javascript:fuel_debug_toggle('$id');\" title=\"Click to ".(($this->jsOpenToggle or $level == 0)?"close":"open")."\">&crarr;</a>".PHP_EOL;
 			}
 			else
 			{
 				$return .= PHP_EOL;
 			}
 
-			if (static::$maxNestingLevel <= $level)
+			if ($this->maxNestingLevel <= $level)
 			{
 				$return .= str_repeat($indent_char, $level + 1)."...".PHP_EOL;
 			}
@@ -277,11 +306,11 @@ JS;
 				$sub_return = '';
 				foreach ($var as $key => $val)
 				{
-					$sub_return .= static::format($key, $val, $level + 1);
+					$sub_return .= $this->format($key, $val, $level + 1);
 				}
 				if (count($var) > 0)
 				{
-					$return .= "<span id=\"$id\" style=\"display: ".((static::$jsOpenToggle or $level == 0)?"block":"none").";\">$sub_return</span>";
+					$return .= "<span id=\"$id\" style=\"display: ".(($this->jsOpenToggle or $level == 0)?"block":"none").";\">$sub_return</span>";
 				}
 				else
 				{
@@ -298,7 +327,7 @@ JS;
 		{
 			$return .= "<i>{$scope}</i> <strong>{$name}</strong> (Float): {$var}".PHP_EOL;
 		}
-		elseif (is_long($var))
+		elseif (is_int($var))
 		{
 			$return .= "<i>{$scope}</i> <strong>{$name}</strong> (Integer): {$var}".PHP_EOL;
 		}
@@ -310,10 +339,6 @@ JS;
 		{
 			$return .= "<i>{$scope}</i> <strong>{$name}</strong> (Boolean): ".($var ? 'true' : 'false').PHP_EOL;
 		}
-		elseif (is_double($var))
-		{
-			$return .= "<i>{$scope}</i> <strong>{$name}</strong> (Double): {$var}".PHP_EOL;
-		}
 		elseif (is_object($var))
 		{
 			// dirty hack to get the object id
@@ -323,6 +348,7 @@ JS;
 			ob_end_clean();
 
 			// process it based on the xdebug presence and configuration
+			// @codeCoverageIgnoreStart
 			if (extension_loaded('xdebug') and ini_get('xdebug.overload_var_dump') === '1')
 			{
 				if (ini_get('html_errors'))
@@ -338,14 +364,15 @@ JS;
 			{
 				preg_match('~object\((.*?)#(\d+)(.*)~', $contents, $matches);
 			}
+			// @codeCoverageIgnoreEnd
 
-			$id = 'fuel_debug_'.mt_rand();
+			$id = 'fuel_debug_'.$itemCounter++;
 			$rvar = new \ReflectionObject($var);
 			$vars = $rvar->getProperties();
 			$return .= "<i>{$scope}</i> <strong>{$name}</strong> (Object #".$matches[2]."): ".get_class($var);
-			if (count($vars) > 0 and static::$maxNestingLevel > $level)
+			if (count($vars) > 0 and $this->maxNestingLevel > $level)
 			{
-				$return .= " <a href=\"javascript:fuel_debug_toggle('$id');\" title=\"Click to ".(static::$jsOpenToggle?"close":"open")."\">&crarr;</a>".PHP_EOL;
+				$return .= " <a href=\"javascript:fuel_debug_toggle('$id');\" title=\"Click to ".($this->jsOpenToggle?"close":"open")."\">&crarr;</a>".PHP_EOL;
 			}
 
 			$sub_return = '';
@@ -364,19 +391,19 @@ JS;
 				{
 					$scope = '<span style="color:green;">public</span>';
 				}
-				if (static::$maxNestingLevel <= $level)
+				if ($this->maxNestingLevel <= $level)
 				{
 					$sub_return .= str_repeat($indent_char, $level + 1)."...".PHP_EOL;
 				}
 				else
 				{
-					$sub_return .= static::format($prop->name, $prop->getValue($var), $level + 1, $indent_char, $scope);
+					$sub_return .= $this->format($prop->name, $prop->getValue($var), $level + 1, $indent_char, $scope);
 				}
 			}
 
 			if (count($vars) > 0)
 			{
-				$return .= "<span id=\"$id\" style=\"display: ".(static::$jsOpenToggle?"block":"none").";\">$sub_return</span>";
+				$return .= "<span id=\"$id\" style=\"display: ".($this->jsOpenToggle?"block":"none").";\">$sub_return</span>";
 			}
 			else
 			{
@@ -400,7 +427,7 @@ JS;
 	 * @param	int			the amount of line padding
 	 * @return	array
 	 */
-	public static function fileLines($filepath, $line_num, $highlight = true, $padding = 5)
+	public function fileLines($filepath, $line_num, $highlight = true, $padding = 5)
 	{
 		// deal with eval'd code
 		if (strpos($filepath, 'eval()\'d code') !== false)
@@ -409,178 +436,142 @@ JS;
 		}
 
 		// We cache the entire file to reduce disk IO for multiple errors
-		if ( ! isset(static::$filesCache[$filepath]))
+		if ( ! isset($this->filesCache[$filepath]))
 		{
-			static::$filesCache[$filepath] = file($filepath, FILE_IGNORE_NEW_LINES);
-			array_unshift(static::$filesCache[$filepath], '');
+			$this->filesCache[$filepath] = file($filepath, FILE_IGNORE_NEW_LINES);
+			array_unshift($this->filesCache[$filepath], '');
 		}
 
 		$start = max(0, $line_num - $padding);
 		$length = ($line_num - $start) + $padding + 1;
 
-		if (($start + $length) > count(static::$filesCache[$filepath]) - 1)
+		if (($start + $length) > count($this->filesCache[$filepath]) - 1)
 		{
 			$length = null;
 		}
 
-		$debug_lines = array_slice(static::$filesCache[$filepath], $start, $length, true);
+		$debug_lines = array_slice($this->filesCache[$filepath], $start, $length, true);
 
 		if ($highlight)
 		{
 			$to_replace = array('<code>', '</code>', '<span style="color: #0000BB">&lt;?php&nbsp;', PHP_EOL);
 			$replace_with = array('', '', '<span style="color: #0000BB">', '');
 
-			foreach ($debug_lines as & $line)
+			foreach ($debug_lines as &$line)
 			{
-				$line = str_replace($to_replace, $replace_with, highlight_string('<?php ' . $line, t));
+				$line = str_replace($to_replace, $replace_with, highlight_string('<?php ' . $line, true));
 			}
 		}
 
 		return $debug_lines;
 	}
 
-	public static function backtrace()
+	public function backtrace()
 	{
-		return static::dump(debug_backtrace());
+		return $this->dump(debug_backtrace());
 	}
 
 	/**
 	* Prints a list of all currently declared classes.
 	*
 	* @access public
-	* @static
 	*/
-	public static function classes()
+	public function classes()
 	{
-		return static::dump(get_declared_classes());
+		return $this->dump(get_declared_classes());
 	}
 
 	/**
 	* Prints a list of all currently declared interfaces (PHP5 only).
 	*
 	* @access public
-	* @static
 	*/
-	public static function interfaces()
+	public function interfaces()
 	{
-		return static::dump(get_declared_interfaces());
+		return $this->dump(get_declared_interfaces());
 	}
 
 	/**
 	* Prints a list of all currently included (or required) files.
 	*
 	* @access public
-	* @static
 	*/
-	public static function includes()
+	public function includes()
 	{
-	return static::dump(get_included_files());
+	return $this->dump(get_included_files());
 	}
 
 	/**
 	 * Prints a list of all currently declared functions.
 	 *
 	 * @access public
-	 * @static
 	 */
-	public static function functions()
+	public function functions()
 	{
-		return static::dump(get_defined_functions());
+		return $this->dump(get_defined_functions());
 	}
 
 	/**
 	 * Prints a list of all currently declared constants.
 	 *
 	 * @access public
-	 * @static
 	 */
-	public static function constants()
+	public function constants()
 	{
-		return static::dump(get_defined_constants());
+		return $this->dump(get_defined_constants());
 	}
 
 	/**
 	 * Prints a list of all currently loaded PHP extensions.
 	 *
 	 * @access public
-	 * @static
 	 */
-	public static function extensions()
+	public function extensions()
 	{
-		return static::dump(get_loaded_extensions());
+		return $this->dump(get_loaded_extensions());
 	}
 
 	/**
 	 * Prints a list of all HTTP request headers.
 	 *
 	 * @access public
-	 * @static
 	 */
-	public static function headers()
+	public function headers()
 	{
 		// get the current request headers and dump them
-		return static::dump(\Input::headers());
+		return $this->dump($this->input->headers());
 	}
 
 	/**
 	 * Prints a list of the configuration settings read from <i>php.ini</i>
 	 *
 	 * @access public
-	 * @static
 	 */
-	public static function phpini()
+	public function phpini()
 	{
-		if ( ! is_readable(get_cfg_var('cfg_file_path')))
-		{
-			return false;
-		}
-
-		// render it
-		return static::dump(parse_ini_file(get_cfg_var('cfg_file_path'), true));
+		return is_readable(get_cfg_var('cfg_file_path')) ? $this->dump(parse_ini_file(get_cfg_var('cfg_file_path'), true)) : false;
 	}
 
 	/**
 	 * Benchmark anything that is callable
 	 *
 	 * @access public
-	 * @static
 	 */
-	public static function benchmark($callable, array $params = array())
+	public function benchmark($callable, array $params = array())
 	{
 		// get the before-benchmark time
-		if (function_exists('getrusage'))
-		{
-			$dat = getrusage();
-			$utime_before = $dat['ru_utime.tv_sec'] + round($dat['ru_utime.tv_usec']/1000000, 4);
-			$stime_before = $dat['ru_stime.tv_sec'] + round($dat['ru_stime.tv_usec']/1000000, 4);
-		}
-		else
-		{
-			list($usec, $sec) = explode(" ", microtime());
-			$utime_before = ((float)$usec + (float)$sec);
-			$stime_before = 0;
-		}
+		list($usec, $sec) = explode(" ", microtime());
+		$time_before = ((float)$usec + (float)$sec);
 
 		// call the function to be benchmarked
 		$result = is_callable($callable) ? call_user_func_array($callable, $params) : null;
 
 		// get the after-benchmark time
-		if (function_exists('getrusage'))
-		{
-			$dat = getrusage();
-			$utime_after = $dat['ru_utime.tv_sec'] + round($dat['ru_utime.tv_usec']/1000000, 4);
-			$stime_after = $dat['ru_stime.tv_sec'] + round($dat['ru_stime.tv_usec']/1000000, 4);
-		}
-		else
-		{
-			list($usec, $sec) = explode(" ", microtime());
-			$utime_after = ((float)$usec + (float)$sec);
-			$stime_after = 0;
-		}
+		list($usec, $sec) = explode(" ", microtime());
+		$time_after = ((float)$usec + (float)$sec);
 
 		return array(
-			'user' => sprintf('%1.6f', $utime_after - $utime_before),
-			'system' => sprintf('%1.6f', $stime_after - $stime_before),
+			'time' => sprintf('%1.6f', $time_after - $time_before),
 			'result' => $result
 		);
 	}

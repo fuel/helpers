@@ -20,13 +20,18 @@ namespace Fuel\Common;
  */
 class Inflector
 {
-
-	protected static $uncountable_words = array(
+	/**
+	 * @var  array  List of uncountable words
+	 */
+	protected $uncountableWords = array(
 		'equipment', 'information', 'rice', 'money',
 		'species', 'series', 'fish', 'meta'
 	);
 
-	protected static $plural_rules = array(
+	/**
+	 * @var  array  Regex rules for pluralisation
+	 */
+	protected $pluralRules = array(
 		'/^(ox)$/i'                 => '\1\2en',     // ox
 		'/([m|l])ouse$/i'           => '\1ice',      // mouse, louse
 		'/(matr|vert|ind)ix|ex$/i'  => '\1ices',     // matrix, vertex, index
@@ -48,7 +53,10 @@ class Inflector
 		'/$/'                      => 's',
 	);
 
-	protected static $singular_rules = array(
+	/**
+	 * @var  array  Regex rules for singularisation
+	 */
+	protected $singularRules = array(
 		'/(matr)ices$/i'         => '\1ix',
 		'/(vert|ind)ices$/i'     => '\1ex',
 		'/^(ox)en/i'             => '\1',
@@ -78,6 +86,37 @@ class Inflector
 		'/([^us])s$/i'           => '\1',
 	);
 
+	/**
+	 * @var  Fuel\Config\Config  Instance of a Fuel config container
+	 */
+	protected $config;
+
+	/**
+	 * @var  Fuel\Security\Manager  Instance of a Fuel security manager
+	 */
+	protected $security;
+
+	/**
+	 * @var  Fuel\Common\Str  Instance of a Fuel string helper
+	 */
+	protected $str;
+
+	/**
+	 * Class constructor
+	 *
+	 * @param  Fuel\Config\Config     $config    Instance of a Fuel config container
+	 * @param  Fuel\Security\Manager  $security  Instance of a Fuel security manager
+	 *
+	 * @return  void
+	 *
+	 * @since 2.0.0
+	 */
+	public function __construct($config = null, $security = null, $str = null)
+	{
+		$this->config = $config;
+		$this->security = $security;
+		$this->str = $str;
+	}
 
 	/**
 	 * Add order suffix to numbers ex. 1st 2nd 3rd 4th 5th
@@ -86,7 +125,7 @@ class Inflector
 	 * @return  string  the ordinalized version of $number
 	 * @link    http://snipplr.com/view/4627/a-function-to-add-a-prefix-to-numbers-ex-1st-2nd-3rd-4th-5th/
 	 */
-	public static function ordinalize($number)
+	public function ordinalize($number)
 	{
 		if ( ! is_numeric($number))
 		{
@@ -124,7 +163,7 @@ class Inflector
 	 * @param   int     number of instances
 	 * @return  string  the plural version of $word
 	 */
-	public static function pluralize($word, $count = 0)
+	public function pluralize($word, $count = 0)
 	{
 		$result = strval($word);
 
@@ -135,12 +174,12 @@ class Inflector
 			return $result;
 		}
 
-		if ( ! static::isCountable($result))
+		if ( ! $this->isCountable($result))
 		{
 			return $result;
 		}
 
-		foreach (static::$plural_rules as $rule => $replacement)
+		foreach ($this->pluralRules as $rule => $replacement)
 		{
 			if (preg_match($rule, $result))
 			{
@@ -158,16 +197,16 @@ class Inflector
 	 * @param   string  the word to singularize
 	 * @return  string  the singular version of $word
 	 */
-	public static function singularize($word)
+	public function singularize($word)
 	{
 		$result = strval($word);
 
-		if ( ! static::isCountable($result))
+		if ( ! $this->isCountable($result))
 		{
 			return $result;
 		}
 
-		foreach (static::$singular_rules as $rule => $replacement)
+		foreach ($this->singularRules as $rule => $replacement)
 		{
 			if (preg_match($rule, $result))
 			{
@@ -186,7 +225,7 @@ class Inflector
 	 * @param   string  the underscored word
 	 * @return  string  the CamelCased version of $underscored_word
 	 */
-	public static function camelize($underscored_word)
+	public function camelize($underscored_word)
 	{
 		return preg_replace_callback(
 			'/(^|_)(.)/',
@@ -204,9 +243,9 @@ class Inflector
 	 * @param   string  the CamelCased word
 	 * @return  string  an underscore separated version of $camel_cased_word
 	 */
-	public static function underscore($camel_cased_word)
+	public function underscore($camel_cased_word)
 	{
-		return \Str::lower(preg_replace('/([A-Z]+)([A-Z])/', '\1_\2', preg_replace('/([a-z\d])([A-Z])/', '\1_\2', strval($camel_cased_word))));
+		return $this->str->lower(preg_replace('/([A-Z]+)([A-Z])/', '\1_\2', preg_replace('/([a-z\d])([A-Z])/', '\1_\2', strval($camel_cased_word))));
 	}
 
 	/**
@@ -217,11 +256,11 @@ class Inflector
 	 * @param   bool    $allow_non_ascii  wether to remove non ascii
 	 * @return  string                    translated string
 	 */
-	public static function ascii($str, $allow_non_ascii = false)
+	public function ascii($str, $allow_non_ascii = false)
 	{
 		// Translate unicode characters to their simpler counterparts
-		\Config::load('ascii', true);
-		$foreign_characters = \Config::get('ascii');
+		$this->config->load('ascii', true);
+		$foreign_characters = $this->config->get('ascii');
 
 		$str = preg_replace(array_keys($foreign_characters), array_values($foreign_characters), $str);
 
@@ -243,13 +282,13 @@ class Inflector
 	 * @param   bool    $allow_non_ascii  wether to allow non ascii
 	 * @return  string                    the new title
 	 */
-	public static function friendlyTitle($str, $sep = '-', $lowercase = false, $allow_non_ascii = false)
+	public function friendlyTitle($str, $sep = '-', $lowercase = false, $allow_non_ascii = false)
 	{
 		// Allow underscore, otherwise default to dash
 		$sep = $sep === '_' ? '_' : '-';
 
 		// Remove tags
-		$str = \Security::strip_tags($str);
+		$str = $this->security->stripTags($str);
 
 		// Decode all entities to their simpler forms
 		$str = html_entity_decode($str, ENT_QUOTES, 'UTF-8');
@@ -261,7 +300,7 @@ class Inflector
 		$str = preg_replace("#[\"\']#", '', $str);
 
 		// Only allow 7bit characters
-		$str = static::ascii($str, $allow_non_ascii);
+		$str = $this->ascii($str, $allow_non_ascii);
 
 		if ($allow_non_ascii)
 		{
@@ -279,7 +318,7 @@ class Inflector
 
 		if ($lowercase === true)
 		{
-			$str = \Str::lower($str);
+			$str = $this->str->lower($str);
 		}
 
 		return $str;
@@ -293,14 +332,14 @@ class Inflector
 	 * @param   bool    lowercare string and upper case first
 	 * @return  string  the human version of given string
 	 */
-	public static function humanize($str, $sep = '_', $lowercase = true)
+	public function humanize($str, $sep = '_', $lowercase = true)
 	{
 		// Allow dash, otherwise default to underscore
 		$sep = $sep != '-' ? '_' : $sep;
 
 		if ($lowercase === true)
 		{
-			$str = \Str::ucfirst($str);
+			$str = $this->str->ucfirst($str);
 		}
 
 		return str_replace($sep, " ", strval($str));
@@ -312,7 +351,7 @@ class Inflector
 	 * @param   string  the modulized class
 	 * @return  string  the string without the class name
 	 */
-	public static function demodulize($class_name_in_module)
+	public function demodulize($class_name_in_module)
 	{
 		return preg_replace('/^.*::/', '', strval($class_name_in_module));
 	}
@@ -323,7 +362,7 @@ class Inflector
 	 * @param   string  the class name
 	 * @return  string  the string without the namespace
 	 */
-	public static function denamespace($class_name)
+	public function denamespace($class_name)
 	{
 		$class_name = trim($class_name, '\\');
 		if ($last_separator = strrpos($class_name, '\\'))
@@ -339,7 +378,7 @@ class Inflector
 	 * @param   string  $class_name  the class name
 	 * @return  string  the string without the namespace
 	 */
-	public static function getNamespace($class_name)
+	public function getNamespace($class_name)
 	{
 		$class_name = trim($class_name, '\\');
 		if ($last_separator = strrpos($class_name, '\\'))
@@ -356,14 +395,14 @@ class Inflector
 	 * @param   string  the table name
 	 * @return  string  the table name
 	 */
-	public static function tableize($class_name)
+	public function tableize($class_name)
 	{
-		$class_name = static::denamespace($class_name);
+		$class_name = $this->denamespace($class_name);
 		if (strncasecmp($class_name, 'Model_', 6) === 0)
 		{
 			$class_name = substr($class_name, 6);
 		}
-		return \Str::lower(static::pluralize(static::underscore($class_name)));
+		return $this->str->lower($this->pluralize($this->underscore($class_name)));
 	}
 
 	/**
@@ -373,7 +412,7 @@ class Inflector
 	 * @param   string  separator
 	 * @return  string
 	 */
-	public static function wordsToUpper($class, $sep = '_')
+	public function wordsToUpper($class, $sep = '_')
 	{
 		return str_replace(' ', $sep, ucwords(str_replace($sep, ' ', $class)));
 	}
@@ -385,10 +424,10 @@ class Inflector
 	 * @param   bool    whether to singularize the table name or not
 	 * @return  string  the class name
 	 */
-	public static function classify($name, $force_singular = true)
+	public function classify($name, $force_singular = true)
 	{
-		$class = ($force_singular) ? static::singularize($name) : $name;
-		return static::wordsToUpper($class);
+		$class = ($force_singular) ? $this->singularize($name) : $name;
+		return $this->wordsToUpper($class);
 	}
 
 	/**
@@ -398,14 +437,14 @@ class Inflector
 	 * @param   bool    $use_underscore	whether to use an underscore or not
 	 * @return  string  the foreign key
 	 */
-	public static function foreignKey($class_name, $use_underscore = true)
+	public function foreignKey($class_name, $use_underscore = true)
 	{
-		$class_name = static::denamespace(\Str::lower($class_name));
+		$class_name = $this->denamespace($this->str->lower($class_name));
 		if (strncasecmp($class_name, 'Model_', 6) === 0)
 		{
 			$class_name = substr($class_name, 6);
 		}
-		return static::underscore(static::demodulize($class_name)).($use_underscore ? "_id" : "id");
+		return $this->underscore($this->demodulize($class_name)).($use_underscore ? "_id" : "id");
 	}
 
 	/**
@@ -414,9 +453,9 @@ class Inflector
 	 * @param   string  the word to check
 	 * @return  bool    if the word is countable
 	 */
-	public static function isCountable($word)
+	public function isCountable($word)
 	{
-		return ! (\in_array(\Str::lower(\strval($word)), static::$uncountable_words));
+		return ! (\in_array($this->str->lower(\strval($word)), $this->uncountableWords));
 	}
 }
 
