@@ -39,6 +39,7 @@ class Pagination
 		'getVariable'    => '',
 		'showFirst'      => false,
 		'showLast'       => false,
+		'linkOffset'     => 0.5,
 		'align'          => 'center',
 	);
 
@@ -111,6 +112,8 @@ class Pagination
 
 		foreach ($var as $key => $value)
 		{
+			$value = $this->validateConfig($key, $value);
+
 			if (isset($this->config[$key]))
 			{
 				// preserve the type
@@ -158,11 +161,30 @@ class Pagination
 		// generate the URL's for the pagination block
 		if ($this->config['totalPages'] > 1)
 		{
-			// let's get the starting page number, this is determined using num_links
-			$start = (($this->config['current'] - $this->config['numberOfLinks']) > 0) ? $this->config['current'] - $this->config['numberOfLinks'] : 1;
+			// calculate start- and end page numbers
+			$start = $this->config['current'] - floor($this->config['numberOfLinks'] * $this->config['linkOffset']);
+			$end = $this->config['current'] + floor($this->config['numberOfLinks'] * ( 1 - $this->config['linkOffset']));
 
-			// let's get the ending page number
-			$end = (($this->config['current'] + $this->config['numberOfLinks']) < $this->config['totalPages']) ? $this->config['current'] + $this->config['numberOfLinks'] : $this->config['totalPages'];
+			// adjust for the first few pages
+			if ($start < 1)
+			{
+				$end -= $start - 1;
+				$start = 1;
+			}
+
+			// make sure we don't overshoot the current page due to rounding issues
+			if ($end < $this->config['current'])
+			{
+				$start++;
+				$end++;
+			}
+
+			// make sure we don't overshoot the total
+			if ($end > $this->config['totalPages'])
+			{
+				$start = max(1, $start - $end + $this->config['totalPages']);
+				$end = $this->config['totalPages'];
+			}
 
 			// now generate the URL's for the pagination block
 			for($i = $start; $i <= $end; $i++)
@@ -309,5 +331,71 @@ class Pagination
 		{
 			$this->config['totalPages'] = (int) ($this->config['totalItems'] / $this->config['limit']) + 1;
 		}
+	}
+
+	/**
+	 * Generate a pagination link
+	 */
+	protected function validateConfig($name, $value)
+	{
+		switch ($name)
+		{
+			case 'offset':
+			case 'totalItems':
+				// make sure it's an integer
+				if ($value != intval($value))
+				{
+					$value = 0;
+				}
+				// and that it's within bounds
+				$value = max(0, $value);
+			break;
+
+			// validate integer values
+			case 'current':
+			case 'limit':
+			case 'totalPages':
+			case 'numberOfLinks':
+			case 'uriSegment':
+				// make sure it's an integer
+				if ($value != intval($value))
+				{
+					$value = 1;
+				}
+				// and that it's within bounds
+				$value = max(1, $value);
+			break;
+
+			// validate booleans
+			case 'showFirst':
+			case 'showLast':
+				if ( ! is_bool($value))
+				{
+					$value = (bool) $value;
+				}
+			break;
+
+			// possible alignment values
+			case 'align':
+				if ( ! in_array($value = strtolower($value), array('left', 'center', 'right')))
+				{
+					$value = 'center';
+				}
+			break;
+
+			// validate the link offset, and adjust if needed
+			case 'linkOffset':
+				// make sure we have a fraction between 0 and 1
+				if ($value > 1)
+				{
+					$value = $value / 100;
+				}
+
+				// and that it's within bounds
+				$value = max(0.01, min($value, 0.99));
+			break;
+		}
+
+		return $value;
 	}
 }
