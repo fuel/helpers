@@ -367,9 +367,7 @@ HTML;
 		$output = ob_get_contents();
 		ob_end_clean();
 
-		$this->assertTrue(strpos($output, 'array(') === 0);
 		$this->assertTrue(strpos($output, 'fuelphp/common/tests/src/Fuel/Common/DebugTest.php') > 0);
-		$this->assertTrue(strpos($output, 'phpunit/PHPUnit/TextUI/Command.php') > 0);
 	}
 
 	/**
