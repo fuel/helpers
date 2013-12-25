@@ -16,6 +16,25 @@ namespace Fuel\Common;
  * @package  Fuel\Common
  * @since  2.0.0
  */
+class SetcookieWrapper
+{
+	/**
+	 * wrapper for the setcookie() function, for testability reasons
+	 *
+	 * @codeCoverageIgnore
+	 */
+	public function setcookie($name, $value, $expire = 0, $path = null, $domain = null, $secure = false, $httponly = false)
+	{
+		return setcookie($name, $value, $expire, $path, $domain, $secure, $httponly);
+	}
+}
+
+/**
+ * Cookie class, encapsulation of a browser cookie
+ *
+ * @package  Fuel\Common
+ * @since  2.0.0
+ */
 class Cookie
 {
 	/**
@@ -55,13 +74,19 @@ class Cookie
 	protected $isSent = false;
 
 	/**
+	 * @var  CookieWrapper  wrapper around the setcookie() function for testability
+	 */
+	protected $wrapper;
+
+	/**
 	 * Create a new cookie object, optionally load an existing cookie value
 	 *
-	 * @param  string  $name    Name of this cookie
-	 * @param  array   $config  Configuration for this cookie
-	 * @param  string  $value   Initial value to be set for this cookie
+	 * @param  string            $name     Name of this cookie
+	 * @param  array             $config   Configuration for this cookie
+	 * @param  string            $value    Initial value to be set for this cookie
+	 * @pararm SetcookieWrapper  $wrapper  So we can inject a custom wrapper for unit testing
 	 */
-	public function __construct($name, Array $config = array(), $value = null)
+	public function __construct($name, Array $config = array(), $value = null, $wrapper = null)
 	{
 		// store the name and value passed
 		$this->name = $name;
@@ -71,7 +96,17 @@ class Cookie
 		$this->config = array_merge($this->config, $config);
 
 		// and if set flag this object as used
-		$this->isNew = (func_num_args() < 2);
+		$this->isNew = ($value === null);
+
+		// create a wrapper instance if none was passed
+		if (empty($wrapper))
+		{
+			$this->wrapper = new SetcookieWrapper();
+		}
+		else
+		{
+			$this->wrapper = $wrapper;
+		}
 	}
 
 	/**
@@ -86,6 +121,10 @@ class Cookie
 			if (isset($this->config[$var = strtolower(substr($method, 3))]))
 			{
 				return $this->config[$var];
+			}
+			elseif ($var == 'name')
+			{
+				return $this->name;
 			}
 			elseif ($var == 'value')
 			{
@@ -123,32 +162,54 @@ class Cookie
 	}
 
 	/**
-	 * Return the state of this Cookie object
+	 * Delete this Cookie
+	 *
+	 * @return  bool
 	 */
 	public function delete()
 	{
 		$this->isDeleted = true;
+		return $this->isDeleted;
 	}
 
 	/**
 	 * Send this cookie to the client
 	 *
+	 * @return  bool
+	 *
 	 * @since   2.0.0
 	 */
 	public function send()
 	{
+		$result = true;
+
 		if ($this->isNew)
 		{
+			// make this cookie as used
+			$this->isNew = false;
+
 			// set the cookie
-			return setcookie($this->name, $this->value, $this->config['expiration'], $this->config['path'], $this->config['domain'], $this->config['secure'], $this->config['http_only']);
+			$result = $this->wrapper->setcookie($this->name, $this->value, $this->config['expiration'], $this->config['path'], $this->config['domain'], $this->config['secure'], $this->config['http_only']);
+
+			// mark the cookie as sent
+			if ($result)
+			{
+				$this->isSent = true;
+			}
 		}
 		elseif ($this->isDeleted)
 		{
 			// delete the cookie by nullifying and expiring it
-			return setcookie($this->name, null, -86400, $this->config['path'], $this->config['domain'], $this->config['secure'], $this->config['http_only']);
+			$result = $this->wrapper->setcookie($this->name, null, -86400, $this->config['path'], $this->config['domain'], $this->config['secure'], $this->config['http_only']);
+
+			// mark the cookie as sent
+			if ($result)
+			{
+				$this->isSent = true;
+			}
 		}
 
-		$this->isSent = true;
+		return $result;
 	}
 
 	/**
