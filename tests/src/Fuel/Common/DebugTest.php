@@ -26,9 +26,11 @@ class DebugTest extends \PHPUnit_Framework_TestCase
 		call_user_func_array(array($this->instance, 'dumpAsHtml'), func_get_args());
 		$result = ob_get_contents();
 		ob_end_clean();
+
 		// remove the variable data from the output
 		$result = preg_replace('/(\(Object #\d+\))/', '(Object #id)', $result);
 		$result = preg_replace('/(\@ line: \d+\<)/', '@ line: 001<', $result);
+		$result = preg_replace('/(: Resource id #\d+)/', ': Resource id #id', $result);
 
 		// return the result
 		return $result;
@@ -312,7 +314,7 @@ HTML;
 	{
 		$expected = <<<HTML
 <script type="text/javascript">function fuel_debug_toggle(a){if(document.getElementById){if(document.getElementById(a).style.display=="none"){document.getElementById(a).style.display="block"}else{document.getElementById(a).style.display="none"}}else{if(document.layers){if(document.id.display=="none"){document.id.display="block"}else{document.id.display="none"}}else{if(document.all.id.style.display=="none"){document.all.id.style.display="block"}else{document.all.id.style.display="none"}}}};</script><div class="fuelphp-dump" style="font-size: 13px;background: #EEE !important; border:1px solid #666; color: #000 !important; padding:10px;"><h1 style="padding: 0 0 5px 0; margin: 0; font: bold 110% sans-serif;">File: VENDORPATH/fuelphp/common/tests/src/Fuel/Common/DebugTest.php @ line: 001</h1><pre style="overflow:auto;font-size:100%;"><strong>Variable: \$fh</strong>
-<i></i> <strong></strong>: Resource id #347
+<i></i> <strong></strong>: Resource id #id
 </pre></div>
 HTML;
 		$fh = fopen(__FILE__, 'r');
