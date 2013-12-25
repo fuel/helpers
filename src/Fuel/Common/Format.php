@@ -297,7 +297,7 @@ class Format
 		else
 		{
 			$result = json_encode($data, Arr::get($this->config, 'json.encode.options', JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP));
-			return is_string($result) ? $result : false;
+			return json_last_error() === JSON_ERROR_NONE ? $result : false;
 		}
 	}
 

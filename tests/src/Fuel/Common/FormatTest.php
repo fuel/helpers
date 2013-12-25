@@ -569,6 +569,11 @@ EOD;
 		include_once __DIR__.'/../../../../resources/InputMock.php';
 		$instance = new Format($array, null, $config, new InputMock());
 		$this->assertEquals($expected, $instance->toJsonp());
+
+		// An invalid UTF8 sequence
+		$input = "\xB1\x31";
+		$instance = new Format($input, null, $config, new InputMock());
+		$this->assertEquals('response()', $instance->toJsonp(null, true));
 	}
 
 	/**
