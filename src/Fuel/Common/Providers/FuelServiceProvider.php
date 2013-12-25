@@ -24,7 +24,7 @@ class FuelServiceProvider extends ServiceProvider
 	/**
 	 * @var  array  list of service names provided by this provider
 	 */
-	public $provides = array('datacontainer', 'cookiejar', 'format', 'date', 'num');
+	public $provides = array('datacontainer', 'cookiejar', 'format', 'date', 'num', 'str', 'inflector', 'debug');
 
 	/**
 	 * Service provider definitions
@@ -46,56 +46,56 @@ class FuelServiceProvider extends ServiceProvider
 		// \Fuel\Common\Format
 		$this->register('format', function ($dic, $data = null, $from_type = null, Array $config = array())
 		{
-			// get the format config
-			$stack = $this->container->resolve('requeststack');
+			// get the config
+			$stack = $dic->resolve('requeststack');
 			if ($request = $stack->top())
 			{
-				$instance = $request->getApplication()->getConfig();
-				$input = $request->getInput();
+				$configInstance = $request->getApplication()->getConfig();
+				$inputInstance = $request->getInput();
 			}
 			else
 			{
-				$instance = $this->container->resolve('application.main')->getConfig();
-				$input = $this->container->resolve('application.main')->getInput();
+				$configInstance = $dic->resolve('application.main')->getConfig();
+				$inputInstance = $dic->resolve('application.main')->getInput();
 			}
-			$config = \Arr::merge($instance->load('format', true), $config);
+			$config = \Arr::merge($configInstance->load('format', true), $config);
 
-			return $dic->resolve('Fuel\Common\Format', array($data, $from_type, $config, $input));
+			return $dic->resolve('Fuel\Common\Format', array($data, $from_type, $config, $inputInstance, $dic->resolve('inflector')));
 		});
 
 		// \Fuel\Common\Pagination
 		$this->register('pagination', function ($dic, $view)
 		{
-			$stack = $this->container->resolve('requeststack');
+			$stack = $dic->resolve('requeststack');
 			if ($request = $stack->top())
 			{
-				$input = $request->getInput();
-				$viewmanager = $request->getApplication()->getViewManager();
+				$inputInstance = $request->getInput();
+				$viewmanagerInstance = $request->getApplication()->getViewManager();
 			}
 			else
 			{
 				$app = $this->container->resolve('application.main');
-				$input = $app->getInput();
-				$viewmanager = $app->getViewManager();
+				$inputInstance = $app->getInput();
+				$viewmanagerInstance = $app->getViewManager();
 			}
 
-			return $dic->resolve('Fuel\Common\Pagination', array($viewmanager, $input, $view));
+			return $dic->resolve('Fuel\Common\Pagination', array($viewmanagerInstance, $inputInstance, $view));
 		});
 
 		// \Fuel\Common\Date
 		$this->register('date', function ($dic, $time = "now", $timezone = null, Array $config = array())
 		{
 			// get the date config
-			$stack = $this->container->resolve('requeststack');
+			$stack = $dic->resolve('requeststack');
 			if ($request = $stack->top())
 			{
-				$instance = $request->getApplication()->getConfig();
+				$configInstance = $request->getApplication()->getConfig();
 			}
 			else
 			{
-				$instance = $this->container->resolve('application.main')->getConfig();
+				$configInstance = $dic->resolve('application.main')->getConfig();
 			}
-			$config = \Arr::merge($instance->load('date', true), $config);
+			$config = \Arr::merge($configInstance->load('date', true), $config);
 
 			return $dic->resolve('Fuel\Common\Date', array($time, $timezone, $config));
 		});
@@ -103,8 +103,8 @@ class FuelServiceProvider extends ServiceProvider
 		// \Fuel\Common\Num
 		$this->register('num', function ($dic, Array $config = array(), Array $lang = array())
 		{
-			// get the format config
-			$stack = $this->container->resolve('requeststack');
+			// get the config and the lang
+			$stack = $dic->resolve('requeststack');
 			if ($request = $stack->top())
 			{
 				$configInstance = $request->getApplication()->getConfig();
@@ -112,13 +112,55 @@ class FuelServiceProvider extends ServiceProvider
 			}
 			else
 			{
-				$configInstance = $this->container->resolve('application.main')->getConfig();
-				$langInstance = $this->container->resolve('application.main')->getLang();
+				$configInstance = $dic->resolve('application.main')->getConfig();
+				$langInstance = $dic->resolve('application.main')->getLang();
 			}
 			$config = \Arr::merge($configInstance->load('num', true), $config);
 			$lang = \Arr::merge($langInstance->load('byteunits', true), $lang);
 
 			return $dic->resolve('Fuel\Common\Num', array($config, $lang));
 		});
+
+		// \Fuel\Common\Str
+		$this->registerSingleton('str', function ($dic)
+		{
+			return $dic->resolve('Fuel\Common\Str');
+		});
+
+		// \Fuel\Common\Inflector
+		$this->register('inflector', function ($dic)
+		{
+			// get the config
+			$stack = $dic->resolve('requeststack');
+			if ($request = $stack->top())
+			{
+				$app = $request->getApplication();
+			}
+			else
+			{
+				$app = $dic->resolve('application.main');
+			}
+			$securityInstance = $dic->multiton('security', $app->getName());
+
+			return $dic->multiton('Fuel\Common\Inflector', $app->getName(), array($app->getConfig(), $securityInstance, $dic->resolve('str')));
+		});
+
+		// \Fuel\Common\Debug
+		$this->registerSingleton('debug', function ($dic)
+		{
+			// get the config
+			$stack = $dic->resolve('requeststack');
+			if ($request = $stack->top())
+			{
+				$app = $request->getApplication();
+			}
+			else
+			{
+				$app = $dic->resolve('application.main');
+			}
+
+			return $dic->resolve('Fuel\Common\Debug', array($app->getInput(), $dic->resolve('inflector')));
+		});
 	}
+
 }
