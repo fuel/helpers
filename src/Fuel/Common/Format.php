@@ -288,7 +288,17 @@ class Format
 		// To allow exporting ArrayAccess objects like Orm\Model instances they need to be
 		// converted to an array first
 		$data = (is_array($data) or is_object($data)) ? $this->toArray($data) : $data;
-		return $pretty ? $this->prettyJson($data) : json_encode($data, Arr::get($this->config, 'json.encode.options', JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP));
+
+		// Return the result in the requested format
+		if ($pretty)
+		{
+			return $this->prettyJson($data);
+		}
+		else
+		{
+			$result = json_encode($data, Arr::get($this->config, 'json.encode.options', JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP));
+			return is_string($result) ? $result : false;
+		}
 	}
 
 	/**
@@ -310,7 +320,7 @@ class Format
 			}
 		}
 
-		return $callback.'('.$this->toJson($data, $pretty).')';
+		return $callback.'('.(string) $this->toJson($data, $pretty).')';
 	}
 
 	/**

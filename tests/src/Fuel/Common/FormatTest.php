@@ -469,7 +469,7 @@ line 2","Value 3"',
 		// An invalid UTF8 sequence
 		$input = "\xB1\x31";
 		$instance = new Format($input);
-		$this->assertEquals(false, $instance->toJson(null, true));
+		$this->assertFalse($instance->toJson(null, true));
 
 		$expected = '"this is not an array"';
 		$instance = new Format('this is not an array', null, $config);
