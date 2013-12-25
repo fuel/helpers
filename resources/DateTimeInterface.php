@@ -6,7 +6,7 @@
  */
 interface DateTimeInterface
 {
-	public function DateInterval(DateTimeInterface $datetime2,$absolute = false);
+	public function diff(DateTimeInterface $datetime2, $absolute = false);
 	public function format($format );
 	public function getOffset();
 	public function getTimestamp();

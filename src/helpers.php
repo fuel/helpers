@@ -11,7 +11,7 @@
 /**
  * Define the DateTimeInterface for PHP versions < 5.5
  */
-if ( ! class_exists('DateTimeInterface', false))
+if ( ! interface_exists('DateTimeInterface', false))
 {
 	include __DIR__.'/../resources/DateTimeInterface.php';
 }
