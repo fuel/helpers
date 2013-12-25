@@ -14,7 +14,6 @@ use ArrayAccess;
 use IteratorAggregate;
 use ArrayIterator;
 use Countable;
-use Fuel\Common\Cookie;
 
 /**
  * Cookie Jar, a container for cookies
@@ -66,7 +65,7 @@ class CookieJar implements ArrayAccess, IteratorAggregate, Countable
 	 * @param  boolean  $readOnly  wether the container is read-only
 	 * @since  2.0.0
 	 */
-	public function __construct(Array $config = array(), Array $data = array())
+	public function __construct(Array $config = array(), Array $data = array(), $wrapper = null)
 	{
 		// merge the config
 		$this->config = array_merge($this->config, $config);
@@ -74,8 +73,19 @@ class CookieJar implements ArrayAccess, IteratorAggregate, Countable
 		// process the data passed
 		foreach ($data as $key => $value)
 		{
-			$this->jar[$key] = new Cookie($key, $this->config, $value);
+			$this->jar[$key] = new Cookie($key, $this->config, $value, $wrapper ?: new SetcookieWrapper());
 		}
+	}
+
+	/**
+	 * Get the parent of this jar
+	 *
+	 * @return  CookieJar
+	 * @since   2.0.0
+	 */
+	public function getParent()
+	{
+		return $this->parent;
 	}
 
 	/**
@@ -88,9 +98,16 @@ class CookieJar implements ArrayAccess, IteratorAggregate, Countable
 	public function setParent(CookieJar $parent = null)
 	{
 		$this->parent = $parent;
-		$this->enableParent();
 
-		$this->parent->setChild($this);
+		if ($this->parent)
+		{
+			$this->enableParent();
+			$this->parent->setChild($this);
+		}
+		else
+		{
+			$this->disableParent();
+		}
 
 		return $this;
 	}
@@ -103,7 +120,10 @@ class CookieJar implements ArrayAccess, IteratorAggregate, Countable
 	 */
 	public function enableParent()
 	{
-		$this->parentEnabled = true;
+		if ($this->parent)
+		{
+			$this->parentEnabled = true;
+		}
 
 		return $this;
 	}
@@ -122,6 +142,17 @@ class CookieJar implements ArrayAccess, IteratorAggregate, Countable
 	}
 
 	/**
+	 * Check if this jar has a parent
+	 *
+	 * @return  bool
+	 * @since   2.0.0
+	 */
+	public function hasParent()
+	{
+		return $this->parentEnabled === true;
+	}
+
+	/**
 	 * Check if we have this cookie in the jar
 	 *
 	 * @param   string  $key
@@ -132,7 +163,7 @@ class CookieJar implements ArrayAccess, IteratorAggregate, Countable
 	{
 		if ( ! isset($this->jar[$key]) or $this->jar[$key]->isDeleted())
 		{
-			if ( ! $this->parentEnabled or ! $this->parent or ! $this->parent->has($key))
+			if ( ! $this->parentEnabled or ! $this->parent->has($key))
 			{
 				return false;
 			}
@@ -192,19 +223,36 @@ class CookieJar implements ArrayAccess, IteratorAggregate, Countable
 	 * @throws  \InvalidArgumentException
 	 * @since   2.0.0
 	 */
-	public function set($key, $value)
+	public function set($key, $value = null)
 	{
-		if (isset($this->jar[$key]) and ! $this->jar[$key]->isDeleted())
+		if (is_array($key))
 		{
-			$this->jar[$key]->setValue($value);
-		}
-		elseif ($this->has($key))
-		{
-			$this->parent->set($key, $value);
+			foreach ($key as $arraykey => $value)
+			{
+				$this->set($arraykey, $value);
+			}
 		}
 		else
 		{
-			$this->jar[$key] = new Cookie($key, $this->config, $value);
+			if (isset($this->jar[$key]) and ! $this->jar[$key]->isDeleted())
+			{
+				if ($value instanceOf Cookie)
+				{
+					$this->jar[$key] = $value;
+				}
+				else
+				{
+					$this->jar[$key]->setValue($value);
+				}
+			}
+			elseif ($this->has($key))
+			{
+				$this->parent->set($key, $value);
+			}
+			else
+			{
+				$this->jar[$key] = new Cookie($key, $this->config, $value);
+			}
 		}
 
 		return $this;
@@ -213,21 +261,32 @@ class CookieJar implements ArrayAccess, IteratorAggregate, Countable
 	/**
 	 * Send all cookies to the client
 	 *
+	 * @return  bool
 	 * @since   2.0.0
 	 */
 	public function send()
 	{
+		$result = true;
+
 		// process the cookies in this jar
 		foreach ($this->jar as $cookie)
 		{
-			$cookie->send();
+			if ( ! $cookie->send())
+			{
+				$result = false;
+			}
 		}
 
 		// and the cookies in this jar's children
 		foreach ($this->children as $cookie)
 		{
-			$cookie->send();
+			if ( ! $cookie->send())
+			{
+				$result = false;
+			}
 		}
+
+		return $result;
 	}
 
 	/**
@@ -240,7 +299,7 @@ class CookieJar implements ArrayAccess, IteratorAggregate, Countable
 	 */
 	public function merge($arg)
 	{
-		$arguments = array_map(function ($array) use (&$valid)
+		$arguments = array_map(function ($array)
 		{
 			if ($array instanceof DataContainer)
 			{
@@ -253,17 +312,7 @@ class CookieJar implements ArrayAccess, IteratorAggregate, Countable
 
 		$data = call_user_func_array('Arr::merge', $arguments);
 
-		foreach ($data as $key => $value)
-		{
-			if ($value instanceOf Cookie)
-			{
-				$this->jar[$key] = $value;
-			}
-			else
-			{
-				$this->jar[$key] = new Cookie($key, $this->config, $value);
-			}
-		}
+		$this->set($data);
 
 		return $this;
 	}
@@ -275,7 +324,7 @@ class CookieJar implements ArrayAccess, IteratorAggregate, Countable
 	 */
 	protected function getJar()
 	{
-		if ($this->parentEnabled and $this->parent)
+		if ($this->parentEnabled)
 		{
 			return array_merge($this->parent->getJar(), $this->jar);
 		}
@@ -292,7 +341,7 @@ class CookieJar implements ArrayAccess, IteratorAggregate, Countable
 	 *
 	 * @since   2.0.0
 	 */
-	protected function setChild(CookieJar $child)
+	public function setChild(CookieJar $child)
 	{
 		if ( ! in_array($child, $this->children))
 		{
@@ -366,7 +415,7 @@ class CookieJar implements ArrayAccess, IteratorAggregate, Countable
 		{
 			$this->jar[$key]->delete();
 		}
-		elseif ($this->parentEnabled and $this->parent)
+		elseif ($this->parentEnabled)
 		{
 			$this->parent->delete($key);
 		}
@@ -380,14 +429,7 @@ class CookieJar implements ArrayAccess, IteratorAggregate, Countable
 	 */
 	public function getIterator()
 	{
-		if ($this->parentEnabled and $this->parent)
-		{
-			return new ArrayIterator(array_merge($this->parent->getJar(), $this->jar));
-		}
-		else
-		{
-			return new ArrayIterator($this->jar);
-		}
+		return new ArrayIterator($this->getJar());
 	}
 
 	/**
@@ -399,7 +441,7 @@ class CookieJar implements ArrayAccess, IteratorAggregate, Countable
 	public function count()
 	{
 		$count = count($this->jar);
-		if ($this->parentEnabled and $this->parent)
+		if ($this->parentEnabled)
 		{
 			$count += $this->parent->count();
 		}
