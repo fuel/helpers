@@ -127,7 +127,7 @@ class Debug
 			if (isset($trace['file']))
 			{
 				// If being called from within, or using call_user_func(), get the next entry
-				if ($trace['file'] === __FILE__ or strpos($trace['function'], 'call_user_func') === 0)
+				if (strpos($trace['function'], 'call_user_func') === 0 or (isset($trace['class']) and $trace['class'] == get_class($this)))
 				{
 					continue;
 				}
@@ -141,7 +141,7 @@ class Debug
 				{
 					$line = $this->fileLines($callee['file'], $i, false, 0);
 					$callee['code'] = reset($line).' '.trim($callee['code']);
-					$tokens = token_get_all('<?php '.$callee['code']);
+					$tokens = token_get_all('<?php '.trim($callee['code']));
 					if (is_array($tokens[1]) and isset($tokens[1][0]) and $tokens[1][0] != 377)
 					{
 						break;
