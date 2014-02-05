@@ -241,16 +241,19 @@ class Date implements DateTimeInterface
 		// do we have a possible strptime() format to work with?
 		if (strpos($format, '%') !== false and $timestamp = strptime($time, $format))
 		{
-			$time = mktime($timestamp['tm_hour'], $timestamp['tm_min'],
-				$timestamp['tm_sec'], $timestamp['tm_mon'] + 1,
-				$timestamp['tm_mday'], $timestamp['tm_year'] + 1900);
+			// convert it into a timestamp
+			$datetime = new \DateTime("now", new \DateTimeZone('UTC'));
+			$time = $datetime
+				->setDate($timestamp['tm_year'] + 1900, $timestamp['tm_mon'] + 1, $timestamp['tm_mday'])
+				->setTime($timestamp['tm_hour'], $timestamp['tm_min'], $timetimestamp['tm_sec'])
+				->format('U');
 
 			if ($time === false or $timestamp['unparsed'])
 			{
-				throw new \OutOfBoundsException('Input was invalid.'.(PHP_INT_SIZE == 4?' A 32-bit system only supports dates between 1901 and 2038.':''));
+				throw new \OutOfBoundsException('Input was invalid.');
 			}
 
-			// mktime will always do UTC, and strptime() does timezones but no daylight savings, so we might need a correction here
+			// coversion was made in UTC, and strptime() does timezones but no daylight savings, so we might need a correction here
 			if (($delta = static::defaultTimezone()->getOffset(new DateTime("2013-01-01 12:00:00", $timezone))) !== 0)
 			{
 				$time += $delta;
