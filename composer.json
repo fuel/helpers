@@ -22,8 +22,7 @@
 		"symfony/yaml": "Allows YAML data conversions."
 	},
 	"autoload": {
-		"psr-0": { "Fuel\\Common": "src/" },
-		"files": ["src/helpers.php"]
-	},
-	"minimum-stability": "dev"
+		"psr-4": { "Fuel\\Common\\": "src/" },
+		"files": ["helpers/bootstrap.php"]
+	}
 }
