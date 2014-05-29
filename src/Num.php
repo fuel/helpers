@@ -5,7 +5,7 @@
  * @author     Fuel Development Team
  * @author     Chase "Syntaqx" Hutchins
  * @license    MIT License
- * @copyright  2010 - 2013 Fuel Development Team
+ * @copyright  2010 - 2014 Fuel Development Team
  * @link       http://fuelphp.com
  */
 
