@@ -46,8 +46,8 @@ if ( ! function_exists('cleanpath'))
 	 */
 	function cleanpath($path)
 	{
-		static $search = array(APPSPATH, VENDORPATH, DOCROOT, '\\');
-		static $replace = array('APPSPATH/', 'VENDORPATH/', 'DOCROOT/', DIRECTORY_SEPARATOR);
+		static $search = array(VENDORPATH, DOCROOT, '\\');
+		static $replace = array('VENDORPATH/', 'DOCROOT/', DIRECTORY_SEPARATOR);
 		return str_ireplace($search, $replace, $path);
 	}
 }

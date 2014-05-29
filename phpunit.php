@@ -7,5 +7,4 @@ class_alias('Fuel\Common\Arr', 'Arr');
 
 // constants required for the tests
 define('DOCROOT', '/this/docroot/');
-define('APPSPATH', '/this/apps/path/');
 define('VENDORPATH', realpath(__DIR__.'/../../').'/');
