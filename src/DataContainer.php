@@ -252,6 +252,14 @@ class DataContainer implements ArrayAccess, IteratorAggregate, Countable
 	}
 
 	/**
+	 * isset magic method
+	 */
+	public function __isset($key)
+	{
+		return $this->has($key);
+	}
+
+	/**
 	 * Check if a key was set upon this bag's data
 	 *
 	 * @param   string  $key
