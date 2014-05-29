@@ -16,6 +16,19 @@ if ( ! interface_exists('DateTimeInterface', false))
 	include __DIR__.'/../resources/DateTimeInterface.php';
 }
 
+if ( ! function_exists('importFile'))
+{
+	/**
+	 * Scope isolated include.
+	 *
+	 * Prevents access to $this/self from included files.
+	 */
+	function importFile($__file__)
+	{
+		include $__file__;
+	}
+}
+
 if ( ! function_exists('result'))
 {
 	/**
@@ -46,8 +59,8 @@ if ( ! function_exists('cleanpath'))
 	 */
 	function cleanpath($path)
 	{
-		static $search = array(VENDORPATH, DOCROOT, '\\');
-		static $replace = array('VENDORPATH/', 'DOCROOT/', DIRECTORY_SEPARATOR);
+		static $search = array(ROOTPATH, VENDORPATH, DOCROOT, '\\');
+		static $replace = array('ROOTPATH/', 'VENDORPATH/', 'DOCROOT/', DIRECTORY_SEPARATOR);
 		return str_ireplace($search, $replace, $path);
 	}
 }
