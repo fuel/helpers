@@ -10,15 +10,17 @@
 
 namespace Fuel\Common;
 
+use Codeception\TestCase\Test;
+
 /**
  * Tests for RegexFactoryTest
  *
  * @package Fuel\Common
  * @author  Fuel Development Team
  *
- * @covers  Fuel\Common\RegexFactory
+ * @coversDefaultClass  Fuel\Common\RegexFactory
  */
-class RegexFactoryTest extends \PHPUnit_Framework_TestCase
+class RegexFactoryTest extends Test
 {
 
 	/**
@@ -26,7 +28,7 @@ class RegexFactoryTest extends \PHPUnit_Framework_TestCase
 	 */
 	protected $object;
 
-	protected function setUp()
+	protected function _before()
 	{
 		$this->object = new RegexFactory;
 
@@ -34,8 +36,8 @@ class RegexFactoryTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @coversDefaultClass __construct
-	 * @coversDefaultClass get
+	 * @covers ::__construct
+	 * @covers ::get
 	 * @group              Common
 	 */
 	public function testDefaultString()
@@ -52,7 +54,7 @@ class RegexFactoryTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @coversDefaultClass __toString
+	 * @covers ::__toString
 	 * @group              Common
 	 */
 	public function testToString()
@@ -64,7 +66,7 @@ class RegexFactoryTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @coversDefaultClass value
+	 * @covers ::value
 	 * @group              Common
 	 */
 	public function testMatchValue()
@@ -79,8 +81,8 @@ class RegexFactoryTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @coversDefaultClass startGroupCapture
-	 * @coversDefaultClass endGroupCapture
+	 * @covers ::startGroupCapture
+	 * @covers ::endGroupCapture
 	 * @group              Common
 	 */
 	public function testGroupCapture()
@@ -107,8 +109,8 @@ class RegexFactoryTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @coversDefaultClass startRange
-	 * @coversDefaultClass endRange
+	 * @covers ::startRange
+	 * @covers ::endRange
 	 * @group              Common
 	 */
 	public function testRange()
@@ -123,7 +125,7 @@ class RegexFactoryTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @coversDefaultClass lowercase
+	 * @covers ::lowercase
 	 * @group              Common
 	 */
 	public function testLowercase()
@@ -137,7 +139,7 @@ class RegexFactoryTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @coversDefaultClass uppercase
+	 * @covers ::uppercase
 	 * @group              Common
 	 */
 	public function testUppercase()
@@ -151,7 +153,7 @@ class RegexFactoryTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @coversDefaultClass numeric
+	 * @covers ::numeric
 	 * @group              Common
 	 */
 	public function testNumeric()
@@ -165,7 +167,7 @@ class RegexFactoryTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @coversDefaultClass any
+	 * @covers ::any
 	 * @group              Common
 	 */
 	public function testAny()
@@ -179,7 +181,7 @@ class RegexFactoryTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @coversDefaultClass start
+	 * @covers ::start
 	 * @group              Common
 	 */
 	public function testStart()
@@ -193,7 +195,7 @@ class RegexFactoryTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @coversDefaultClass end
+	 * @covers ::end
 	 * @group              Common
 	 */
 	public function testEnd()
@@ -207,7 +209,7 @@ class RegexFactoryTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @coversDefaultClass noneOrOne
+	 * @covers ::noneOrOne
 	 * @group              Common
 	 */
 	public function testNoneOrOne()
@@ -221,7 +223,7 @@ class RegexFactoryTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @coversDefaultClass noneOrMany
+	 * @covers ::noneOrMany
 	 * @group              Common
 	 */
 	public function testNoneOrMany()
@@ -235,7 +237,7 @@ class RegexFactoryTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @coversDefaultClass oneOrMore
+	 * @covers ::oneOrMore
 	 * @group              Common
 	 */
 	public function testOneOrMore()
@@ -249,7 +251,7 @@ class RegexFactoryTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @coversDefaultClass addOr
+	 * @covers ::addOr
 	 * @group              Common
 	 */
 	public function testAddOr()
@@ -263,7 +265,7 @@ class RegexFactoryTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @coversDefaultClass matchQuantity
+	 * @covers ::matchQuantity
 	 * @group              Common
 	 */
 	public function testMatchQuantity()
@@ -286,7 +288,7 @@ class RegexFactoryTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @coversDefaultClass caseInsensitive
+	 * @covers ::caseInsensitive
 	 * @group              Common
 	 */
 	public function testCaseInsensitive()
@@ -300,7 +302,7 @@ class RegexFactoryTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @coversDefaultClass ignoreWhitespace
+	 * @covers ::ignoreWhitespace
 	 * @group              Common
 	 */
 	public function testIgnoreWhitespace()
@@ -314,7 +316,7 @@ class RegexFactoryTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @coversDefaultClass singleSubstitution
+	 * @covers ::singleSubstitution
 	 * @group              Common
 	 */
 	public function testSingleSubstitution()
@@ -328,7 +330,7 @@ class RegexFactoryTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @coversDefaultClass dotNewline
+	 * @covers ::dotNewline
 	 * @group              Common
 	 */
 	public function testDotNewline()

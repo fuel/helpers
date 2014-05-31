@@ -312,7 +312,7 @@ class Str
 	 * If you call the closure with false as the arg it will return the value without
 	 * alternating the next time.
 	 *
-	 * @return  Closure
+	 * @return \Closure
 	 */
 	public function alternator()
 	{

@@ -31,20 +31,6 @@ class ArrTest extends Test
 		$this->assertArrayHasKey($key, $array);
 	}
 
-	// /**
-	//  * @covers Fuel\Common\Arr::set
-	//  * @group Common
-	//  */
-	// public function testSetWithNull()
-	// {
-	// 	$array = array();
-	// 	$key = null;
-	// 	$value = 'test';
-
-	// 	Arr::set($array, $key, $value);
-	// 	$this->assertEquals(1, count($array));
-	// }
-
 	/**
 	 * @covers Fuel\Common\Arr::set
 	 * @group Common
@@ -82,7 +68,7 @@ class ArrTest extends Test
 
 	/**
 	 * @covers Fuel\Common\Arr::get
-	 * @expectedException  InvalidArgumentException
+	 * @expectedException  \InvalidArgumentException
 	 * @group Common
 	 */
 	public function testGetException()
@@ -147,7 +133,7 @@ class ArrTest extends Test
 
 	/**
 	 * @covers Fuel\Common\Arr::merge
-	 * @expectedException  InvalidArgumentException
+	 * @expectedException  \InvalidArgumentException
 	 * @group Common
 	 */
 	public function testMergeException()
@@ -201,7 +187,7 @@ class ArrTest extends Test
 
 	/**
 	 * @covers Fuel\Common\Arr::mergeAssoc
-	 * @expectedException  InvalidArgumentException
+	 * @expectedException  \InvalidArgumentException
 	 * @group Common
 	 */
 	public function testMergeAssocException1()
@@ -211,7 +197,7 @@ class ArrTest extends Test
 
 	/**
 	 * @covers Fuel\Common\Arr::mergeAssoc
-	 * @expectedException  InvalidArgumentException
+	 * @expectedException  \InvalidArgumentException
 	 * @group Common
 	 */
 	public function testMergeAssocException2()
@@ -233,7 +219,7 @@ class ArrTest extends Test
 
 	/**
 	 * @covers Fuel\Common\Arr::isAssoc
-	 * @expectedException  InvalidArgumentException
+	 * @expectedException  \InvalidArgumentException
 	 * @group Common
 	 */
 	public function testIsAssocException()
@@ -297,7 +283,7 @@ class ArrTest extends Test
 
 	/**
 	 * @covers Fuel\Common\Arr::assocToKeyval
-	 * @expectedException  InvalidArgumentException
+	 * @expectedException  \InvalidArgumentException
 	 * @group Common
 	 */
 	public function testAssocToKeyvalException()
@@ -319,13 +305,13 @@ class ArrTest extends Test
 
 	/**
 	 * @covers Fuel\Common\Arr::toAssoc
-	 * @expectedException  BadMethodCallException
+	 * @expectedException  \BadMethodCallException
 	 * @group Common
 	 */
 	public function testtoAssocException()
 	{
 		$arr = array('foo', 'bar', 'baz');
-		$result = Arr::toAssoc($arr);
+		Arr::toAssoc($arr);
 	}
 
 	/**
@@ -599,7 +585,7 @@ class ArrTest extends Test
 
 	/**
 	 * @covers Fuel\Common\Arr::insert
-	 * @expectedException  InvalidArgumentException
+	 * @expectedException  \InvalidArgumentException
 	 * @group Common
 	 */
 	public function testInsertException()
@@ -655,13 +641,13 @@ class ArrTest extends Test
 
 	/**
 	 * @covers Fuel\Common\Arr::insertBeforeKey
-	 * @expectedException  InvalidArgumentException
+	 * @expectedException  \InvalidArgumentException
 	 * @group Common
 	 */
 	public function testInsertBeforeKeyException()
 	{
 		$character = array("name" => "Jack", "surname" => "Reacher");
-		$result = Arr::insertBeforeKey($character, array("initial" => "P."), "non-existing-key");
+		Arr::insertBeforeKey($character, array("initial" => "P."), "non-existing-key");
 	}
 
 	/**
@@ -689,13 +675,13 @@ class ArrTest extends Test
 
 	/**
 	 * @covers Fuel\Common\Arr::insertAfterKey
-	 * @expectedException  InvalidArgumentException
+	 * @expectedException  \InvalidArgumentException
 	 * @group Common
 	 */
 	public function testInsertAfterKeyException()
 	{
 		$character = array("name" => "Jack", "surname" => "Reacher");
-		$result = Arr::insertAfterKey($character, array("initial" => "P."), "non-existing-key");
+		Arr::insertAfterKey($character, array("initial" => "P."), "non-existing-key");
 	}
 
 	/**
@@ -715,13 +701,13 @@ class ArrTest extends Test
 
 	/**
 	 * @covers Fuel\Common\Arr::insertBeforeValue
-	 * @expectedException  InvalidArgumentException
+	 * @expectedException  \InvalidArgumentException
 	 * @group Common
 	 */
 	public function testInsertBeforeValueException()
 	{
 		$character = array("name" => "Jack", "surname" => "Reacher");
-		$result = Arr::insertBeforeValue($character, array("initial" => "P."), "non-existing-value");
+		Arr::insertBeforeValue($character, array("initial" => "P."), "non-existing-value");
 	}
 
 	/**
@@ -741,13 +727,13 @@ class ArrTest extends Test
 
 	/**
 	 * @covers Fuel\Common\Arr::insertAfterValue
-	 * @expectedException  InvalidArgumentException
+	 * @expectedException  \InvalidArgumentException
 	 * @group Common
 	 */
 	public function testInsertAfterValueException()
 	{
 		$character = array("name" => "Jack", "surname" => "Reacher");
-		$result = Arr::insertAfterValue($character, array("initial" => "P."), "non-existing-value");
+		Arr::insertAfterValue($character, array("initial" => "P."), "non-existing-value");
 	}
 
 	/**
@@ -841,22 +827,22 @@ class ArrTest extends Test
 
 	/**
 	 * @covers Fuel\Common\Arr::sort
-	 * @expectedException  InvalidArgumentException
+	 * @expectedException  \InvalidArgumentException
 	 * @group Common
 	 */
 	public function testSortInvalidArgumentException()
 	{
-		$result = Arr::sort(array(array("some-key" => "some-value")), "some-key", "illegal-order-value");
+		Arr::sort(array(array("some-key" => "some-value")), "some-key", "illegal-order-value");
 	}
 
 	/**
 	 * @covers Fuel\Common\Arr::sort
-	 * @expectedException  InvalidArgumentException
+	 * @expectedException  \InvalidArgumentException
 	 * @group Common
 	 */
 	public function testSortException()
 	{
-		$result = Arr::sort("non-array-value", null);
+		Arr::sort("non-array-value", null);
 	}
 
 	/**
@@ -925,7 +911,7 @@ class ArrTest extends Test
 			'age' => array(SORT_ASC, SORT_NUMERIC),
 		), true);
 
-
+		$this->assertEquals($expected, $result);
 	}
 
 	/**
@@ -968,12 +954,12 @@ class ArrTest extends Test
 
 	/**
 	 * @covers Fuel\Common\Arr::replaceKey
-	 * @expectedException  InvalidArgumentException
+	 * @expectedException \InvalidArgumentException
 	 * @group Common
 	 */
 	public function testReplaceKeyException()
 	{
-		$result = Arr::replaceKey('not-an-array', 'two', 'four');
+		Arr::replaceKey('not-an-array', 'two', 'four');
 	}
 
 	/**
@@ -1084,7 +1070,7 @@ class ArrTest extends Test
 
 	/**
 	 * @covers Fuel\Common\Arr::search
-	 * @expectedException  InvalidArgumentException
+	 * @expectedException  \InvalidArgumentException
 	 * @group Common
 	 */
 	public function testSearchException1()
@@ -1094,7 +1080,7 @@ class ArrTest extends Test
 
 	/**
 	 * @covers Fuel\Common\Arr::search
-	 * @expectedException  InvalidArgumentException
+	 * @expectedException  \InvalidArgumentException
 	 * @group Common
 	 */
 	public function testSearchException2()
@@ -1104,7 +1090,7 @@ class ArrTest extends Test
 
 	/**
 	 * @covers Fuel\Common\Arr::search
-	 * @expectedException  InvalidArgumentException
+	 * @expectedException  \InvalidArgumentException
 	 * @group Common
 	 */
 	public function testSearchException3()
@@ -1181,7 +1167,7 @@ class ArrTest extends Test
 
 	/**
 	 * @covers Fuel\Common\Arr::sum
-	 * @expectedException  InvalidArgumentException
+	 * @expectedException  \InvalidArgumentException
 	 * @group Common
 	 */
 	public function testSumException()
@@ -1247,7 +1233,7 @@ class ArrTest extends Test
 
 	/**
 	 * @covers Fuel\Common\Arr::previousByKey
-	 * @expectedException  InvalidArgumentException
+	 * @expectedException  \InvalidArgumentException
 	 * @group Common
 	 */
 	public function testPreviousByKeyException()
@@ -1282,7 +1268,7 @@ class ArrTest extends Test
 
 	/**
 	 * @covers Fuel\Common\Arr::nextByKey
-	 * @expectedException  InvalidArgumentException
+	 * @expectedException  \InvalidArgumentException
 	 * @group Common
 	 */
 	public function testNextByKeyException()
@@ -1317,7 +1303,7 @@ class ArrTest extends Test
 
 	/**
 	 * @covers Fuel\Common\Arr::previousByValue
-	 * @expectedException  InvalidArgumentException
+	 * @expectedException  \InvalidArgumentException
 	 * @group Common
 	 */
 	public function testPreviousByValueException()
@@ -1352,7 +1338,7 @@ class ArrTest extends Test
 
 	/**
 	 * @covers Fuel\Common\Arr::nextByValue
-	 * @expectedException  InvalidArgumentException
+	 * @expectedException  \InvalidArgumentException
 	 * @group Common
 	 */
 	public function testNextByValueException()

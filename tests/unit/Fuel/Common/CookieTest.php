@@ -1,23 +1,22 @@
 <?php
+
 namespace Fuel\Common;
 
-class CookieStub
-{
-	public function setcookie($name, $value, $expire = 0, $path = null, $domain = null, $secure = false, $httponly = false)
-	{
-		return true;
-	}
-}
+use Codeception\TestCase\Test;
 
-class CookieTest extends \PHPUnit_Framework_TestCase
+class CookieTest extends Test
 {
+
+	/**
+	 * @var Cookie
+	 */
 	public $instance;
 
 	/**
 	 * @covers Fuel\Common\Cookie::__construct
 	 * @group Common
 	 */
-	public function setup()
+	public function _before()
 	{
 		$this->instance = new Cookie('test', array(), null, new CookieStub());
 	}

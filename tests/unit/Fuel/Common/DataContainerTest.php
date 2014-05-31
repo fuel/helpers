@@ -2,12 +2,12 @@
 
 namespace Fuel\Common;
 
-use Fuel\Common\DataContainer;
+use Codeception\TestCase\Test;
 
-class DataContainerTest extends \PHPUnit_Framework_TestCase
+class DataContainerTest extends Test
 {
 	/**
-	 * @expectedException  OutOfBoundsException
+	 * @expectedException  \OutOfBoundsException
 	 * @group Common
 	 */
 	public function testGetSet()
@@ -53,7 +53,7 @@ class DataContainerTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @expectedException  RuntimeException
+	 * @expectedException  \RuntimeException
 	 * @group Common
 	 */
 	public function testReadOnlyReplace()
@@ -63,7 +63,7 @@ class DataContainerTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @expectedException  RuntimeException
+	 * @expectedException  \RuntimeException
 	 * @group Common
 	 */
 	public function testReadOnlyMerge()
@@ -73,7 +73,7 @@ class DataContainerTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @expectedException  RuntimeException
+	 * @expectedException  \RuntimeException
 	 * @group Common
 	 */
 	public function testReadOnly()
@@ -92,7 +92,7 @@ class DataContainerTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @expectedException  RuntimeException
+	 * @expectedException  \RuntimeException
 	 * @group Common
 	 */
 	public function testReadOnlyArrayAccess()
@@ -182,7 +182,7 @@ class DataContainerTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @expectedException  InvalidArgumentException
+	 * @expectedException  \InvalidArgumentException
 	 * @group Common
 	 */
 	public function testInvalidMerge()

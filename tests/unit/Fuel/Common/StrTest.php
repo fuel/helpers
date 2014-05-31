@@ -2,14 +2,20 @@
 
 namespace Fuel\Common;
 
-class StrTest extends \PHPUnit_Framework_TestCase
+use Codeception\TestCase\Test;
+
+class StrTest extends Test
 {
+
+	/**
+	 * @var Str
+	 */
 	public $instance;
 
 	/**
 	 * @group Common
 	 */
-	public function setup()
+	public function _before()
 	{
 		$this->instance = new Str();
 	}

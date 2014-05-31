@@ -2,28 +2,19 @@
 
 namespace Fuel\Common;
 
-/**
- * Test wrapper for setcookie(), so we can fake calls and results
- */
-class TestCookieWrapper
+use Codeception\TestCase\Test;
+
+class CookieJarTest extends Test
 {
-	public $return = true;
 
-	public function __construct($return = true)
-	{
-		$this->return = $return;
-	}
-
-	public function setcookie($name, $value, $expire = 0, $path = null, $domain = null, $secure = false, $httponly = false)
-	{
-		return $this->return;
-	}
-}
-
-class CookieJarTest extends \PHPUnit_Framework_TestCase
-{
+	/**
+	 * @var CookieJar
+	 */
 	public $instance;
 
+	/**
+	 * @var CookieJar
+	 */
 	public $parent;
 
 	/**
@@ -31,7 +22,7 @@ class CookieJarTest extends \PHPUnit_Framework_TestCase
 	 * @covers Fuel\Common\CookieJar::setParent
 	 * @group Common
 	 */
-	public function setup()
+	public function _before()
 	{
 		$this->instance = new CookieJar(array(), array('child' => 'value'), new TestCookieWrapper());
 		$this->parent = new CookieJar(array(), array('parent' => 'value'), new TestCookieWrapper());
@@ -214,7 +205,7 @@ class CookieJarTest extends \PHPUnit_Framework_TestCase
 		$this->assertArrayHasKey('child', $data);
 
 
-		$result = $this->instance->setParent($this->parent);
+		$this->instance->setParent($this->parent);
 
 		$data = array();
 		foreach ($this->instance as $key => $value)
