@@ -250,8 +250,8 @@ line 2","Value 3"',
 	 */
 	public function testToXml()
 	{
-		include_once __DIR__.'/../../../../resources/ConfigMock.php';
-		include_once __DIR__.'/../../../../resources/SecurityMock.php';
+		include_once __DIR__ . '/../../../../resources/ConfigMock.php';
+		include_once __DIR__ . '/../../../../resources/SecurityMock.php';
 		$inflector = new Inflector(new ConfigMock(), new SecurityMock(), new Str());
 
 		$array = array(
@@ -277,8 +277,8 @@ line 2","Value 3"',
 	 */
 	public function testToXmlInvalidDate()
 	{
-		include_once __DIR__.'/../../../../resources/ConfigMock.php';
-		include_once __DIR__.'/../../../../resources/SecurityMock.php';
+		include_once __DIR__ . '/../../../../resources/ConfigMock.php';
+		include_once __DIR__ . '/../../../../resources/SecurityMock.php';
 		$inflector = new Inflector(new ConfigMock(), new SecurityMock(), new Str());
 
 		$expected = '<?xml version="1.0" encoding="utf-8"?>
@@ -294,8 +294,8 @@ line 2","Value 3"',
 	 */
 	public function testToXmlBasenode()
 	{
-		include_once __DIR__.'/../../../../resources/ConfigMock.php';
-		include_once __DIR__.'/../../../../resources/SecurityMock.php';
+		include_once __DIR__ . '/../../../../resources/ConfigMock.php';
+		include_once __DIR__ . '/../../../../resources/SecurityMock.php';
 		$inflector = new Inflector(new ConfigMock(), new SecurityMock(), new Str());
 
 		$array = array(
@@ -320,8 +320,8 @@ line 2","Value 3"',
 	 */
 	public function testToXmlEscapeTags()
 	{
-		include_once __DIR__.'/../../../../resources/ConfigMock.php';
-		include_once __DIR__.'/../../../../resources/SecurityMock.php';
+		include_once __DIR__ . '/../../../../resources/ConfigMock.php';
+		include_once __DIR__ . '/../../../../resources/SecurityMock.php';
 		$inflector = new Inflector(new ConfigMock(), new SecurityMock(), new Str());
 
 		$array = array(
@@ -349,8 +349,8 @@ line 2","Value 3"',
 	 */
 	public function testToXmlCData($config)
 	{
-		include_once __DIR__.'/../../../../resources/ConfigMock.php';
-		include_once __DIR__.'/../../../../resources/SecurityMock.php';
+		include_once __DIR__ . '/../../../../resources/ConfigMock.php';
+		include_once __DIR__ . '/../../../../resources/SecurityMock.php';
 		$inflector = new Inflector(new ConfigMock(), new SecurityMock(), new Str());
 
 		$array = array(
@@ -378,8 +378,8 @@ line 2","Value 3"',
 	 */
 	public function testXmlToArrayNamespaced($config)
 	{
-		include_once __DIR__.'/../../../../resources/ConfigMock.php';
-		include_once __DIR__.'/../../../../resources/SecurityMock.php';
+		include_once __DIR__ . '/../../../../resources/ConfigMock.php';
+		include_once __DIR__ . '/../../../../resources/SecurityMock.php';
 		$inflector = new Inflector(new ConfigMock(), new SecurityMock(), new Str());
 
 		$xml = '<?xml version="1.0" encoding="utf-8"?>
@@ -405,8 +405,8 @@ line 2","Value 3"',
 	 */
 	public function testXmlToArrayNamespacedWithXmlNS($config)
 	{
-		include_once __DIR__.'/../../../../resources/ConfigMock.php';
-		include_once __DIR__.'/../../../../resources/SecurityMock.php';
+		include_once __DIR__ . '/../../../../resources/ConfigMock.php';
+		include_once __DIR__ . '/../../../../resources/SecurityMock.php';
 		$inflector = new Inflector(new ConfigMock(), new SecurityMock(), new Str());
 
 		$xml = '<?xml version="1.0" encoding="utf-8"?>
@@ -566,7 +566,7 @@ EOD;
 
 		$expected = 'response({"articles":[{"title":"test","author":"foo","specials":"[],:","tag":"\u003Ctag\u003E","apos":"McDonald\u0027s","quot":"\u0022test\u0022","amp":"M\u0026M"}]})';
 
-		include_once __DIR__.'/../../../../resources/InputMock.php';
+		include_once __DIR__ . '/../../../../resources/InputMock.php';
 		$instance = new Format($array, null, $config, new InputMock());
 		$this->assertEquals($expected, $instance->toJsonp());
 

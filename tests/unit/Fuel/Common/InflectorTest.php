@@ -14,8 +14,8 @@ class InflectorTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function setup()
 	{
-		include_once __DIR__.'/../../../../resources/ConfigMock.php';
-		include_once __DIR__.'/../../../../resources/SecurityMock.php';
+		include_once __DIR__ . '/../../../../resources/ConfigMock.php';
+		include_once __DIR__ . '/../../../../resources/SecurityMock.php';
 		$this->instance = new Inflector(new ConfigMock(), new SecurityMock(), new Str());
 	}
 

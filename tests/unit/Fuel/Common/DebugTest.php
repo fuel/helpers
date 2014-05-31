@@ -42,11 +42,11 @@ class DebugTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function setup()
 	{
-		include_once __DIR__.'/../../../../resources/ConfigMock.php';
-		include_once __DIR__.'/../../../../resources/SecurityMock.php';
+		include_once __DIR__ . '/../../../../resources/ConfigMock.php';
+		include_once __DIR__ . '/../../../../resources/SecurityMock.php';
 		$inflector = new Inflector(new ConfigMock(), new SecurityMock(), new Str());
 
-		include_once __DIR__.'/../../../../resources/InputMock.php';
+		include_once __DIR__ . '/../../../../resources/InputMock.php';
 		$this->instance = new Debug(new InputMock(), $inflector);
 	}
 
