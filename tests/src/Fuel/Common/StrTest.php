@@ -4,6 +4,15 @@ namespace Fuel\Common;
 
 class StrTest extends \PHPUnit_Framework_TestCase
 {
+	public $instance;
+
+	/**
+	 * @group Common
+	 */
+	public function setup()
+	{
+		$this->instance = new Str();
+	}
 
 	public function truncate_provider()
 	{
@@ -13,92 +22,104 @@ class StrTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * Test for Str::truncate()
+	 * Test for $this->instance->truncate()
 	 *
 	 * @test
 	 * @dataProvider truncate_provider
 	 */
-	public function test_truncate_plain($limit, $string)
+	public function testTruncatePlain($limit, $string)
 	{
-		$output = Str::truncate($string, $limit);
+		$output = $this->instance->truncate($string, $limit);
 		$expected = 'Lorem ipsum dol...';
 		$this->assertEquals($expected, $output);
 	}
 
 	/**
-	 * Test for Str::truncate()
+	 * Test for $this->instance->truncate()
 	 *
 	 * @test
 	 * @dataProvider truncate_provider
 	 */
-	public function test_truncate_custom_continuation($limit, $string)
+	public function testTruncateCustomContinuation($limit, $string)
 	{
-		$output = Str::truncate($string, $limit, '..');
+		$output = $this->instance->truncate($string, $limit, '..');
 		$expected = 'Lorem ipsum dol..';
 		$this->assertEquals($expected, $output);
 	}
 
 	/**
-	 * Test for Str::truncate()
+	 * Test for $this->instance->truncate()
 	 *
 	 * @test
 	 * @dataProvider truncate_provider
 	 */
-	public function test_truncate_not_html($limit, $string)
+	public function testTruncateNotHtml($limit, $string)
 	{
 		$string = '<h1>'.$string.'</h1>';
 
-		$output = Str::truncate($string, $limit, '...', false);
+		$output = $this->instance->truncate($string, $limit, '...', false);
 		$expected = '<h1>Lorem ipsum...';
 		$this->assertEquals($expected, $output);
 
-		$output = Str::truncate($string, $limit, '...', true);
+		$output = $this->instance->truncate($string, $limit, '...', true);
 		$expected = '<h1>Lorem ipsum dol...</h1>';
 		$this->assertEquals($expected, $output);
 	}
 
 	/**
-	 * Test for Str::truncate()
+	 * Test for $this->instance->truncate()
 	 *
 	 * @test
 	 * @dataProvider truncate_provider
 	 */
-	public function test_truncate_is_html($limit, $string)
+	public function testTruncateIsHtml($limit, $string)
 	{
 		$string = '<h1>'.$string.'</h1>';
 
-		$output = Str::truncate($string, $limit, '...', true);
+		$output = $this->instance->truncate($string, $limit, '...', true);
 		$expected = '<h1>Lorem ipsum dol...</h1>';
+		$this->assertEquals($expected, $output);
+
+		$string .= '&ellip; <h1>additional header</h1>';
+
+		$output = $this->instance->truncate($string, $limit, '...', true);
+		$expected = '<h1>Lorem ipsum dol...</h1>';
+		$this->assertEquals($expected, $output);
+
+		$string = '&ellip; <h1>short text</h1>';
+
+		$output = $this->instance->truncate($string, $limit, '...', true);
+		$expected = '&ellip; <h1>short text</h1>';
 		$this->assertEquals($expected, $output);
 	}
 
 	/**
-	 * Test for Str::truncate()
+	 * Test for $this->instance->truncate()
 	 *
 	 * @test
 	 * @dataProvider truncate_provider
 	 */
-	public function test_truncate_multiple_tags($limit, $string)
+	public function testTruncateMultipleTags($limit, $string)
 	{
 		$limit = 400;
 		$string = '<p><strong>'.$string.'</strong></p>';
 
-		$output = Str::truncate($string, $limit, '...', true);
+		$output = $this->instance->truncate($string, $limit, '...', true);
 		$this->assertEquals($string, $output);
 	}
 
 	/**
-	 * Test for Str::increment()
+	 * Test for $this->instance->increment()
 	 *
 	 * @test
 	 */
-	public function test_increment()
+	public function testIncrement()
 	{
 		$values = array('valueA', 'valueB', 'valueC');
 
 		for ($i = 0; $i < count($values); $i ++)
 		{
-			$output = Str::increment($values[$i], $i);
+			$output = $this->instance->increment($values[$i], $i);
 			$expected = $values[$i].'_'.$i;
 
 			$this->assertEquals($expected, $output);
@@ -106,121 +127,163 @@ class StrTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * Test for Str::lower()
+	 * Test for $this->instance->lower()
 	 *
 	 * @test
 	 */
-	public function test_lower()
+	public function testLower()
 	{
-		$output = Str::lower('HELLO WORLD');
+		$output = $this->instance->lower('HELLO WORLD');
 		$expected = "hello world";
 
 		$this->assertEquals($expected, $output);
 	}
 
 	/**
-	 * Test for Str::upper()
+	 * Test for $this->instance->upper()
 	 *
 	 * @test
 	 */
-	public function test_upper()
+	public function testUpper()
 	{
-		$output = Str::upper('hello world');
+		$output = $this->instance->upper('hello world');
 		$expected = "HELLO WORLD";
 
 		$this->assertEquals($expected, $output);
 	}
 
 	/**
-	 * Test for Str::lcfirst()
+	 * Test for $this->instance->lcfirst()
 	 *
 	 * @test
 	 */
-	public function test_lcfirst()
+	public function testLcfirst()
 	{
-		$output = Str::lcfirst('Hello World');
+		$output = $this->instance->lcfirst('Hello World');
 		$expected = "hello World";
 
 		$this->assertEquals($expected, $output);
 	}
 
 	/**
-	 * Test for Str::ucfirst()
+	 * Test for $this->instance->ucfirst()
 	 *
 	 * @test
 	 */
-	public function test_ucfirst()
+	public function testUcfirst()
 	{
-		$output = Str::ucfirst('hello world');
+		$output = $this->instance->ucfirst('hello world');
 		$expected = "Hello world";
 
 		$this->assertEquals($expected, $output);
 	}
 
 	/**
-	 * Test for Str::ucwords()
+	 * Test for $this->instance->ucwords()
 	 *
 	 * @test
 	 */
-	public function test_ucwords()
+	public function testUcwords()
 	{
-		$output = Str::ucwords('hello world');
+		$output = $this->instance->ucwords('hello world');
 		$expected = "Hello World";
 
 		$this->assertEquals($expected, $output);
 	}
 
 	/**
-	 * Test for Str::random()
+	 * Test for $this->instance->tr()
 	 *
 	 * @test
 	 */
-	public function test_random()
+	public function testTr()
 	{
-		// testing length
-		$output = Str::random('alnum', 34);
-		$this->assertEquals(34, strlen($output));
+		$output = $this->instance->tr(10);
+		$expected = 10;
+		$this->assertEquals($expected, $output);
 
-		// testing alnum
-		$output = Str::random('alnum', 15);
-		$this->assertTrue(ctype_alnum($output));
+		$output = $this->instance->tr(array('test'));
+		$expected = array('test');
+		$this->assertEquals($expected, $output);
 
-		// testing numeric
-		$output = Str::random('numeric', 20);
-		$this->assertTrue(ctype_digit($output));
-
-		// testing alpha
-		$output = Str::random('alpha', 35);
-		$this->assertTrue(ctype_alpha($output));
-
-		// testing nozero
-		$output = Str::random('nozero', 22);
-		$this->assertFalse(strpos($output, '0'));
+		$output = $this->instance->tr('Your name is :name', array('name' => 'John'));
+		$expected = 'Your name is John';
+		$this->assertEquals($expected, $output);
 	}
 
 	/**
-	 * Test for Str::is_json()
+	 * Test for $this->instance->random()
 	 *
 	 * @test
 	 */
-	public function test_is_json()
+	public function testRandom()
+	{
+		// testing length
+		$output = $this->instance->random('alnum', 34);
+		$this->assertEquals(34, strlen($output));
+
+		// testing alnum
+		$output = $this->instance->random('alnum', 15);
+		$this->assertTrue(ctype_alnum($output));
+
+		// testing numeric
+		$output = $this->instance->random('numeric', 20);
+		$this->assertTrue(ctype_digit($output));
+
+		// testing hexdec
+		$output = $this->instance->random('hexdec', 22);
+		$this->assertTrue(ctype_xdigit($output));
+
+		// testing alpha
+		$output = $this->instance->random('alpha', 35);
+		$this->assertTrue(ctype_alpha($output));
+
+		// testing nozero
+		$output = $this->instance->random('nozero', 22);
+		$this->assertFalse(strpos($output, '0'));
+
+		// testing distinct
+		$output = $this->instance->random('distinct', 34);
+		$this->assertEquals(34, strlen($output));
+
+		// testing unique
+		$output = $this->instance->random('unique');
+		$this->assertEquals(32, strlen($output));
+		$this->assertTrue(ctype_xdigit($output));
+
+		// testing sha1
+		$output = $this->instance->random('sha1');
+		$this->assertEquals(40, strlen($output));
+		$this->assertTrue(ctype_xdigit($output));
+
+		// testing basic
+		$output = $this->instance->random('basic');
+		$this->assertTrue(ctype_digit($output));
+	}
+
+	/**
+	 * Test for $this->instance->is_json()
+	 *
+	 * @test
+	 */
+	public function testIsJson()
 	{
 		$values = array('fuelphp','is' => array('awesome' => true));
 
 		$string = json_encode($values);
-		$this->assertTrue(Str::is_json($string));
+		$this->assertTrue($this->instance->is_json($string));
 
 		$string = serialize($values);
-		$this->assertFalse(Str::is_json($string));
+		$this->assertFalse($this->instance->is_json($string));
 	}
 
 	/**
-	 * Test for Str::is_xml()
+	 * Test for $this->instance->is_xml()
 	 *
 	 * @test
 	 * @requires extension libxml
 	 */
-	public function test_is_xml()
+	public function testIsXml()
 	{
 		$valid_xml = '<?xml version="1.0" encoding="UTF-8"?>
 					<phpunit colors="true" stopOnFailure="false" bootstrap="bootstrap_phpunit.php">
@@ -242,86 +305,96 @@ class StrTest extends \PHPUnit_Framework_TestCase
 						</
 					</phpunit>';
 
-		$this->assertTrue(Str::is_xml($valid_xml));
-		$this->assertFalse(Str::is_xml($invalid_xml));
+		$this->assertTrue($this->instance->is_xml($valid_xml));
+		$this->assertFalse($this->instance->is_xml($invalid_xml));
 	}
 
 	/**
-	 * Test for Str::is_serialized()
+	 * Test for $this->instance->is_xml()
+	 *
+	 * @test
+	 * @requires extension libxml
+	 */
+	public function testIsXmlException()
+	{
+	}
+
+	/**
+	 * Test for $this->instance->is_serialized()
 	 *
 	 * @test
 	 */
-	public function test_is_serialized()
+	public function testIsSerialized()
 	{
 		$values = array('fuelphp','is' => array('awesome' => true));
 
 		$string = json_encode($values);
-		$this->assertFalse(Str::is_serialized($string));
+		$this->assertFalse($this->instance->is_serialized($string));
 
 		$string = serialize($values);
-		$this->assertTrue(Str::is_serialized($string));
+		$this->assertTrue($this->instance->is_serialized($string));
 	}
 
 	/**
-	 * Test for Str::is_html()
+	 * Test for $this->instance->is_html()
 	 *
 	 * @test
 	 */
-	public function test_is_html()
+	public function testIsHtml()
 	{
 		$html = '<div class="row"><div class="span12"><strong>FuelPHP</strong> is a simple, flexible, <i>community<i> driven PHP 5.3 web framework based on the best ideas of other frameworks with a fresh start.</p>';
 		$simple_string = strip_tags($html);
 
-		$this->assertTrue(Str::is_html($html));
-		$this->assertFalse(Str::is_html($simple_string));
+		$this->assertTrue($this->instance->is_html($html));
+		$this->assertFalse($this->instance->is_html($simple_string));
 	}
 
 	/**
-	 * Test for Str::startsWith()
+	 * Test for $this->instance->startsWith()
 	 *
 	 * @test
 	 */
-	public function test_startsWith()
+	public function testStartsWith()
 	{
 		$string = 'HELLO WORLD';
 
-		$output = Str::startsWith($string, 'HELLO');
+		$output = $this->instance->startsWith($string, 'HELLO');
 		$this->assertTrue($output);
 
-		$output = Str::startsWith($string, 'hello');
+		$output = $this->instance->startsWith($string, 'hello');
 		$this->assertFalse($output);
 
-		$output = Str::startsWith($string, 'hello', true);
+		$output = $this->instance->startsWith($string, 'hello', true);
 		$this->assertTrue($output);
 	}
 
 	/**
-	 * Test for Str::endsWith()
+	 * Test for $this->instance->endsWith()
 	 *
 	 * @test
 	 */
-	public function test_endsWith()
+	public function testEndsWith()
 	{
 		$string = 'HELLO WORLD';
 
-		$output = Str::endsWith($string, 'WORLD');
+		$output = $this->instance->endsWith($string, 'WORLD');
 		$this->assertTrue($output);
 
-		$output = Str::endsWith($string, 'world');
+		$output = $this->instance->endsWith($string, 'world');
 		$this->assertFalse($output);
 
-		$output = Str::endsWith($string, 'world', true);
+		$output = $this->instance->endsWith($string, 'world', true);
 		$this->assertTrue($output);
 	}
 
 	/**
-	 * Test for Str::alternator()
+	 * Test for $this->instance->alternator()
 	 *
 	 * @test
 	 */
-	public function test_alternator()
+	public function testAlternator()
 	{
-		$alt = Str::alternator('one', 'two', 'three');
+		$alt = $this->instance->alternator('one', 'two', 'three');
 
 		$output = $alt();
 		$expected = 'one';
