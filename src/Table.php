@@ -163,7 +163,7 @@ class Table
 	 * Gets the currently active row. The row will not be added until addRow()
 	 * is called.
 	 *
-	 * @return type
+	 * @return Row
 	 */
 	public function getCurrentRow()
 	{
