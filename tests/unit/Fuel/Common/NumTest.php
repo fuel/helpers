@@ -19,7 +19,7 @@ class NumTest extends Test
 	 * @covers Fuel\Common\Num::__construct
 	 * @group Common
 	 */
-	public function setup()
+	public function _before()
 	{
 		$this->instance = new Num();
 	}

@@ -14,7 +14,7 @@ class InflectorTest extends Test
 	 * @covers Fuel\Common\Inflector::__construct
 	 * @group Common
 	 */
-	public function setup()
+	public function _before()
 	{
 		include_once __DIR__ . '/../../../../resources/ConfigMock.php';
 		include_once __DIR__ . '/../../../../resources/SecurityMock.php';
