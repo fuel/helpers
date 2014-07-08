@@ -136,6 +136,7 @@ class Debug
 				$label = $this->inflector->humanize($backtrace[$stack+1]['function']);
 
 				// get info about what was dumped
+				$tokens = [];
 				$callee['code'] = '';
 				for ($i = $callee['line']; $i > 0; $i--)
 				{

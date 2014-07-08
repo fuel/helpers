@@ -233,7 +233,8 @@ class DataContainer implements ArrayAccess, IteratorAggregate, Countable
 		}, func_get_args());
 
 		array_unshift($arguments, $this->data);
-		$this->data = call_user_func_array('Arr::merge', $arguments);
+		// TODO: Replace this with an injectable instance
+		$this->data = call_user_func_array('\Fuel\Common\Arr::merge', $arguments);
 
 		$this->isModified = true;
 

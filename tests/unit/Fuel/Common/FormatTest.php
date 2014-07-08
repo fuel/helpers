@@ -653,6 +653,7 @@ EOD;
 
 		$instance = new Format($array);
 		$this->assertEquals($expected, $instance->toYaml());
+		die();
 	}
 
 	/**

@@ -294,7 +294,6 @@ class CookieJar implements ArrayAccess, IteratorAggregate, Countable
 	 *
 	 * @param   array  $arg  array to merge with
 	 * @return  $this
-	 * @throws  RuntimeException
 	 * @since   2.0.0
 	 */
 	public function merge($arg)
@@ -310,7 +309,8 @@ class CookieJar implements ArrayAccess, IteratorAggregate, Countable
 
 		}, func_get_args());
 
-		$data = call_user_func_array('Arr::merge', $arguments);
+		// TODO: Replace this with a correctly injectable instance
+		$data = call_user_func_array('\Fuel\Common\Arr::merge', $arguments);
 
 		$this->set($data);
 
