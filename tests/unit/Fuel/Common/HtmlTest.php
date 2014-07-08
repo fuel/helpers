@@ -130,4 +130,16 @@ class HtmlTest extends Test
 		);
 	}
 
+	/**
+	 * @covers Fuel\Common\Html::arrayToAttributes
+	 * @group Common
+	 */
+	public function testTagWithAttributesThatNeedEncoding()
+	{
+		$this->assertEquals(
+				'name="blue &amp; green"',
+				Html::arrayToAttributes(array('name' => 'blue & green'))
+		);
+	}
+
 }

@@ -76,7 +76,7 @@ abstract class Html
 			{
 				if ( is_string($key) )
 				{
-					$attributeList[] = $key . '="' . $value . '"';
+					$attributeList[] = htmlspecialchars($key) . '="' . htmlspecialchars($value) . '"';
 				}
 				else
 				{
