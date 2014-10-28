@@ -55,8 +55,8 @@ class FuelServiceProvider extends ServiceProvider
 			}
 			else
 			{
-				$configInstance = $dic->resolve('application::__main')->getComponent()->getConfig();
-				$inputInstance = $dic->resolve('application::__main')->getComponent()->getInput();
+				$configInstance = $dic->resolve('application::__main')->getRootComponent()->getConfig();
+				$inputInstance = $dic->resolve('application::__main')->getRootComponent()->getInput();
 			}
 			$config = \Arr::merge($configInstance->load('format', true), $config);
 
@@ -75,7 +75,7 @@ class FuelServiceProvider extends ServiceProvider
 			else
 			{
 				$app = $this->container->resolve('application::__main');
-				$inputInstance = $app->getComponent()->getInput();
+				$inputInstance = $app->getRootComponent()->getInput();
 				$viewmanagerInstance = $app->getViewManager();
 			}
 
@@ -93,7 +93,7 @@ class FuelServiceProvider extends ServiceProvider
 			}
 			else
 			{
-				$configInstance = $dic->resolve('application::__main')->getComponent()->getConfig();
+				$configInstance = $dic->resolve('application::__main')->getRootComponent()->getConfig();
 			}
 			$config = \Arr::merge($configInstance->load('date', true), $config);
 
@@ -112,8 +112,8 @@ class FuelServiceProvider extends ServiceProvider
 			}
 			else
 			{
-				$configInstance = $dic->resolve('application::__main')->getComponent()->getConfig();
-				$langInstance = $dic->resolve('application::__main')->getComponent()->getLanguage();
+				$configInstance = $dic->resolve('application::__main')->getRootComponent()->getConfig();
+				$langInstance = $dic->resolve('application::__main')->getRootComponent()->getLanguage();
 			}
 			$config = \Arr::merge($configInstance->load('num', true), $config);
 			$lang = \Arr::merge($langInstance->load('byteunits', true), $lang);
