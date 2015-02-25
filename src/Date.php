@@ -13,7 +13,6 @@ namespace Fuel\Common;
 use DateInterval;
 use DateTimeZone;
 use DateTime;
-use DateTimeInterface;
 
 /**
  * Date Class
@@ -30,7 +29,7 @@ use DateTimeInterface;
  * - Uses either strptime() or DateTime to create a date from a format, depending on the format
  * - Uses strftime formatting for dates www.php.net/manual/en/function.strftime.php
  */
-class Date implements DateTimeInterface
+class Date
 {
 	/**
 	 * @var  DateTime object warnings and errors

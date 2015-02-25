@@ -8,14 +8,6 @@
  * @link       http://fuelphp.com
  */
 
-/**
- * Define the DateTimeInterface for PHP versions < 5.5
- */
-if ( ! interface_exists('DateTimeInterface', false))
-{
-	include __DIR__.'/../resources/DateTimeInterface.php';
-}
-
 if ( ! function_exists('importFile'))
 {
 	/**
