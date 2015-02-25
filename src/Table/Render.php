@@ -10,6 +10,8 @@
 
 namespace Fuel\Common\Table;
 
+use Fuel\Common\Table;
+
 /**
  * Uses a table structure built with Table to create HTML
  *
