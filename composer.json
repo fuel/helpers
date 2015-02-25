@@ -25,5 +25,10 @@
 			"Fuel\\Common\\": "src/"
 		},
 		"files": ["helpers/bootstrap.php"]
+	},
+	"extra": {
+		"branch-alias": {
+			"dev-master": "2.0-dev"
+		}
 	}
 }
