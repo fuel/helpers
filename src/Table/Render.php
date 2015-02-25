@@ -4,28 +4,26 @@
  * @version    2.0
  * @author     Fuel Development Team
  * @license    MIT License
- * @copyright  2010 - 2014 Fuel Development Team
+ * @copyright  2010 - 2015 Fuel Development Team
  * @link       http://fuelphp.com
  */
 
 namespace Fuel\Common\Table;
 
-use \Fuel\Common\Table;
-
 /**
  * Uses a table structure built with Table to create HTML
  *
- * @package Fuel\Common\Table
- * @since   2.0.0
- * @author  Fuel Development Team
+ * @package Fuel\Common
+ *
+ * @since 2.0
  */
 abstract class Render
 {
-
 	/**
-	 * Renders the given table into a string. Output depends on the subclass.
+	 * Renders the given table into a string. Output depends on the subclass
 	 *
-	 * @param  Table   $table
+	 * @param Table $table
+	 *
 	 * @return string
 	 */
 	public function renderTable(Table $table)
@@ -41,10 +39,11 @@ abstract class Render
 	}
 
 	/**
-	 * Renders the main body rows for the table.
+	 * Renders the main body rows for the table
 	 *
-	 * @param \Fuel\Common\Table $table
-	 * @return array Array of rendered rows
+	 * @param Table $table
+	 *
+	 * @return array
 	 */
 	protected function buildRows(Table $table)
 	{
@@ -68,10 +67,11 @@ abstract class Render
 	}
 
 	/**
-	 * Renders the header rows for the table.
+	 * Renders the header rows for the table
 	 *
-	 * @param \Fuel\Common\Table $table
-	 * @return array Array of rendered rows
+	 * @param Table $table
+	 *
+	 * @return array
 	 */
 	protected function buildHeaders(Table $table)
 	{
@@ -95,10 +95,11 @@ abstract class Render
 	}
 
 	/**
-	 * Renders the footer rows for the table.
+	 * Renders the footer rows for the table
 	 *
-	 * @param \Fuel\Common\Table $table
-	 * @return array Array of rendered rows
+	 * @param Table $table
+	 *
+	 * @return array
 	 */
 	protected function buildFooters(Table $table)
 	{
@@ -124,11 +125,12 @@ abstract class Render
 	/**
 	 * Should generate the container tag, eg: &lt;table&gt;
 	 *
-	 * @param Table  $table
-	 * @param array  $rows  The constructed rows to show
-	 * @param array  $headerRows  The constructed header rows to show
-	 * @param array  $footerRows  The constructed footer rows to show
-	 * @return mixed Should Ideally be a string that can be printed later.
+	 * @param Table $table
+	 * @param array $rows
+	 * @param array $headerRows
+	 * @param array $footerRows
+	 *
+	 * @return mixed Should Ideally be a string that can be printed later
 	 */
 	protected abstract function container(
 		Table $table,
@@ -140,28 +142,29 @@ abstract class Render
 	/**
 	 * Renders a normal Row
 	 *
-	 * @param  Row   $row   The current row being rendered
-	 * @param  array $cells The constructed Cells that the current Row contains
-	 * @return mixed Should ideally be a string that can be printed by
-	 * container()
+	 * @param Row   $row
+	 * @param array $cells
+	 *
+	 * @return mixed Should ideally be a string that can be printed by container()
 	 */
 	protected abstract function row(Row $row, array $cells);
 
 	/**
 	 * Renders a header Row
 	 *
-	 * @param  Row   $row   The current row being rendered
-	 * @param  array $cells The constructed Cells that the current Row contains
-	 * @return mixed Should ideally be a string that can be printed by
-	 * container()
+	 * @param Row   $row
+	 * @param array $cells
+	 *
+	 * @return mixed Should ideally be a string that can be printed by container()
 	 */
 	protected abstract function headerRow(Row $row, array $cells);
 
 	/**
 	 * Renders a footer Row
 	 *
-	 * @param  Row   $row   The current row being rendered
-	 * @param  array $cells The constructed Cells that the current Row contains
+	 * @param Row   $row
+	 * @param array $cells
+	 *
 	 * @return mixed Should ideally be a string that can be printed by
 	 * container()
 	 */
@@ -187,5 +190,4 @@ abstract class Render
 	 * @param Cell
 	 */
 	protected abstract function footerCell(Cell $cell);
-
 }

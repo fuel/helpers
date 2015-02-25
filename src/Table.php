@@ -4,7 +4,7 @@
  * @version    2.0
  * @author     Fuel Development Team
  * @license    MIT License
- * @copyright  2010 - 2014 Fuel Development Team
+ * @copyright  2010 - 2015 Fuel Development Team
  * @link       http://fuelphp.com
  */
 
@@ -18,26 +18,25 @@ use Fuel\Common\Table\EnumRowType;
  * Deals with constructing table structures.
  *
  * @package Fuel\Common
- * @since   2.0.0
- * @author  Fuel Development Team
+ *
+ * @since 2.0
  */
 class Table
 {
+	/**
+	 * @var array
+	 */
+	protected $rows = [];
 
 	/**
-	 * @var array Contains constructed rows
+	 * @var array
 	 */
-	protected $rows = array();
+	protected $headerRows = [];
 
 	/**
-	 * @var array Contains constructed header rows
+	 * @var array
 	 */
-	protected $headerRows = array();
-
-	/**
-	 * @var array Contains constructed footer rows
-	 */
-	protected $footerRows = array();
+	protected $footerRows = [];
 
 	/**
 	 * @var Row The row that new cells will be added to
@@ -45,16 +44,17 @@ class Table
 	protected $currentRow = null;
 
 	/**
-	 * @var array Contains the attributes to associate with this table.
+	 * @var array
 	 */
-	protected $attributes = array();
+	protected $attributes = [];
 
 	/**
-	 * Adds a Cell to the current Row.
+	 * Adds a Cell to the current Row
 	 *
-	 * @param  mixed $content    Anything that is not a Cell will be added as content to a new Cell
-	 * @param  array $attributes The array of attributes to assign the new Cell
-	 * @return Table For method chaining
+	 * @param mixed $content    Anything that is not a Cell will be added as content to a new Cell
+	 * @param array $attributes The array of attributes to assign the new Cell
+	 *
+	 * @return $this
 	 */
 	public function addCell($content, $attributes = array())
 	{
@@ -69,15 +69,15 @@ class Table
 			$currentRow[] = $this->constructCell($content, $attributes);
 		}
 
-		//Return current object for method chaining
 		return $this;
 	}
 
 	/**
-	 * Creates a new Cell with the given content.
+	 * Creates a new Cell with the given content
 	 *
-	 * @param  mixed $content    The content for the new Cell
-	 * @param  array $attributes The attributes for the Cell
+	 * @param mixed $content    The content for the new Cell
+	 * @param array $attributes The attributes for the Cell
+	 *
 	 * @return Cell
 	 */
 	protected function constructCell($content = null, $attributes = array())
@@ -89,9 +89,11 @@ class Table
 	}
 
 	/**
-	 * Creates a new Row object and assigns it as the currently active row.
+	 * Creates a new Row object and assigns it as the currently active row
 	 *
 	 * @param EnumRowType $type The type of the new row, uses Body by default
+	 *
+	 * @return $this
 	 */
 	public function createRow($type = EnumRowType::Body)
 	{
@@ -102,10 +104,9 @@ class Table
 	}
 
 	/**
-	 * Adds the Row that's currently being constructed to the list of finished
-	 * Rows.
+	 * Adds the Row that's currently being constructed to the list of finished Rows
 	 *
-	 * @return Table
+	 * @return $this
 	 */
 	public function addRow()
 	{
@@ -160,8 +161,7 @@ class Table
 	}
 
 	/**
-	 * Gets the currently active row. The row will not be added until addRow()
-	 * is called.
+	 * Gets the currently active row. The row will not be added until addRow() is called
 	 *
 	 * @return Row
 	 */
@@ -179,29 +179,18 @@ class Table
 	 * Sets the attributes for the currently active Row
 	 *
 	 * @param array $attributes
-	 * @return Table
+	 *
+	 * @return $this
 	 */
 	public function setCurrentRowAttributes(array $attributes)
 	{
 		$this->getCurrentRow()->setAttributes($attributes);
-		return $this;
-	}
-
-	/**
-	 * Sets the atributes of the Table
-	 *
-	 * @param array $newAttributes
-	 * @return Table
-	 */
-	public function setAttributes(array $newAttributes)
-	{
-		$this->attributes = $newAttributes;
 
 		return $this;
 	}
 
 	/**
-	 * Gets the attributes of this Table
+	 * Returns the attributes of this Table
 	 *
 	 * @return array
 	 */
@@ -210,4 +199,17 @@ class Table
 		return $this->attributes;
 	}
 
+	/**
+	 * Sets the atributes of the Table
+	 *
+	 * @param array $newAttributes
+	 *
+	 * @return $this
+	 */
+	public function setAttributes(array $newAttributes)
+	{
+		$this->attributes = $newAttributes;
+
+		return $this;
+	}
 }

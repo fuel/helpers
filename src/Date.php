@@ -4,7 +4,7 @@
  * @version    2.0
  * @author     Fuel Development Team
  * @license    MIT License
- * @copyright  2010 - 2014 Fuel Development Team
+ * @copyright  2010 - 2015 Fuel Development Team
  * @link       http://fuelphp.com
  */
 
@@ -21,8 +21,9 @@ use DateTimeInterface;
  * DateTime drop-in replacement that supports internationalization and does
  * correction to GMT when your webserver isn't configured correctly.
  *
- * @package  Fuel\Common
- * @since  1.0.0
+ * @package Fuel\Common
+ *
+ * @since 1.0
  *
  * Notes:
  * - Always returns Date objects, will accept both Date objects and UNIX timestamps

@@ -4,28 +4,31 @@
  * @version    2.0
  * @author     Fuel Development Team
  * @license    MIT License
- * @copyright  2010 - 2014 Fuel Development Team
+ * @copyright  2010 - 2015 Fuel Development Team
  * @link       http://fuelphp.com
  */
 
 namespace Fuel\Common\Table;
 
-use \Fuel\Common\DataContainer;
+use Fuel\Common\DataContainer;
 
 /**
  * Defines a Row that contains Cells for a table.
  *
- * @package Fuel\Common\Table
- * @since   2.0.0
- * @author  Fuel Development Team
+ * @package Fuel\Common
+ *
+ * @since 2.0
  */
 class Row extends DataContainer
 {
+	/**
+	 * @var array
+	 */
+	protected $attributes = [];
 
 	/**
-	 * @var array Contains the attributes to associate with this table.
+	 * @var integer
 	 */
-	protected $attributes = array();
 	protected $type = EnumRowType::Body;
 
 	/**
@@ -44,20 +47,7 @@ class Row extends DataContainer
 	}
 
 	/**
-	 * Sets the atributes of the Row
-	 *
-	 * @param  array $newAttributes
-	 * @return Row
-	 */
-	public function setAttributes(array $newAttributes)
-	{
-		$this->attributes = $newAttributes;
-
-		return $this;
-	}
-
-	/**
-	 * Gets the attributes of this Row
+	 * Returns the attributes of this Row
 	 *
 	 * @return array
 	 */
@@ -67,9 +57,23 @@ class Row extends DataContainer
 	}
 
 	/**
-	 * Gets the type of the row as defined by EnumRowType
+	 * Sets the atributes of the Row
 	 *
-	 * @return int
+	 * @param array $newAttributes
+	 *
+	 * @return $this
+	 */
+	public function setAttributes(array $newAttributes)
+	{
+		$this->attributes = $newAttributes;
+
+		return $this;
+	}
+
+	/**
+	 * Returns the type of the row as defined by EnumRowType
+	 *
+	 * @return integer
 	 */
 	public function getType()
 	{
@@ -77,15 +81,16 @@ class Row extends DataContainer
 	}
 
 	/**
-	 * Sets the type of the row. Should be a value from EnumRowType.
+	 * Sets the type of the row. Should be a value from EnumRowType
 	 *
-	 * @param int $type
-	 * @return \Fuel\Common\Table\Row
+	 * @param integer $type
+	 *
+	 * @return $this
 	 */
 	public function setType($type)
 	{
 		$this->type = $type;
+
 		return $this;
 	}
-
 }

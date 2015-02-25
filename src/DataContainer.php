@@ -4,25 +4,20 @@
  * @version    2.0
  * @author     Fuel Development Team
  * @license    MIT License
- * @copyright  2010 - 2014 Fuel Development Team
+ * @copyright  2010 - 2015 Fuel Development Team
  * @link       http://fuelphp.com
  */
 
 namespace Fuel\Common;
 
-use ArrayAccess;
-use IteratorAggregate;
-use ArrayIterator;
-use Countable;
-use InvalidArgumentException;
-
 /**
  * Generic data container
  *
- * @package  Fuel\Common
- * @since  2.0.0
+ * @package Fuel\Common
+ *
+ * @since 2.0
  */
-class DataContainer implements ArrayAccess, IteratorAggregate, Countable
+class DataContainer implements \ArrayAccess, \IteratorAggregate, \Countable
 {
 	/**
 	 * @var    DataContainer  parent container, for inheritance
@@ -436,7 +431,7 @@ class DataContainer implements ArrayAccess, IteratorAggregate, Countable
 	 */
 	public function getIterator()
 	{
-		return new ArrayIterator($this->getContents());
+		return new \ArrayIterator($this->getContents());
 	}
 
 	/**

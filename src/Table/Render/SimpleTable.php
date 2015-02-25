@@ -4,7 +4,7 @@
  * @version    2.0
  * @author     Fuel Development Team
  * @license    MIT License
- * @copyright  2010 - 2014 Fuel Development Team
+ * @copyright  2010 - 2015 Fuel Development Team
  * @link       http://fuelphp.com
  */
 
@@ -20,20 +20,20 @@ use Fuel\Common\Html;
  * Uses a table structure built with Table to create a HTML table tag and
  * content.
  *
- * @package Fuel\Common\Table\Render
- * @since   2.0.0
- * @author  Fuel Development Team
+ * @package Fuel\Common
+ *
+ * @since 2.0
  */
 class SimpleTable extends Render
 {
-
 	/**
-	 * Generates a "correct" table tag to contain the rendered rows.
+	 * Generates a "correct" table tag to contain the rendered rows
 	 *
-	 * @param  Table   $table
-	 * @param  array   $rows
-	 * @param  array   $headers
-	 * @param  array   $footers
+	 * @param Table $table
+	 * @param array $rows
+	 * @param array $headers
+	 * @param array $footers
+	 *
 	 * @return string
 	 */
 	protected function container(Table $table, array $rows, array $headers, array $footers)
@@ -52,10 +52,11 @@ class SimpleTable extends Render
 	}
 
 	/**
-	 * Generates a tr with the given rendered cells.
+	 * Generates a tr with the given rendered cells
 	 *
-	 * @param  Row     $row
-	 * @param  array   $cells
+	 * @param Row   $row
+	 * @param array $cells
+	 *
 	 * @return string
 	 */
 	protected function row(Row $row, array $cells)
@@ -70,7 +71,8 @@ class SimpleTable extends Render
 	/**
 	 * Creates a td tag using the given Cell
 	 *
-	 * @param Cell     $cell
+	 * @param Cell $cell
+	 *
 	 * @return string
 	 */
 	protected function cell(Cell $cell)
@@ -84,10 +86,10 @@ class SimpleTable extends Render
 
 	/**
 	 * Helper function to convert an array into a list of attributes and append
-	 * them to a string.
+	 * them to a string
 	 *
-	 * @param string $html        The string to append the attributes to. Passed by reference.
-	 * @param array  $attributes  The key-value array that defines the attributes.
+	 * @param string $html
+	 * @param array  $attributes
 	 */
 	protected function addAttributes(&$html, array $attributes)
 	{

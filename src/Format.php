@@ -4,19 +4,18 @@
  * @version    2.0
  * @author     Fuel Development Team
  * @license    MIT License
- * @copyright  2010 - 2014 Fuel Development Team
+ * @copyright  2010 - 2015 Fuel Development Team
  * @link       http://fuelphp.com
  */
 
 namespace Fuel\Common;
 
 /**
- * Format class
- *
  * Help convert between various formats such as XML, JSON, CSV, etc.
  *
- * @package  Fuel\Common
- * @since  1.0.0
+ * @package Fuel\Common
+ *
+ * @since 1.0
  */
 class Format
 {

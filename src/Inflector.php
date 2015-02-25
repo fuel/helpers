@@ -4,19 +4,18 @@
  * @version    2.0
  * @author     Fuel Development Team
  * @license    MIT License
- * @copyright  2010 - 2014 Fuel Development Team
+ * @copyright  2010 - 2015 Fuel Development Team
  * @link       http://fuelphp.com
  */
 
 namespace Fuel\Common;
 
 /**
- * Some of this code was written by Flinn Mueller.
+ * Some of this code was written by Flinn Mueller
  *
- * @package		Fuel
- * @category	Common
- * @copyright	Flinn Mueller
- * @link		http://docs.fuelphp.com/classes/inlector.html
+ * @package Fuel\Common
+ *
+ * @copyright Flinn Mueller
  */
 class Inflector
 {

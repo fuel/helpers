@@ -4,19 +4,16 @@
  * @version    2.0
  * @author     Fuel Development Team
  * @license    MIT License
- * @copyright  2010 - 2014 Fuel Development Team
+ * @copyright  2010 - 2015 Fuel Development Team
  * @link       http://fuelphp.com
  */
 
 namespace Fuel\Common;
 
-use \LogicException;
-
 /**
  * Class for building regular expressions
  *
  * @package Fuel\Common
- * @author  Fuel Development Team
  *
  * @since 2.0
  */
@@ -79,7 +76,7 @@ class RegexFactory
 		// If there are still open delimiters throw an exception
 		if ($this->openDelimiters !== 0)
 		{
-			throw new LogicException('A delimiter has not been closed!');
+			throw new \LogicException('A delimiter has not been closed!');
 		}
 
 		$expression = $this->expression;

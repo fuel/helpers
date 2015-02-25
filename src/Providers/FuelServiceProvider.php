@@ -4,140 +4,102 @@
  * @version    2.0
  * @author     Fuel Development Team
  * @license    MIT License
- * @copyright  2010 - 2014 Fuel Development Team
+ * @copyright  2010 - 2015 Fuel Development Team
  * @link       http://fuelphp.com
  */
 
 namespace Fuel\Common\Providers;
 
-use Fuel\Dependency\ServiceProvider;
+use League\Container\ServiceProvider;
+use Fuel\Common;
 
 /**
- * FuelPHP ServiceProvider class for this package
+ * Fuel ServiceProvider class for Common
  *
- * @package  Fuel\Common
+ * @package Fuel\Common
  *
- * @since  2.0.0
+ * @since 2.0
  */
 class FuelServiceProvider extends ServiceProvider
 {
 	/**
-	 * @var  array  list of service names provided by this provider
+	 * @var array
 	 */
-	public $provides = array('datacontainer', 'cookiejar', 'format', 'date', 'num', 'str', 'inflector', 'debug');
+	protected $provides = [
+		'datacontainer',
+		'cookiejar',
+		'format',
+		'date',
+		'num',
+		'str',
+		'inflector',
+		'debug'
+	];
 
 	/**
-	 * Service provider definitions
+	 * {@inheritdoc}
 	 */
-	public function provide()
+	public function register()
 	{
-		// \Fuel\Common\DataContainer
-		$this->register('datacontainer', function ($dic, Array $data = array(), $readOnly = false)
+		$this->container->add('datacontainer', function (array $data = [], $readOnly = false)
 		{
-			return $dic->resolve('Fuel\Common\DataContainer', array($data, $readOnly));
+			return new Common\DataContainer($data, $readOnly);
 		});
 
 		// \Fuel\Common\CookieJar
-		$this->register('cookiejar', function ($dic, Array $config = array(), Array $data = array())
+		$this->container->add('cookiejar', function (array $config = [], array $data = [])
 		{
-			return $dic->resolve('Fuel\Common\CookieJar', array($config, $data));
+			return new Common\CookieJar($config, $data);
 		});
 
-		// \Fuel\Common\Format
-		$this->register('format', function ($dic, $data = null, $from_type = null, Array $config = array())
+		$this->container->add('format', function ($data = null, $fromType = null, array $config = [])
 		{
-			// get the config
-			$stack = $dic->resolve('requeststack');
-			if ($request = $stack->top())
-			{
-				$configInstance = $request->getComponent()->getConfig();
-				$inputInstance = $request->getInput();
-			}
-			else
-			{
-				$configInstance = $dic->resolve('application::__main')->getRootComponent()->getConfig();
-				$inputInstance = $dic->resolve('application::__main')->getRootComponent()->getInput();
-			}
+			$configInstance = $this->container->get('configInstance');
+			$input = $this->container->get('inputInstance');
+
 			$config = \Arr::merge($configInstance->load('format', true), $config);
 
-			return $dic->resolve('Fuel\Common\Format', array($data, $from_type, $config, $inputInstance, $dic->resolve('inflector')));
+			$inflector = $this->container->get('inflector');
+
+			return new Common\Format($data, $fromType, $config, $input, $inflector);
 		});
 
-		// \Fuel\Common\Pagination
-		$this->register('pagination', function ($dic, $view)
+		$this->container->add('pagination', function ($view)
 		{
-			$stack = $dic->resolve('requeststack');
-			if ($request = $stack->top())
-			{
-				$inputInstance = $request->getInput();
-				$viewmanagerInstance = $request->getComponent()->getApplication()->getViewManager();
-			}
-			else
-			{
-				$app = $this->container->resolve('application::__main');
-				$inputInstance = $app->getRootComponent()->getInput();
-				$viewmanagerInstance = $app->getViewManager();
-			}
+			$input = $this->container->get('inputInstance');
+			$viewManager = $this->container->get('viewManagerInstance');
 
-			return $dic->resolve('Fuel\Common\Pagination', array($viewmanagerInstance, $inputInstance, $view));
+			return new Common\Pagination($viewManager, $input, $view);
 		});
 
-		// \Fuel\Common\Date
-		$this->register('date', function ($dic, $time = "now", $timezone = null, Array $config = array())
+		$this->container->add('date', function ($time = "now", $timezone = null, array $config = [])
 		{
-			// get the date config
-			$stack = $dic->resolve('requeststack');
-			if ($request = $stack->top())
-			{
-				$configInstance = $request->getComponent()->getConfig();
-			}
-			else
-			{
-				$configInstance = $dic->resolve('application::__main')->getRootComponent()->getConfig();
-			}
+			$configInstance = $this->container->get('configInstance');
 			$config = \Arr::merge($configInstance->load('date', true), $config);
 
-			return $dic->resolve('Fuel\Common\Date', array($time, $timezone, $config));
+			return new Common\Date($time, $timezone, $config);
 		});
 
-		// \Fuel\Common\Num
-		$this->register('num', function ($dic, Array $config = array(), Array $lang = array())
+		$this->container->add('num', function (array $config = [], array $lang = [])
 		{
-			// get the config and the lang
-			$stack = $dic->resolve('requeststack');
-			if ($request = $stack->top())
-			{
-				$configInstance = $request->getComponent()->getConfig();
-				$langInstance = $request->getComponent()->getLanguage();
-			}
-			else
-			{
-				$configInstance = $dic->resolve('application::__main')->getRootComponent()->getConfig();
-				$langInstance = $dic->resolve('application::__main')->getRootComponent()->getLanguage();
-			}
+			$configInstance = $this->container->get('configInstance');
+			$langInstance = $this->container->get('langInstance');
+
 			$config = \Arr::merge($configInstance->load('num', true), $config);
 			$lang = \Arr::merge($langInstance->load('byteunits', true), $lang);
 
-			return $dic->resolve('Fuel\Common\Num', array($config, $lang));
+			return new Common\Num($config, $lang);
 		});
 
-		// \Fuel\Common\Str
-		$this->registerSingleton('str', function ($dic)
-		{
-			return $dic->resolve('Fuel\Common\Str');
-		});
+		$this->container->singleton('str', 'Fuel\Common\Str');
 
-		// \Fuel\Common\Inflector
-		$this->registerSingleton('inflector', function ($dic)
-		{
-			return $dic->resolve('Fuel\Common\Inflector', array(null, $dic->resolve('security'), $dic->resolve('str')));
-		});
+		$this->container->singleton('inflector', 'Fuel\Common\Inflector')
+			->withArgument(null)
+			->withArgument('security')
+			->withArgument('str');
 
-		// \Fuel\Common\Debug
-		$this->registerSingleton('debug', function ($dic)
-		{
-			return $dic->resolve('Fuel\Common\Debug', array(null, $dic->resolve('inflector')));
-		});
+		$this->container->singleton('debug', 'Fuel\Common\Debug')
+			->withArgument(null)
+			->withArgument('inflector');
 	}
-
 }

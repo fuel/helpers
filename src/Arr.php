@@ -4,7 +4,7 @@
  * @version    2.0
  * @author     Fuel Development Team
  * @license    MIT License
- * @copyright  2010 - 2014 Fuel Development Team
+ * @copyright  2010 - 2015 Fuel Development Team
  * @link       http://fuelphp.com
  */
 
@@ -14,8 +14,9 @@ namespace Fuel\Common;
  * The Arr class provides a few nice functions for making
  * dealing with arrays easier
  *
- * @package  Fuel\Common
- * @since    2.0
+ * @package Fuel\Common
+ *
+ * @since 2.0
  */
 class Arr
 {

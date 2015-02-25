@@ -5,7 +5,7 @@
  * @author     Fuel Development Team
  * @author     Chase "Syntaqx" Hutchins
  * @license    MIT License
- * @copyright  2010 - 2014 Fuel Development Team
+ * @copyright  2010 - 2015 Fuel Development Team
  * @link       http://fuelphp.com
  */
 
@@ -21,7 +21,7 @@ namespace Fuel\Common;
  *	Kohana Framework: kohanaframework.org
  *	CakePHP: cakephp.org
  *
- * @since 1.0.0
+ * @since 1.0
  */
 class Num
 {

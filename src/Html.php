@@ -4,7 +4,7 @@
  * @version    2.0
  * @author     Fuel Development Team
  * @license    MIT License
- * @copyright  2010 - 2014 Fuel Development Team
+ * @copyright  2010 - 2015 Fuel Development Team
  * @link       http://fuelphp.com
  */
 
@@ -14,18 +14,18 @@ namespace Fuel\Common;
  * Helper class to deal with common HTML related operations.
  *
  * @package Fuel\Common
- * @since   2.0.0
- * @author  Fuel Development Team
+ *
+ * @since 2.0
  */
 abstract class Html
 {
-
 	/**
-	 * Returns a HTML tag.
+	 * Returns a HTML tag
 	 *
-	 * @param  string      $name       Name of the tag to render. (Eg, img, form, a...)
-	 * @param  array       $attributes Any attributes to apply to the tag to render
-	 * @param  null|string $content    If not set to null will create a tag of the form "&lt;name&lt;content&lt;/name&lt;". Otherwise will render as a single tag.
+	 * @param string      $name       Name of the tag to render. (Eg, img, form, a...)
+	 * @param array       $attributes Any attributes to apply to the tag to render
+	 * @param null|string $content    If not set to null will create a tag of the form "&lt;name&lt;content&lt;/name&lt;". Otherwise will render as a single tag.
+	 *
 	 * @return string
 	 */
 	public static function tag($name, $attributes = array(), $content = null)
@@ -55,13 +55,14 @@ abstract class Html
 	}
 
 	/**
-	 * Produces a string of html tag attributes from an array.
+	 * Produces a string of html tag attributes from an array
 	 *
 	 * array('name' => 'test', 'foo' => 'bar')
 	 * becomes:
 	 * 'name="test" foo="bar"'
 	 *
-	 * @param  array  $attributes
+	 * @param array $attributes
+	 *
 	 * @return string
 	 */
 	public static function arrayToAttributes(array $attributes)
@@ -87,5 +88,4 @@ abstract class Html
 
 		return implode(' ', $attributeList);
 	}
-
 }
