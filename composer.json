@@ -1,6 +1,6 @@
 {
 	"name": "fuelphp/common",
-	"description": "FuelPHP generic helper functions and classes.",
+	"description": "FuelPHP generic helper functions and classes",
 	"keywords": ["Helper", "Utility"],
 	"homepage": "https://github.com/fuelphp/common",
 	"license": "MIT",
