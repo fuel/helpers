@@ -1,6 +1,5 @@
 {
 	"name": "fuelphp/common",
-	"type": "library",
 	"description": "FuelPHP generic helper functions and classes.",
 	"keywords": ["Helper", "Utility"],
 	"homepage": "https://github.com/fuelphp/common",
@@ -15,14 +14,16 @@
 		"php": ">=5.4"
 	},
 	"require-dev": {
-		"codeception/codeception": "1.8.*",
-		"symfony/yaml": "2.3.x"
+		"codeception/codeception": "~2.0",
+		"symfony/yaml": "^2.3"
 	},
 	"suggest": {
 		"symfony/yaml": "Allows YAML data conversions."
 	},
 	"autoload": {
-		"psr-4": { "Fuel\\Common\\": "src/" },
+		"psr-4": {
+			"Fuel\\Common\\": "src/"
+		},
 		"files": ["helpers/bootstrap.php"]
 	}
 }
