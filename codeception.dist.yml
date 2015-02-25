@@ -8,7 +8,6 @@ settings:
   bootstrap: _bootstrap.php
   colors: false
   memory_limit: 1024M
-  log: true
 coverage:
   enabled: true
   include:
