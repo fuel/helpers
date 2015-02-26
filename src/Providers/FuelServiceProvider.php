@@ -26,6 +26,7 @@ class FuelServiceProvider extends ServiceProvider
 	 * @var array
 	 */
 	protected $provides = [
+		'arr',
 		'datacontainer',
 		'cookiejar',
 		'format',
@@ -41,6 +42,8 @@ class FuelServiceProvider extends ServiceProvider
 	 */
 	public function register()
 	{
+		$this->container->add('arr', 'Fuel\Common\Arr');
+
 		$this->container->add('datacontainer', function (array $data = [], $readOnly = false)
 		{
 			return new Common\DataContainer($data, $readOnly);
