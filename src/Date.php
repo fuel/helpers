@@ -30,7 +30,7 @@ use DateTimeInterface;
  * - Uses either strptime() or DateTime to create a date from a format, depending on the format
  * - Uses strftime formatting for dates www.php.net/manual/en/function.strftime.php
  */
-class Date implements DateTimeInterface
+class Date extends DateTime
 {
 	/**
 	 * @var  DateTime object warnings and errors
@@ -218,7 +218,7 @@ class Date implements DateTimeInterface
 	 *
 	 * @return  bool|Date  new Date instance, or false on failure
 	 */
-	public function createFromFormat($format = 'local', $time, $timezone = null)
+	public static function createFromFormat($format = 'local', $time, $timezone = null)
 	{
 		// deal with the timezone passed
 		if ($timezone !== null)
@@ -242,14 +242,14 @@ class Date implements DateTimeInterface
 		// do we have a possible strptime() format to work with?
 		if (strpos($format, '%') !== false and $timestamp = strptime($time, $format))
 		{
-			// convert it into a timestamp
-			$timestamp = mktime($timestamp['tm_hour'], $timestamp['tm_min'], $timestamp['tm_sec'],
-							$timestamp['tm_mon'] + 1, $timestamp['tm_mday'], $timestamp['tm_year'] + 1900);
-
 			if ($timestamp === false or $timestamp['unparsed'])
 			{
 				throw new \OutOfBoundsException('Input was invalid.'.(PHP_INT_SIZE == 4?' A 32-bit system only supports dates between 1901 and 2038.':''));
 			}
+
+			// convert it into a timestamp
+			$time = mktime($timestamp['tm_hour'], $timestamp['tm_min'], $timestamp['tm_sec'],
+							$timestamp['tm_mon'] + 1, $timestamp['tm_mday'], $timestamp['tm_year'] + 1900);
 
 			// coversion was made in UTC, and strptime() does timezones but no daylight savings, so we might need a correction here
 			if (($delta = static::defaultTimezone()->getOffset(new DateTime("2013-01-01 12:00:00", $timezone))) !== 0)

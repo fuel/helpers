@@ -311,7 +311,7 @@ class CookieJar implements ArrayAccess, IteratorAggregate, Countable
 
 		}, func_get_args());
 
-		$data = call_user_func_array('Arr::merge', $arguments);
+		$data = call_user_func_array(__NAMESPACE__.'\Arr::merge', $arguments);
 
 		$this->set($data);
 
