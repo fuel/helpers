@@ -289,7 +289,7 @@ class DataContainer implements \ArrayAccess, \IteratorAggregate, \Countable
 	 * @return  mixed
 	 * @since   2.0.0
 	 */
-	public function get($key, $default = null)
+	public function get($key = null, $default = null)
 	{
 		$fail = uniqid('__FAIL__', true);
 
