@@ -1,34 +1,42 @@
-<?php
+<?php declare(strict_types=1);
+
 /**
- * @package    Fuel\Common
- * @version    2.0
- * @author     Fuel Development Team
- * @author     Chase "Syntaqx" Hutchins
+ * The Fuel PHP Framework is a fast, simple and flexible development framework
+ *
+ * @package    fuel
+ * @version    2.0.0
+ * @author     FlexCoders Ltd, Fuel The PHP Framework Team
  * @license    MIT License
- * @copyright  2010 - 2015 Fuel Development Team
- * @link       http://fuelphp.com
+ * @copyright  2023 FlexCoders Ltd, The Fuel PHP Framework Team
+ * @link       https://fuelphp.org
  */
 
-namespace Fuel\Common;
+namespace Fuel\Helpers;
+
+use Exception;
 
 /**
  * Numeric helper class. Provides additional formatting methods for working with
  * numeric values.
  *
- * Credit where credit is due:
+ * Credit is left where credit is due.
  *
  * Techniques and inspiration were taken from all over, including:
  *	Kohana Framework: kohanaframework.org
  *	CakePHP: cakephp.org
  *
- * @since 1.0
+ * @package		Fuel
+ * @category	Core
+ * @author      Chase "Syntaqx" Hutchins
  */
 class Num
 {
 	/**
-	 * @var  array  Byte units
+	 * byte units
+	 *
+	 * @var   array
 	 */
-	protected $byteUnits = array(
+	protected static array $byte_units = [
 		'B'   => 0,
 		'K'   => 10,
 		'Ki'  => 10,
@@ -62,85 +70,75 @@ class Num
 		'Yi'  => 80,
 		'YB'  => 80,
 		'YiB' => 80,
-	);
+	];
 
 	/**
-	 * @var  array  Configuration values
+	 * Default configuration values
+	 *
+	 * @var   array
 	 */
-	protected $config = array(
-		// formatPhone()
-		'phone' => '(000) 000-0000',
+	protected static array $config = [
+		'formatting' => [
+			'phone' => '(000) 000-0000',
 
-		// smartFormatPhone()
-		'smartPhone' => array(
-			7  => '000-0000',
-			10 => '(000) 000-0000',
-			11 => '0 (000) 000-0000',
-		),
+			'smart_phone' => [
+				7  => '000-0000',
+				10 => '(000) 000-0000',
+				11 => '0 (000) 000-0000',
+			],
 
-		// formatExp()
-		'exp' => '00-00',
+			'credit_card' => '**** **** **** 0000',
 
-		// maskCreditCard()
-		'creditCard' => '**** **** **** 0000',
-	);
+			'exp' => '00-00',
+		],
+	];
 
 	/**
-	 * Class constructor
+	 * update the class configuration
 	 *
-	 * @param  array  $config     Configuration array
-	 * @param  array  $byteUnits  Optional language dependent list of Byte Units
-	 *
-	 * @return  void
-	 *
-	 * @since 2.0.0
+	 * @return   void
 	 */
-	public function __construct(Array $config = array(), Array $byteUnits = array())
+	public static function config(array $config = [], array $units = []): void
 	{
-		$this->config = array_merge($this->config, $config);
-		$this->byteUnits = array_merge($this->byteUnits, $byteUnits);
+		static::$config = Arr::merge(static::$config, $config);
+		static::$byte_units = Arr::merge(static::$byte_units, $units);
 	}
 
 	/**
 	 * Converts a file size number to a byte value. File sizes are defined in
 	 * the format: SB, where S is the size (1, 8.5, 300, etc.) and B is the
 	 * byte unit (K, MiB, GB, etc.). All valid byte units are defined in
-	 * $this->byteUnits
+	 * static::$byte_units
 	 *
 	 * Usage:
 	 * <code>
-	 * $num = new \Fuel\Common\Num();
-	 * echo $num->bytes('200K');  // 204800
-	 * echo $num->bytes('5MiB');  // 5242880
-	 * echo $num->bytes('1000');  // 1000
-	 * echo $num->bytes('2.5GB'); // 2684354560
+	 * echo Num::bytes('200K');  // 204800
+	 * echo static::bytes('5MiB');  // 5242880
+	 * echo static::bytes('1000');  // 1000
+	 * echo static::bytes('2.5GB'); // 2684354560
 	 * </code>
 	 *
 	 * @author     Kohana Team
 	 * @copyright  (c) 2009-2011 Kohana Team
 	 * @license    http://kohanaframework.org/license
-	 *
-	 * @param  string  File size in SB format
-	 *
-	 * @return  float
-	 *
-	 * @since 1.0.0
+	 * @param      string   file size in SB format
+	 * @return     float
 	 */
-	public function bytes($size = 0)
+	public static function bytes(string $size): int
 	{
 		// Prepare the size
 		$size = trim((string) $size);
 
 		// Construct an OR list of byte units for the regex
-		$accepted = implode('|', array_keys($this->byteUnits));
+		$accepted = implode('|', array_keys(static::$byte_units));
 
 		// Construct the regex pattern for verifying the size format
 		$pattern = '/^([0-9]+(?:\.[0-9]+)?)('.$accepted.')?$/Di';
 
 		// Verify the size format and store the matching parts
-		if (!preg_match($pattern, $size, $matches))
+		if ( ! preg_match($pattern, $size, $matches))
 		{
-			throw new \Exception('The byte unit size, "'.$size.'", is improperly formatted.');
+			throw new Exception(sprintf('The byte unit size, %s, is improperly formatted.', $size));
 		}
 
 		// Find the float value of the size
@@ -150,7 +148,7 @@ class Num
 		$unit = Arr::get($matches, 2, 'B');
 
 		// Convert the size into bytes
-		$bytes = $size * pow(2, $this->byteUnits[$unit]);
+		$bytes = $size * pow(2, static::$byte_units[$unit]);
 
 		return $bytes;
 	}
@@ -164,22 +162,19 @@ class Num
 	 * larger size then what the PHP integer type will hold, then use a string.
 	 * It will be converted to a double, which should always have 64 bit length.
 	 *
-	 * @param  int  the byte number to format
-	 * @param  int  number of decimals
-	 *
-	 * @return  boolean|string  formatted string, or false if formatting failed
-	 *
-	 * @since 1.0.0
+	 * @param   integer
+	 * @param   integer
+	 * @return  boolean|string
 	 */
-	public function formatBytes($bytes = 0, $decimals = 0)
+	public static function format_bytes(int $bytes, int $decimals = 0): string|false
 	{
-		static $quant = array(
+		static $quant = [
 			'TB' => 1099511627776,  // pow( 1024, 4)
 			'GB' => 1073741824,     // pow( 1024, 3)
 			'MB' => 1048576,        // pow( 1024, 2)
 			'KB' => 1024,           // pow( 1024, 1)
 			'B ' => 1,              // pow( 1024, 0)
-		);
+		];
 
 		foreach ($quant as $unit => $mag )
 		{
@@ -197,26 +192,22 @@ class Num
 	 *
 	 * Usage:
 	 * <code>
-	 * $num = new \Fuel\Common\Num();
-	 * echo $num->quantity(7000); // 7K
-	 * echo $num->quantity(7500); // 8K
-	 * echo $num->quantity(7500, 1); // 7.5K
+	 * echo Num::quantity(7000); // 7K
+	 * echo Num::quantity(7500); // 8K
+	 * echo Num::quantity(7500, 1); // 7.5K
 	 * </code>
 	 *
-	 * @param  int  Number to convert
-	 * @param  int  Number of decimals in the converted result
-	 *
-	 * @return  string  The converted number
-	 *
-	 * @since 1.0.0
+	 * @param   integer
+	 * @param   integer
+	 * @return  string
 	 */
-	public function quantity($num, $decimals = 0)
+	public static function quantity(int $num, int $decimals = 0): string
 	{
-		if ($num >= 1000 && $num < 1000000)
+		if ($num >= 1000 and $num < 1000000)
 		{
 			return sprintf('%01.'.$decimals.'f', (sprintf('%01.0f', $num) / 1000)).'K';
 		}
-		elseif ($num >= 1000000 && $num < 1000000000)
+		elseif ($num >= 1000000 and $num < 1000000000)
 		{
 			return sprintf('%01.'.$decimals.'f', (sprintf('%01.0f', $num) / 1000000)).'M';
 		}
@@ -234,23 +225,18 @@ class Num
 	 *
 	 * Usage:
 	 * <code>
-	 * $num = new \Fuel\Common\Num();
-	 * echo $num->format('1234567890', '(000) 000-0000'); // (123) 456-7890
-	 * echo $num->format('1234567890', '000.000.0000'); // 123.456.7890
+	 * echo Num::format('1234567890', '(000) 000-0000'); // (123) 456-7890
+	 * echo Num::format('1234567890', '000.000.0000'); // 123.456.7890
 	 * </code>
 	 *
 	 * @link    http://snippets.symfony-project.org/snippet/157
-	 *
-	 * @param  string  The string to format
-	 * @param  string  The format to apply
-	 *
-	 * @return  string  Formatted number
-	 *
-	 * @since 1.0.0
+	 * @param   string     the string to format
+	 * @param   string     the format to apply
+	 * @return  string
 	 */
-	public function format($string, $format)
+	public static function format(string $string = '', string $format = ''): string
 	{
-		if(empty($format) or empty($string))
+		if (empty($format) or empty($string))
 		{
 			return $string;
 		}
@@ -284,25 +270,20 @@ class Num
 	 *
 	 * Usage:
 	 * <code>
-	 * $num = new \Fuel\Common\Num();
-	 * echo $num->maskString('1234567812345678', '************0000'); ************5678
-	 * echo $num->maskString('1234567812345678', '**** **** **** 0000'); // **** **** **** 5678
-	 * echo $num->maskString('1234567812345678', '**** - **** - **** - 0000', ' -'); // **** - **** - **** - 5678
+	 * echo Num::mask_string('1234567812345678', '************0000'); ************5678
+	 * echo Num::mask_string('1234567812345678', '**** **** **** 0000'); // **** **** **** 5678
+	 * echo Num::mask_string('1234567812345678', '**** - **** - **** - 0000', ' -'); // **** - **** - **** - 5678
 	 * </code>
 	 *
 	 * @link    http://snippets.symfony-project.org/snippet/157
-	 *
-	 * @param  string  The string to transform
-	 * @param  string  The mask format
-	 * @param  string  A string (defaults to a single space) containing characters to ignore in the format
-	 *
-	 * @return  string  The masked string
-	 *
-	 * @since 1.0.0
+	 * @param   string     the string to transform
+	 * @param   string     the mask format
+	 * @param   string     a string (defaults to a single space) containing characters to ignore in the format
+	 * @return  string     the masked string
 	 */
-	public function maskString($string, $format = '', $ignore = ' ')
+	public static function maskString(string $string = '', string $format = '', string $ignore = ' '): string
 	{
-		if(empty($format) or empty($string))
+		if (empty($format) or empty($string))
 		{
 			return $string;
 		}
@@ -338,24 +319,19 @@ class Num
 	 * Formats a phone number.
 	 *
 	 * @link    http://snippets.symfony-project.org/snippet/157
-	 *
-	 * @param  string  The unformatted phone number to format
-	 * @param  string  The format to use, defaults to '(000) 000-0000'
-	 *
-	 * @return  string  The formatted string
-	 *
-	 * @see  format
-	 *
-	 * @since 1.0.0
+	 * @param   string the unformatted phone number to format
+	 * @param   string the format to use, defaults to '(000) 000-0000'
+	 * @return  string the formatted string
+	 * @see     format
 	 */
-	public function formatPhone($string = '', $format = null)
+	public static function formatPhone(string $string = '', ?string $format = null): string
 	{
-		if ($format === null)
+		if (is_null($format))
 		{
-			$format = isset($this->config['phone']) ? $this->config['phone'] : '(000) 000-0000';
+			$format = static::$config['formatting']['phone'];
 		}
 
-		return $this->format($string, $format);
+		return static::format($string, $format);
 	}
 
 	/**
@@ -363,28 +339,22 @@ class Num
 	 *
 	 * Usage:
 	 * <code>
-	 * $num = new \Fuel\Common\Num();
-	 * echo $num->smartFormatPhone('1234567'); // 123-4567
-	 * echo $num->smartFormatPhone('1234567890'); // (123) 456-7890
-	 * echo $num->smartFormatPhone('91234567890'); // 9 (123) 456-7890
-	 * echo $num->smartFormatPhone('123456'); // => 123456
+	 * echo Num::smart_format_phone('1234567'); // 123-4567
+	 * echo Num::smart_format_phone('1234567890'); // (123) 456-7890
+	 * echo Num::smart_format_phone('91234567890'); // 9 (123) 456-7890
+	 * echo Num::smart_format_phone('123456'); // => 123456
 	 * </code>
 	 *
-	 * @param  string  The unformatted phone number to format
-	 *
-	 * @return  string  The formatted string
-	 *
-	 * @see  format
-	 *
-	 * @since 1.0.0
+	 * @param   string     the unformatted phone number to format
+	 * @see     format
 	 */
-	public function smartFormatPhone($string)
+	public static function smartFormatPhone(string $string = ''): string
 	{
-		$formats = isset($this->config['smartPhone']) ? $this->config['smartPhone'] : null;
+		$formats = static::$config['formatting']['smart_phone'];
 
-		if (is_array($formats) and isset($formats[strlen($string)]))
+		if (is_array($formats) and isset($formats[$len = strlen($string)]))
 		{
-			return $this->format($string, $formats[strlen($string)]);
+			return static::format($string, $formats[$len]);
 		}
 
 		return $string;
@@ -393,44 +363,34 @@ class Num
 	/**
 	 * Formats a credit card expiration string. Expects 4-digit string (MMYY).
 	 *
-	 * @param  string  The unformatted expiration string to format
-	 * @param  string  The format to use, defaults to '00-00'
-	 *
-	 * @return  string  The formatted string
-	 *
-	 * @see  format
-	 *
-	 * @since 1.0.0
+	 * @param   string     the unformatted expiration string to format
+	 * @param   string     the format to use, defaults to '00-00'
+	 * @see     format
 	 */
-	public function formatExp($string, $format = null)
+	public static function formatExp(string $string = '', ?string $format = null): string
 	{
-		if ($format === null)
+		if (is_null($format))
 		{
-			$format = isset($this->config['exp']) ? $this->config['exp'] : '00-00';
+			$format = static::$config['formatting']['exp'];
 		}
 
-		return $this->format($string, $format);
+		return static::format($string, $format);
 	}
 
 	/**
 	 * Formats (masks) a credit card.
 	 *
-	 * @param  string  The unformatted credit card number to format
-	 * @param  string  The format to use, defaults to '**** **** **** 0000'
-	 *
-	 * @return  string  The masked string
-	 *
-	 * @see     maskString
-	 *
-	 * @since 1.0.0
+	 * @param   string     the unformatted credit card number to format
+	 * @param   string     the format to use, defaults to '**** **** **** 0000'
+	 * @see     mask_string
 	 */
-	public function maskCreditCard($string, $format = null)
+	public static function maskCreditCard(string $string = '', ?string $format = null): string
 	{
-		if ($format === null)
+		if (is_null($format))
 		{
-			$format = isset($this->config['creditCard']) ? $this->config['creditCard'] : '**** **** **** 0000';
+			$format = static::$config['formatting']['credit_card'];
 		}
 
-		return $this->maskString($string, $format);
+		return static::maskString($string, $format);
 	}
 }

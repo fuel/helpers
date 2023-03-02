@@ -1,34 +1,57 @@
 {
-	"name": "fuelphp/common",
-	"description": "FuelPHP generic helper functions and classes",
-	"keywords": ["Helper", "Utility"],
-	"homepage": "https://github.com/fuelphp/common",
-	"license": "MIT",
-	"authors": [
-		{
-			"name": "FuelPHP Development Team",
-			"email": "team@fuelphp.com"
-		}
-	],
-	"require": {
-		"php": ">=5.4"
-	},
-	"require-dev": {
-		"codeception/codeception": "~2.0",
-		"symfony/yaml": "^2.3"
-	},
-	"suggest": {
-		"symfony/yaml": "Allows YAML data conversions."
-	},
-	"autoload": {
-		"psr-4": {
-			"Fuel\\Common\\": "src/"
-		},
-		"files": ["helpers/bootstrap.php"]
-	},
-	"extra": {
-		"branch-alias": {
-			"dev-master": "2.0-dev"
-		}
-	}
+    "name": "fuel/helpers",
+    "type": "library",
+    "description": "Fuel display package providing static helper classes",
+    "keywords": [
+        "fuel",
+        "fuelphp",
+        "php",
+        "helpers"
+    ],
+    "homepage": "https://fuelphp.org/",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Fuel PHP team",
+            "email": "contact@fuelphp.org",
+            "role": "Developer"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/fuel/helpers/issues",
+        "source": "https://github.com/fuel/helpers",
+        "docs": "https://fuelphp.org/docs/helpers"
+    },
+    "require": {
+        "php": "^8.2",
+        "psr/http-message": "^1.0"
+    },
+    "require-dev": {
+        "roave/security-advisories": "dev-latest"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "provide": {
+    },
+    "autoload": {
+        "psr-4": {
+            "Fuel\\Helpers\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Fuel\\Helpers\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "phpunit --colors=always",
+        "static": "psalm",
+        "cs-check": "phpcs",
+        "cs-fix": "phpcbf",
+        "check": [
+            "@cs-check",
+            "@static",
+            "@test"
+        ]
+    }
 }
