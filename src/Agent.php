@@ -17,6 +17,51 @@ use Exception;
 use ErrorException;
 use Psr\Http\Message\ServerRequestInterface;
 
+use function array_merge;
+use function array_shift;
+use function ini_get;
+use function ini_set;
+use function get_browser;
+use function array_change_key_case;
+use function strtolower;
+use function array_key_exists;
+use function str_replace;
+use function preg_match;
+use function preg_quote;
+use function array_slice;
+use function current;
+use function key;
+use function array_flip;
+use function is_file;
+use function filesize;
+use function sprintf;
+use function file_get_contents;
+use function curl_init;
+use function curl_setopt;
+use function curl_exec;
+use function curl_getinfo;
+use function base64_encode;
+use function stream_context_create;
+use function parse_ini_string;
+use function uksort;
+use function strlen;
+use function is_numeric;
+
+use const CURLOPT_PROXYUSERPWD;
+use const CURLOPT_BINARYTRANSFER;
+use const CURLOPT_RETURNTRANSFER;
+use const CURLOPT_FOLLOWLOCATION;
+use const CURLOPT_MAXREDIRS;
+use const CURLOPT_HEADER;
+use const CURLOPT_USERAGENT;
+use const CURLOPT_URL;
+use const CURLOPT_PROXY;
+use const CURLOPT_PROXYPORT;
+use const CURLOPT_PROXYAUTH;
+use const CURLAUTH_BASIC;
+use const CURLAUTH_NTLM;
+use const INI_SCANNER_RAW;
+
 /**
  * Identifies the platform, browser, robot, or mobile device from the user agent string
  *

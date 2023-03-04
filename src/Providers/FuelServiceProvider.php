@@ -15,7 +15,6 @@ namespace Fuel\Helpers\Providers;
 
 use Fuel\Container\ServiceProvider\{AbstractServiceProvider, BootableServiceProviderInterface};
 
-use function array_merge;
 use function in_array;
 
 /**

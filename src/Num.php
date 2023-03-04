@@ -15,11 +15,25 @@ namespace Fuel\Helpers;
 
 use Exception;
 
+use function array_keys;
+use function ctype_alnum;
+use function doubleval;
+use function implode;
+use function is_array;
+use function is_null;
+use function pow;
+use function preg_match;
+use function sprintf;
+use function strlen;
+use function strpos;
+use function substr;
+use function trim;
+
 /**
  * Numeric helper class. Provides additional formatting methods for working with
  * numeric values.
  *
- * Credit is left where credit is due.
+ * Credit where credit is due.
  *
  * Techniques and inspiration were taken from all over, including:
  *	Kohana Framework: kohanaframework.org
